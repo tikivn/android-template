@@ -1,7 +1,6 @@
 package vn.tiki.activities.compiler;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.JavaFile;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,6 +36,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 @AutoService(Processor.class)
 public final class ActivitiesProcessor extends AbstractProcessor {
+  static final String ACTIVITY_TYPE = "android.app.Activity";
 
   private Elements elementUtils;
   private Types typeUtils;
@@ -69,9 +69,15 @@ public final class ActivitiesProcessor extends AbstractProcessor {
       TypeElement typeElement = entry.getKey();
       BindingSet binding = entry.getValue();
 
-      JavaFile javaFile = binding.brewJava();
       try {
-        javaFile.writeTo(filer);
+
+        new IntentBuilderClassGenerator(binding)
+            .brewJava()
+            .writeTo(filer);
+
+        new UtilClassGenerator(binding)
+            .brewJava()
+            .writeTo(filer);
       } catch (IOException e) {
         error(typeElement, "Unable to write binding for type %s: %s", typeElement, e.getMessage());
       }
@@ -139,6 +145,19 @@ public final class ActivitiesProcessor extends AbstractProcessor {
     return hasError;
   }
 
+  private boolean isNotSupportedType(TypeElement enclosingElement) {
+    boolean hasError = false;
+    boolean isActivity = isSubtypeOfType(enclosingElement.asType(), ACTIVITY_TYPE);
+    if (!isActivity) {
+      error(
+          enclosingElement,
+          "@%s only support Activity",
+          Extra.class.getCanonicalName());
+      hasError = true;
+    }
+    return hasError;
+  }
+
   private boolean isBindingInWrongPackage(
       Class<? extends Annotation> annotationClass,
       Element element) {
@@ -165,7 +184,8 @@ public final class ActivitiesProcessor extends AbstractProcessor {
 
     // Start by verifying common generated code restrictions.
     boolean hasError = isInaccessibleViaGeneratedCode(Extra.class, "fields", element)
-        || isBindingInWrongPackage(Extra.class, element);
+        || isBindingInWrongPackage(Extra.class, element)
+        || isNotSupportedType(enclosingElement);
 
     if (hasError) {
       return;
@@ -182,7 +202,6 @@ public final class ActivitiesProcessor extends AbstractProcessor {
     String name = simpleName.toString();
 
     builder.addField(new FieldExtraBinding(name));
-
   }
 
   @Override public SourceVersion getSupportedSourceVersion() {
