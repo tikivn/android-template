@@ -12,10 +12,11 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
+import static vn.tiki.activities.compiler.ActivitiesProcessor.BUNDLE;
+import static vn.tiki.activities.compiler.ActivitiesProcessor.BUNDLES;
+import static vn.tiki.activities.compiler.ActivitiesProcessor.CONTEXT;
 
 final class UtilClassGenerator {
-  private static final ClassName BUNDLES = ClassName.get("vn.tiki.activities.internal", "Bundles");
-  private static final ClassName BUNDLE = ClassName.get("android.os", "Bundle");
 
   private final TypeName targetTypeName;
   private final ClassName targetClassName;
@@ -28,7 +29,7 @@ final class UtilClassGenerator {
     this.isActivity = bindingSet.isActivity;
     this.fieldExtraBindings = bindingSet.fieldExtraBindings;
   }
-  
+
   JavaFile brewJava() {
     return JavaFile.builder(targetClassName.packageName(), createType())
         .addFileComment("Generated code from Activities. Do not modify!")
@@ -48,7 +49,23 @@ final class UtilClassGenerator {
 
     result.addMethod(createBindingMethod());
 
+    result.addMethod(createIntentBuilderFactoryMethod());
+
     return result.build();
+  }
+
+  private MethodSpec createIntentBuilderFactoryMethod() {
+    final String intentBuilderClassName = targetClassName.simpleName() +
+        "_IntentBuilder";
+    final ClassName intentBuilderType = ClassName.get(
+        targetClassName.packageName(),
+        intentBuilderClassName);
+    return MethodSpec.methodBuilder("intentBuilder")
+        .addModifiers(PUBLIC, STATIC)
+        .returns(intentBuilderType)
+        .addParameter(CONTEXT, "context")
+        .addStatement("return new $L(context)", intentBuilderClassName)
+        .build();
   }
 
   private MethodSpec createPrivateDefaultConstructor() {

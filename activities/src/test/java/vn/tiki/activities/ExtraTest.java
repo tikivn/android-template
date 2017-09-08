@@ -21,12 +21,39 @@ public class ExtraTest {
         + "}"
     );
 
+    JavaFileObject intentBuilderSource = JavaFileObjects.forSourceString(
+        "test/Test_IntentBuilder",
+        ""
+            + "package test;\n"
+            + "import android.content.Context;\n"
+            + "import android.content.Intent;\n"
+            + "import java.lang.String;\n"
+            + "public final class Test_IntentBuilder {\n"
+            + "  private final Intent intent;\n"
+            + "  Test_IntentBuilder(Context context) {\n"
+            + "    intent = new Intent(context, Test.class);\n"
+            + "  }\n"
+            + "  public Test_IntentBuilder name(String name) {\n"
+            + "    intent.putExtra(\"name\", name);\n"
+            + "    return this;\n"
+            + "  }\n"
+            + "  public Test_IntentBuilder age(int age) {\n"
+            + "    intent.putExtra(\"age\", age);\n"
+            + "    return this;\n"
+            + "  }\n"
+            + "  public Intent make() {\n"
+            + "    return intent;\n"
+            + "  }\n"
+            + "}"
+    );
+
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_", ""
         + "package test;\n"
+        + "import android.content.Context;\n"
         + "import android.os.Bundle;\n"
         + "import vn.tiki.activities.internal.Bundles;\n"
         + "public final class Test_ {\n"
-        + "  private Test() {\n"
+        + "  private Test_() {\n"
         + "  }\n"
         + "  public static void bindExtras(Test target) {\n"
         + "    bindExtras(target, target.getIntent().getExtras());\n"
@@ -34,6 +61,9 @@ public class ExtraTest {
         + "  public static void bindExtras(Test target, Bundle source) {\n"
         + "    target.name = Bundles.get(source, \"name\");\n"
         + "    target.age = Bundles.get(source, \"age\");\n"
+        + "  }\n"
+        + "  public static Test_IntentBuilder intentBuilder(Context context) {\n"
+        + "    return new Test_IntentBuilder(context);\n"
         + "  }\n"
         + "}"
     );
@@ -43,6 +73,6 @@ public class ExtraTest {
         .processedWith(new ActivitiesProcessor())
         .compilesWithoutWarnings()
         .and()
-        .generatesSources(bindingSource);
+        .generatesSources(intentBuilderSource, bindingSource);
   }
 }

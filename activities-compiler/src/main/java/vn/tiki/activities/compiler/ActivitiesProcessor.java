@@ -1,7 +1,8 @@
 package vn.tiki.activities.compiler;
 
 import com.google.auto.service.AutoService;
-import com.sun.source.util.Trees;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,35 +25,27 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import vn.tiki.activities.Extra;
 
 import static javax.lang.model.element.ElementKind.CLASS;
-import static javax.lang.model.element.ElementKind.INTERFACE;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 
 @AutoService(Processor.class)
 public final class ActivitiesProcessor extends AbstractProcessor {
   static final String ACTIVITY_TYPE = "android.app.Activity";
+  static final ClassName CONTEXT = ClassName.get("android.content", "Context");
+  static final ClassName INTENT = ClassName.get("android.content", "Intent");
+  static final ClassName BUNDLES = ClassName.get("vn.tiki.activities.internal", "Bundles");
+  static final ClassName BUNDLE = ClassName.get("android.os", "Bundle");
 
-  private Elements elementUtils;
-  private Types typeUtils;
   private Filer filer;
-  private Trees trees;
 
   @Override public synchronized void init(ProcessingEnvironment env) {
     super.init(env);
 
-    elementUtils = env.getElementUtils();
-    typeUtils = env.getTypeUtils();
     filer = env.getFiler();
-    try {
-      trees = Trees.instance(processingEnv);
-    } catch (IllegalArgumentException ignored) {
-    }
   }
 
   @Override public Set<String> getSupportedAnnotationTypes() {
@@ -199,9 +192,12 @@ public final class ActivitiesProcessor extends AbstractProcessor {
       builder = getOrCreateBindingBuilder(builderMap, enclosingElement);
     }
 
-    String name = simpleName.toString();
+    TypeMirror elementType = element.asType();
 
-    builder.addField(new FieldExtraBinding(name));
+    String name = simpleName.toString();
+    TypeName type = TypeName.get(elementType);
+
+    builder.addField(new FieldExtraBinding(name, type));
   }
 
   @Override public SourceVersion getSupportedSourceVersion() {
@@ -216,11 +212,6 @@ public final class ActivitiesProcessor extends AbstractProcessor {
       builderMap.put(enclosingElement, builder);
     }
     return builder;
-  }
-
-  private boolean isInterface(TypeMirror typeMirror) {
-    return typeMirror instanceof DeclaredType
-        && ((DeclaredType) typeMirror).asElement().getKind() == INTERFACE;
   }
 
   private static boolean isTypeEqual(TypeMirror typeMirror, String otherType) {

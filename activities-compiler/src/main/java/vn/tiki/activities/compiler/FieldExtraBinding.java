@@ -1,13 +1,21 @@
 package vn.tiki.activities.compiler;
 
+import com.squareup.javapoet.TypeName;
+
 class FieldExtraBinding {
   private final String name;
+  private final TypeName type;
 
-  public FieldExtraBinding(String name) {
+  FieldExtraBinding(String name, TypeName type) {
     this.name = name;
+    this.type = type;
   }
 
-  public String getName() {
+  String getName() {
     return name;
+  }
+
+  public TypeName getType() {
+    return type;
   }
 }

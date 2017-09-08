@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import vn.tiki.activities.Extra;
 import vn.tiki.sample.R;
-import vn.tiki.sample.annotation.Extra;
 
 /**
  * Created by Giang Nguyen on 9/3/17.
