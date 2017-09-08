@@ -16,10 +16,11 @@ before_install:
   # Install the rest of tools (e.g., avdmanager)
   - sdkmanager tools
 
-script: ./gradlew check connectedCheck --stacktrace
+script: ./gradlew :sample:jacocoTestReport
 
 after_success:
-  - .buildscript/deploy_snapshot.sh
+  - export CODECOV_TOKEN="4cb08118-2073-45d2-b2de-47151e1d734f"
+  - bash <(curl -s https://codecov.io/bash)
 
 env:
   global:
