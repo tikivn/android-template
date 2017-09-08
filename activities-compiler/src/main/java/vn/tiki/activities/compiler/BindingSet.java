@@ -9,36 +9,35 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.util.ArrayList;
 import java.util.List;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import static com.google.auto.common.MoreElements.getPackage;
 import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
+import static vn.tiki.activities.compiler.ActivitiesProcessor.isSubtypeOfType;
 
 class BindingSet {
   private static final ClassName BUNDLES = ClassName.get("vn.tiki.activities.internal", "Bundles");
   private static final ClassName BUNDLE = ClassName.get("android.os", "Bundle");
+  private static final String ACTIVITY_TYPE = "android.app.Activity";
 
   private final TypeName targetTypeName;
   private final ClassName bindingClassName;
-  private final boolean isFinal;
+  private final boolean isActivity;
   private final List<FieldExtraBinding> fieldExtraBindings;
-  private final BindingSet parentBinding;
 
   BindingSet(
       TypeName targetTypeName,
       ClassName bindingClassName,
-      boolean isFinal,
-      List<FieldExtraBinding> fieldExtraBindings,
-      BindingSet parentBinding) {
+      boolean isActivity,
+      List<FieldExtraBinding> fieldExtraBindings) {
     this.targetTypeName = targetTypeName;
     this.bindingClassName = bindingClassName;
-    this.isFinal = isFinal;
+    this.isActivity = isActivity;
     this.fieldExtraBindings = fieldExtraBindings;
-    this.parentBinding = parentBinding;
   }
 
   JavaFile brewJava() {
@@ -49,21 +48,36 @@ class BindingSet {
 
   private TypeSpec createType() {
     TypeSpec.Builder result = TypeSpec.classBuilder(bindingClassName.simpleName())
-        .addModifiers(PUBLIC);
-    if (isFinal) {
-      result.addModifiers(FINAL);
+        .addModifiers(PUBLIC)
+        .addModifiers(FINAL);
+
+    result.addMethod(createPrivateDefaultConstructor());
+
+    if (isActivity) {
+      result.addMethod(createBindingMethodForActivity());
     }
 
-    if (parentBinding != null) {
-      result.superclass(parentBinding.bindingClassName);
-    }
-
-    createBindExtrasMethod(result);
+    result.addMethod(createBindingMethod());
 
     return result.build();
   }
 
-  private void createBindExtrasMethod(TypeSpec.Builder result) {
+  private MethodSpec createPrivateDefaultConstructor() {
+    return MethodSpec.constructorBuilder()
+        .addModifiers(PRIVATE)
+        .build();
+  }
+
+  private MethodSpec createBindingMethodForActivity() {
+    return MethodSpec.methodBuilder("bindExtras")
+        .addModifiers(PUBLIC)
+        .addModifiers(STATIC)
+        .addParameter(targetTypeName, "target")
+        .addStatement("bindExtras(target, target.getIntent().getExtras())")
+        .build();
+  }
+
+  private MethodSpec createBindingMethod() {
     MethodSpec.Builder bindExtrasMethodBuilder = MethodSpec.methodBuilder("bindExtras")
         .addModifiers(PUBLIC)
         .addModifiers(STATIC)
@@ -74,7 +88,7 @@ class BindingSet {
       addFieldBinding(bindExtrasMethodBuilder, fieldExtraBinding);
     }
 
-    result.addMethod(bindExtrasMethodBuilder.build());
+    return bindExtrasMethodBuilder.build();
   }
 
   private void addFieldBinding(
@@ -101,26 +115,24 @@ class BindingSet {
         packageName.length() + 1).replace('.', '$');
     ClassName bindingClassName = ClassName.get(packageName, className + "_");
 
-    boolean isFinal = enclosingElement.getModifiers().contains(Modifier.FINAL);
-    return new Builder(targetType, bindingClassName, isFinal);
+    boolean isActivity = isSubtypeOfType(typeMirror, ACTIVITY_TYPE);
+
+    return new Builder(targetType, bindingClassName, isActivity);
   }
 
   static class Builder {
     private final TypeName targetTypeName;
     private final ClassName bindingClassName;
-    private final boolean isFinal;
+    private final boolean isActivity;
     private final List<FieldExtraBinding> fieldExtraBindings = new ArrayList<>();
 
-    private BindingSet parentBinding;
-
-    private Builder(TypeName targetTypeName, ClassName bindingClassName, boolean isFinal) {
+    private Builder(
+        TypeName targetTypeName,
+        ClassName bindingClassName,
+        boolean isActivity) {
       this.targetTypeName = targetTypeName;
       this.bindingClassName = bindingClassName;
-      this.isFinal = isFinal;
-    }
-
-    void setParent(BindingSet parent) {
-      this.parentBinding = parent;
+      this.isActivity = isActivity;
     }
 
     void addField(FieldExtraBinding fieldExtraBinding) {
@@ -131,9 +143,9 @@ class BindingSet {
       return new BindingSet(
           targetTypeName,
           bindingClassName,
-          isFinal,
-          fieldExtraBindings,
-          parentBinding);
+          isActivity,
+          fieldExtraBindings
+      );
     }
   }
 }
