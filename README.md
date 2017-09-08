@@ -5,6 +5,9 @@ Template for android development at Tiki
 
 ![Logo](logo.png)
 
+[![Build Status](https://travis-ci.org/tikivn/android-template.svg?branch=master)](https://travis-ci.org/tikivn/android-template)
+[![codecov](https://codecov.io/gh/tikivn/android-template/branch/master/graph/badge.svg)](https://codecov.io/gh/tikivn/android-template)
+
 License
 -------
 
