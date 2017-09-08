@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion versions.compileSdk
+  buildToolsVersion versions.buildTools
+
+  defaultConfig {
+    applicationId "vn.tiki.sample"
+    minSdkVersion versions.minSdk
+    targetSdkVersion versions.compileSdk
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation deps.support.appCompat
+  implementation deps.support.design
+  implementation deps.support.constrain
+  implementation deps.dagger.dagger
+  annotationProcessor deps.dagger.compiler
+  implementation deps.butterknife.butterknife
+  annotationProcessor deps.butterknife.compiler
+  implementation deps.rx.java
+  implementation deps.rx.android
+  implementation project(':daggers')
+
+  testImplementation deps.test.junit
+  testImplementation deps.test.mockito
+  testImplementation deps.test.truth
+  testImplementation deps.test.robolectric
+
+}

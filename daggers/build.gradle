@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion versions.compileSdk
+  buildToolsVersion versions.buildTools
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+
+    consumerProguardFiles 'proguard-rules.txt'
+
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath = true
+      }
+    }
+  }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+    // We run a full lint analysis as build part in CI, so skip vital checks for assemble tasks.
+    checkReleaseBuilds false
+  }
+}
+
+dependencies {
+  implementation deps.support.annotations
+
+  testImplementation deps.test.junit
+  testImplementation deps.test.truth
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

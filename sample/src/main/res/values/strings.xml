@@ -1,0 +1,11 @@
+<resources>
+  <string name="app_name">Sample</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
+  <string name="login">Login</string>
+  <string name="error_invalid_email">Email is invalid.</string>
+  <string name="error_invalid_password">Password must at least 6 characters.</string>
+  <string name="error_wrong_password">Wrong password.</string>
+  <string name="msg_you_are_offline">You are offline.</string>
+  <string name="msg_successful">Successful</string>
+</resources>
