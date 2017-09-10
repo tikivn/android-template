@@ -16,14 +16,14 @@ import static vn.tiki.activities.compiler.ActivitiesProcessor.BUNDLE;
 import static vn.tiki.activities.compiler.ActivitiesProcessor.BUNDLES;
 import static vn.tiki.activities.compiler.ActivitiesProcessor.CONTEXT;
 
-final class UtilClassGenerator {
+final class ActivityBinding {
 
   private final TypeName targetTypeName;
   private final ClassName targetClassName;
   private final boolean isActivity;
   private final List<FieldExtraBinding> fieldExtraBindings;
 
-  UtilClassGenerator(BindingSet bindingSet) {
+  ActivityBinding(BindingSet bindingSet) {
     this.targetTypeName = bindingSet.targetTypeName;
     this.targetClassName = bindingSet.targetClassName;
     this.isActivity = bindingSet.isActivity;

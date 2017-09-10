@@ -13,25 +13,21 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static vn.tiki.activities.compiler.ActivitiesProcessor.CONTEXT;
 import static vn.tiki.activities.compiler.ActivitiesProcessor.INTENT;
 
-final class IntentBuilderClassGenerator {
+final class IntentBuilder {
 
-  private final TypeName targetTypeName;
   private final ClassName targetClassName;
-  private final boolean isActivity;
   private final List<FieldExtraBinding> fieldExtraBindings;
   private final String name;
   private final ClassName builderClassName;
 
-  IntentBuilderClassGenerator(BindingSet bindingSet) {
-    this.targetTypeName = bindingSet.targetTypeName;
+  IntentBuilder(BindingSet bindingSet) {
     this.targetClassName = bindingSet.targetClassName;
-    this.isActivity = bindingSet.isActivity;
     this.fieldExtraBindings = bindingSet.fieldExtraBindings;
     name = targetClassName.simpleName() + "_IntentBuilder";
     builderClassName = ClassName.get(targetClassName.packageName(), name);
   }
 
-  public JavaFile brewJava() {
+  JavaFile brewJava() {
     return JavaFile.builder(targetClassName.packageName(), createType())
         .addFileComment("Generated code from Activities. Do not modify!")
         .build();
