@@ -35,12 +35,58 @@ import static javax.lang.model.element.Modifier.STATIC;
 @AutoService(Processor.class)
 public final class ActivitiesProcessor extends AbstractProcessor {
   static final String ACTIVITY_TYPE = "android.app.Activity";
+  static final String FRAGMENT_TYPE = "android.app.Fragment";
+  static final String SUPPORT_FRAGMENT_TYPE = "android.support.v4.app.Fragment";
   static final ClassName CONTEXT = ClassName.get("android.content", "Context");
   static final ClassName INTENT = ClassName.get("android.content", "Intent");
   static final ClassName BUNDLES = ClassName.get("vn.tiki.activities.internal", "Bundles");
   static final ClassName BUNDLE = ClassName.get("android.os", "Bundle");
 
   private Filer filer;
+
+  private static boolean isTypeEqual(TypeMirror typeMirror, String otherType) {
+    return otherType.equals(typeMirror.toString());
+  }
+
+  static boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {
+    if (isTypeEqual(typeMirror, otherType)) {
+      return true;
+    }
+    if (typeMirror.getKind() != TypeKind.DECLARED) {
+      return false;
+    }
+    DeclaredType declaredType = (DeclaredType) typeMirror;
+    List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+    if (typeArguments.size() > 0) {
+      StringBuilder typeString = new StringBuilder(declaredType.asElement().toString());
+      typeString.append('<');
+      for (int i = 0; i < typeArguments.size(); i++) {
+        if (i > 0) {
+          typeString.append(',');
+        }
+        typeString.append('?');
+      }
+      typeString.append('>');
+      if (typeString.toString().equals(otherType)) {
+        return true;
+      }
+    }
+    Element element = declaredType.asElement();
+    if (!(element instanceof TypeElement)) {
+      return false;
+    }
+    TypeElement typeElement = (TypeElement) element;
+    TypeMirror superType = typeElement.getSuperclass();
+    if (isSubtypeOfType(superType, otherType)) {
+      return true;
+    }
+    for (TypeMirror interfaceType : typeElement.getInterfaces()) {
+      if (isSubtypeOfType(interfaceType, otherType)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @Override public synchronized void init(ProcessingEnvironment env) {
     super.init(env);
@@ -64,13 +110,23 @@ public final class ActivitiesProcessor extends AbstractProcessor {
 
       try {
 
-        new IntentBuilderClassGenerator(binding)
-            .brewJava()
-            .writeTo(filer);
+        if (binding.isActivity) {
+          new IntentBuilder(binding)
+              .brewJava()
+              .writeTo(filer);
 
-        new UtilClassGenerator(binding)
-            .brewJava()
-            .writeTo(filer);
+          new ActivityBinding(binding)
+              .brewJava()
+              .writeTo(filer);
+        } else if (binding.isFragment) {
+          new FragmentBuilder(binding)
+              .brewJava()
+              .writeTo(filer);
+
+          new FragmentBinding(binding)
+              .brewJava()
+              .writeTo(filer);
+        }
       } catch (IOException e) {
         error(typeElement, "Unable to write binding for type %s: %s", typeElement, e.getMessage());
       }
@@ -140,11 +196,14 @@ public final class ActivitiesProcessor extends AbstractProcessor {
 
   private boolean isNotSupportedType(TypeElement enclosingElement) {
     boolean hasError = false;
-    boolean isActivity = isSubtypeOfType(enclosingElement.asType(), ACTIVITY_TYPE);
-    if (!isActivity) {
+    final TypeMirror typeMirror = enclosingElement.asType();
+    boolean isActivity = isSubtypeOfType(typeMirror, ACTIVITY_TYPE);
+    boolean isFragment = isSubtypeOfType(typeMirror, FRAGMENT_TYPE)
+        || isSubtypeOfType(typeMirror, SUPPORT_FRAGMENT_TYPE);
+    if (!isActivity && !isFragment) {
       error(
           enclosingElement,
-          "@%s only support Activity",
+          "@%s only support Activity or Fragment",
           Extra.class.getCanonicalName());
       hasError = true;
     }
@@ -212,50 +271,6 @@ public final class ActivitiesProcessor extends AbstractProcessor {
       builderMap.put(enclosingElement, builder);
     }
     return builder;
-  }
-
-  private static boolean isTypeEqual(TypeMirror typeMirror, String otherType) {
-    return otherType.equals(typeMirror.toString());
-  }
-
-  static boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {
-    if (isTypeEqual(typeMirror, otherType)) {
-      return true;
-    }
-    if (typeMirror.getKind() != TypeKind.DECLARED) {
-      return false;
-    }
-    DeclaredType declaredType = (DeclaredType) typeMirror;
-    List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
-    if (typeArguments.size() > 0) {
-      StringBuilder typeString = new StringBuilder(declaredType.asElement().toString());
-      typeString.append('<');
-      for (int i = 0; i < typeArguments.size(); i++) {
-        if (i > 0) {
-          typeString.append(',');
-        }
-        typeString.append('?');
-      }
-      typeString.append('>');
-      if (typeString.toString().equals(otherType)) {
-        return true;
-      }
-    }
-    Element element = declaredType.asElement();
-    if (!(element instanceof TypeElement)) {
-      return false;
-    }
-    TypeElement typeElement = (TypeElement) element;
-    TypeMirror superType = typeElement.getSuperclass();
-    if (isSubtypeOfType(superType, otherType)) {
-      return true;
-    }
-    for (TypeMirror interfaceType : typeElement.getInterfaces()) {
-      if (isSubtypeOfType(interfaceType, otherType)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private void logParsingError(

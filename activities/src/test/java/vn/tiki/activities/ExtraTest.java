@@ -75,4 +75,71 @@ public class ExtraTest {
         .and()
         .generatesSources(intentBuilderSource, bindingSource);
   }
+
+  @Test public void bindingExtraForFragment() {
+    JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
+        + "package test;\n"
+        + "import android.app.Fragment;\n"
+        + "import vn.tiki.activities.Extra;\n"
+        + "public class Test extends Fragment {\n"
+        + "    @Extra String name;\n"
+        + "    @Extra int age;\n"
+        + "}"
+    );
+
+    JavaFileObject fragmentBuilderSource = JavaFileObjects.forSourceString(
+        "test/Test_Builder",
+        ""
+            + "package test;\n"
+            + "import android.content.Intent;\n"
+            + "import java.lang.String;\n"
+            + "public final class Test_Builder {\n"
+            + "  private final Intent args;\n"
+            + "  Test_Builder() {\n"
+            + "    args = new Intent();\n"
+            + "  }\n"
+            + "  public Test_Builder name(String name) {\n"
+            + "    args.putExtra(\"name\", name);\n"
+            + "    return this;\n"
+            + "  }\n"
+            + "  public Test_Builder age(int age) {\n"
+            + "    args.putExtra(\"age\", age);\n"
+            + "    return this;\n"
+            + "  }\n"
+            + "  public Test make() {\n"
+            + "    Test target = new Test();\n"
+            + "    target.setArguments(args.getExtras());\n"
+            + "    return target;\n"
+            + "  }\n"
+            + "}"
+    );
+
+    JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_", ""
+        + "package test;\n"
+        + "import android.content.Context;\n"
+        + "import android.os.Bundle;\n"
+        + "import vn.tiki.activities.internal.Bundles;\n"
+        + "public final class Test_ {\n"
+        + "  private Test_() {\n"
+        + "  }\n"
+        + "  public static void bindExtras(Test target) {\n"
+        + "    bindExtras(target, target.getArguments());\n"
+        + "  }\n"
+        + "  public static void bindExtras(Test target, Bundle source) {\n"
+        + "    target.name = Bundles.get(source, \"name\");\n"
+        + "    target.age = Bundles.get(source, \"age\");\n"
+        + "  }\n"
+        + "  public static Test_Builder builder() {\n"
+        + "    return new Test_Builder();\n"
+        + "  }\n"
+        + "}"
+    );
+
+    assertAbout(javaSource()).that(source)
+        .withCompilerOptions("-Xlint:-processing")
+        .processedWith(new ActivitiesProcessor())
+        .compilesWithoutWarnings()
+        .and()
+        .generatesSources(fragmentBuilderSource);
+  }
 }
