@@ -28,5 +28,14 @@ public class ExtraInjectionActivity extends AppCompatActivity {
 
     tvName.setText(name);
     tvAge.setText(String.valueOf(age));
+
+    if (savedInstanceState == null) {
+      getSupportFragmentManager().beginTransaction()
+          .add(R.id.fragmentContainer, ExtraInjectionFragment_.builder()
+              .height(170)
+              .weight(60)
+              .make())
+          .commit();
+    }
   }
 }

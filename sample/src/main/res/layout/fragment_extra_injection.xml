@@ -8,21 +8,17 @@
     android:orientation="vertical">
 
   <TextView
-      android:id="@+id/tvName"
+      android:id="@+id/tvHeight"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textAppearance="@style/TextAppearance.AppCompat.Body1"
       tools:text="This is text"/>
 
   <TextView
-      android:id="@+id/tvAge"
+      android:id="@+id/tvWeight"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textAppearance="@style/TextAppearance.AppCompat.Body2"
       tools:text="This is text"/>
 
-  <FrameLayout
-      android:id="@+id/fragmentContainer"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
 </LinearLayout>
