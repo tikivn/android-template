@@ -43,11 +43,13 @@ dependencies {
   annotationProcessor deps.dagger.compiler
   implementation deps.butterknife.butterknife
   annotationProcessor deps.butterknife.compiler
-  implementation project(':activities')
-  annotationProcessor project(':activities-compiler')
+  implementation project(':intents')
+  annotationProcessor project(':intents-compiler')
   implementation deps.rx.java
   implementation deps.rx.android
   implementation project(':daggers')
+//  implementation 'com.github.tikivn.android-template:daggers:-SNAPSHOT'
+
 
   testImplementation deps.test.junit
   testImplementation deps.test.mockito

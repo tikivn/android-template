@@ -1,7 +1,7 @@
 include ':sample'
-include ':activities'
-include ':activities-annotations'
-include ':activities-compiler'
+include ':intents'
+include ':intents-annotations'
+include ':intents-compiler'
 include ':daggers'
 
 rootProject.name = 'android-template'

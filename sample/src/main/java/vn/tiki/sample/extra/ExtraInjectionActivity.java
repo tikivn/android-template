@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import vn.tiki.activities.Extra;
+import vn.tiki.intents.Extra;
 import vn.tiki.sample.R;
 
 /**
