@@ -1,6 +1,7 @@
 package vn.tiki.architecture.mvp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -12,6 +13,7 @@ public abstract class MvpActivity<V extends Mvp.View, P extends Mvp.Presenter<V>
     AppCompatActivity {
 
   @Nullable MvpBinding<V, P> mvpBinding;
+  private P presenter;
 
   /**
    * Connect Presenter to View then Presenter will attach/detach view and destroy base on lifecycle.
@@ -22,6 +24,17 @@ public abstract class MvpActivity<V extends Mvp.View, P extends Mvp.Presenter<V>
    */
   public void connect(P presenter, V view) {
     mvpBinding = new MvpBinding<>(presenter, view);
+    this.presenter = presenter;
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (presenter instanceof ActivityResultDelegate) {
+      ((ActivityResultDelegate) presenter).onActivityResult(ActivityResult.create(
+          requestCode,
+          resultCode,
+          data));
+    }
   }
 
   @Override protected void onStart() {
