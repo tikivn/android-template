@@ -1,6 +1,5 @@
 package vn.tiki.sample.login;
 
-import dagger.Module;
 import dagger.Provides;
 import vn.tiki.sample.di.ActivityScope;
 import vn.tiki.sample.model.UserModel;
@@ -8,11 +7,19 @@ import vn.tiki.sample.model.UserModel;
 /**
  * Created by Giang Nguyen on 8/25/17.
  */
-@Module
-public class LoginModule {
+public interface LoginModule {
 
   @ActivityScope
-  @Provides LoginPresenter provideLoginPresenter(UserModel userModel) {
-    return new LoginPresenter(userModel);
+  @dagger.Subcomponent(modules = Module.class)
+  interface Component {
+    void inject(LoginActivity __);
+  }
+
+  @dagger.Module
+  class Module {
+    @ActivityScope
+    @Provides LoginPresenter provideLoginPresenter(UserModel userModel) {
+      return new LoginPresenter(userModel);
+    }
   }
 }

@@ -30,12 +30,12 @@ public final class Daggers {
     componentMap.remove(activityInjector);
   }
 
-  public static void inject(Context context, Object target) {
+  public static void inject(Object target, Context context) {
     final Injector injector = findInjector(context);
-    inject(injector, target);
+    inject(target, injector);
   }
 
-  private static void inject(Injector injector, Object target) {
+  private static void inject(Object target, Injector injector) {
     if (injector instanceof AppInjector) {
       inject(appInjector.appComponent(), target);
     } else {

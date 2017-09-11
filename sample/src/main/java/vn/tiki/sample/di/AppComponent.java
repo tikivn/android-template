@@ -2,7 +2,7 @@ package vn.tiki.sample.di;
 
 import dagger.Component;
 import javax.inject.Singleton;
-import vn.tiki.sample.login.LoginComponent;
+import vn.tiki.sample.extra.ExtraInjectionModule;
 import vn.tiki.sample.login.LoginModule;
 
 /**
@@ -11,5 +11,8 @@ import vn.tiki.sample.login.LoginModule;
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
-  LoginComponent plus(LoginModule __);
+
+  LoginModule.Component plus(LoginModule.Module __);
+
+  ExtraInjectionModule.Component plus(ExtraInjectionModule.Module __);
 }
