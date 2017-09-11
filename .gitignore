@@ -23,3 +23,6 @@ jniLibs
 build
 local.properties
 reports
+
+.mainframer
+mainframer.sh
