@@ -108,3 +108,5 @@ subprojects { project ->
     }
   }
 }
+
+apply from: rootProject.file('gradle/script-java-code-coverage-root.gradle')

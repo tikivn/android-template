@@ -1,0 +1,99 @@
+apply plugin: 'jacoco'
+
+FileTree getJacocoClassDirs(List projects) {
+  ArrayList<String> notForTestingFiles = ['**/R.class',
+                                          '**/R2*.class',
+                                          '**/R$*.class',
+                                          '**/BR.class',
+                                          '**/BuildConfig.*',
+                                          '**/BindingUtils.*',
+                                          '**/BitmapUtil.*',
+                                          '**/Manifest*.*',
+                                          '**/*Test*.*',
+                                          '**/App.*',
+                                          '**/*Activity.*',
+                                          '**/*Fragment.*',
+                                          '**/*View.*',
+                                          '**/*Dialog.*',
+                                          '**/*Adapter.*',
+                                          '**/*Module.*',
+                                          '**/*Component.*',
+                                          '**/*MembersInjector.*', // Dagger auto-generated code.
+                                          '**/*_Provide*Factory*.*', // Dagger auto-generated code.
+                                          '**/*AutoValue_*.*',
+                                          'android/**/*.*',
+                                          '**/*Factory.*',
+                                          '**/databinding/**',
+                                          '**/analytics/**',
+                                          '**/widget/**',
+                                          '**/widgets/**',
+                                          '**/**_ViewBinding.*',
+                                          '**/*$*.class',
+                                          '**/*ViewHolder.*',]
+
+  FileTree classDirs = fileTree(dir: "${buildDir}/intermediates/classes/debug",
+      exclude: notForTestingFiles)
+
+  projects.each {
+    def projectBuildDir = project(it).buildDir
+    classDirs += fileTree(dir: "${projectBuildDir}/intermediates/classes/debug",
+        exclude: notForTestingFiles)
+  }
+
+  return classDirs
+}
+
+// get source dirs for project dependencies
+List<String> getJacocoSrcDirs(List<String> projects) {
+  return projects.collect {
+    def projectDir = project(it).projectDir
+    return "${projectDir}/src/main/java"
+  }
+}
+
+// get source dirs for project dependencies
+List<String> getJacocoExecutionDataDirs(List<String> projects) {
+  return projects.collect {
+    def projectBuildDir = project(it).buildDir
+    return "${projectBuildDir}/jacoco/testDebugUnitTest.exec"
+  }
+}
+
+def dependencies = [':daggers',
+                    ':intents',
+                    ':intents-compiler',
+                    ':intents-annotations',]
+
+def dependencyTestTasks = dependencies.collect {
+  println(it)
+  if (it == ':intents-compiler' || it == ':intents-annotations') {
+    return "$it:test"
+  } else {
+    return "$it:testDebugUnitTest"
+  }
+}
+
+task javaCodeCoverageAll(type: JacocoReport) {
+
+  dependencyTestTasks.each { dependsOn(it) }
+
+  FileTree jacocoClassDirs = getJacocoClassDirs(dependencies)
+  List<String> jacocoSrcDirs = getJacocoSrcDirs(dependencies)
+  List<String> executionDataDirs = getJacocoExecutionDataDirs(dependencies)
+
+  reports {
+    xml {
+      enabled true
+      destination "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
+    }
+    html {
+      enabled true
+      destination "$buildDir/reports/jacoco/html/"
+    }
+  }
+
+  // your gradle project dependencies go here
+  classDirectories = files(jacocoClassDirs)
+  sourceDirectories = files(jacocoSrcDirs)
+  executionData = files(executionDataDirs)
+}

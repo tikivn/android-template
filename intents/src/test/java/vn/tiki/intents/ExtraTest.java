@@ -14,7 +14,7 @@ public class ExtraTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
         + "package test;\n"
         + "import android.app.Activity;\n"
-        + "import vn.tiki.activities.Extra;\n"
+        + "import vn.tiki.intents.Extra;\n"
         + "public class Test extends Activity {\n"
         + "    @Extra String name;\n"
         + "    @Extra int age;\n"
@@ -51,7 +51,7 @@ public class ExtraTest {
         + "package test;\n"
         + "import android.content.Context;\n"
         + "import android.os.Bundle;\n"
-        + "import vn.tiki.activities.internal.Bundles;\n"
+        + "import vn.tiki.intents.internal.Bundles;\n"
         + "public final class Test_ {\n"
         + "  private Test_() {\n"
         + "  }\n"
@@ -80,7 +80,7 @@ public class ExtraTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
         + "package test;\n"
         + "import android.app.Fragment;\n"
-        + "import vn.tiki.activities.Extra;\n"
+        + "import vn.tiki.intents.Extra;\n"
         + "public class Test extends Fragment {\n"
         + "    @Extra String name;\n"
         + "    @Extra int age;\n"
@@ -116,9 +116,8 @@ public class ExtraTest {
 
     JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_", ""
         + "package test;\n"
-        + "import android.content.Context;\n"
         + "import android.os.Bundle;\n"
-        + "import vn.tiki.activities.internal.Bundles;\n"
+        + "import vn.tiki.intents.internal.Bundles;\n"
         + "public final class Test_ {\n"
         + "  private Test_() {\n"
         + "  }\n"
@@ -140,6 +139,6 @@ public class ExtraTest {
         .processedWith(new IntentsProcessor())
         .compilesWithoutWarnings()
         .and()
-        .generatesSources(fragmentBuilderSource);
+        .generatesSources(fragmentBuilderSource, bindingSource);
   }
 }
