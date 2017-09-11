@@ -54,10 +54,12 @@ buildscript {
           'android': 'io.reactivex.rxjava2:rxandroid:2.0.1',
       ],
       tiki: [
-          'intents': 'com.github.tikivn.android-template:intents:-SNAPSHOT',
-          'intents-annotations': 'com.github.tikivn.android-template:intents-annotations:-SNAPSHOT',
-          'intents-compiler': 'com.github.tikivn.android-template:intents-compiler:-SNAPSHOT',
+          'intents': [
+              'intents': 'com.github.tikivn.android-template:intents:-SNAPSHOT',
+              'compiler': 'com.github.tikivn.android-template:intents-compiler:-SNAPSHOT',
+          ],
           'daggers': 'com.github.tikivn.android-template:daggers:-SNAPSHOT',
+          'mvp': 'com.github.tikivn.android-template:mvp:-SNAPSHOT',
       ],
 
       test: [

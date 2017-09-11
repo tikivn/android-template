@@ -1,4 +1,4 @@
-package vn.tiki.daggerhelper;
+package vn.tiki.daggers;
 
 import android.content.Context;
 import android.content.ContextWrapper;

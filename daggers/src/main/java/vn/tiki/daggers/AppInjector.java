@@ -1,4 +1,4 @@
-package vn.tiki.daggerhelper;
+package vn.tiki.daggers;
 
 public interface AppInjector extends Injector {
   Object appComponent();

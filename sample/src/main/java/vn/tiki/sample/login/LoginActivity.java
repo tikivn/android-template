@@ -25,8 +25,8 @@ import butterknife.OnTextChanged;
 import java.util.List;
 import javax.inject.Inject;
 import vn.tiki.architecture.mvp.MvpActivity;
-import vn.tiki.daggerhelper.ActivityInjector;
-import vn.tiki.daggerhelper.Daggers;
+import vn.tiki.daggers.ActivityInjector;
+import vn.tiki.daggers.Daggers;
 import vn.tiki.sample.R;
 import vn.tiki.sample.util.NetworkUtil;
 
