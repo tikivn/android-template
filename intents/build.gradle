@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion versions.compileSdk
+  buildToolsVersion versions.buildTools
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+
+    consumerProguardFiles 'proguard-rules.txt'
+
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath = true
+      }
+    }
+  }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+    // We run a full lint analysis as build part in CI, so skip vital checks for assemble tasks.
+    checkReleaseBuilds false
+  }
+}
+
+dependencies {
+  api project(':intents-annotations')
+  implementation deps.support.annotations
+
+  androidTestImplementation deps.test.junit
+  androidTestImplementation deps.test.truth
+  androidTestImplementation deps.support.test.runner
+
+  testImplementation deps.test.junit
+  testImplementation deps.test.truth
+  testImplementation deps.test.compiletesting
+  testImplementation files(getRuntimeJar())
+  testImplementation files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+  testImplementation project(':intents-compiler')
+}
+
+def getRuntimeJar() {
+  try {
+    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile();
+    File runtimeJar = new File(javaBase, "lib/rt.jar");
+    if (runtimeJar.exists()) {
+      return runtimeJar;
+    }
+    runtimeJar = new File(javaBase, "jre/lib/rt.jar");
+    return runtimeJar.exists() ? runtimeJar : null;
+  } catch (IOException e) {
+    throw new RuntimeException(e);
+  }
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
