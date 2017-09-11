@@ -3,5 +3,6 @@ include ':intents'
 include ':intents-annotations'
 include ':intents-compiler'
 include ':daggers'
+include ':mvp'
 
 rootProject.name = 'android-template'

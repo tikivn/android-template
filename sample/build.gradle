@@ -48,6 +48,7 @@ dependencies {
   implementation deps.rx.java
   implementation deps.rx.android
   implementation project(':daggers')
+  implementation project(':mvp')
 //  implementation 'com.github.tikivn.android-template:daggers:-SNAPSHOT'
 
 

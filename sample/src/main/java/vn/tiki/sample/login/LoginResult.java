@@ -1,6 +1,7 @@
 package vn.tiki.sample.login;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created by Giang Nguyen on 9/6/17.
@@ -11,7 +12,7 @@ public final class LoginResult {
   private final Throwable error;
   private final Boolean success;
 
-  private LoginResult(boolean inFlight, Throwable error, Boolean success) {
+  private LoginResult(boolean inFlight, @Nullable Throwable error, Boolean success) {
     this.inFlight = inFlight;
     this.error = error;
     this.success = success;

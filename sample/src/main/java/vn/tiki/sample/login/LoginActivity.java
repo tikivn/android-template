@@ -24,10 +24,10 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import java.util.List;
 import javax.inject.Inject;
+import vn.tiki.architecture.mvp.MvpActivity;
 import vn.tiki.daggerhelper.ActivityInjector;
 import vn.tiki.daggerhelper.Daggers;
 import vn.tiki.sample.R;
-import vn.tiki.sample.mvp.MvpActivity;
 import vn.tiki.sample.util.NetworkUtil;
 
 public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implements
@@ -68,7 +68,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
   }
 
   @Override public Object activityModule() {
-    return new LoginModule();
+    return new LoginModule.Module();
   }
 
   @Override

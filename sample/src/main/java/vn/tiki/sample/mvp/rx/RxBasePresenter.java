@@ -3,8 +3,8 @@ package vn.tiki.sample.mvp.rx;
 import android.support.annotation.CallSuper;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import vn.tiki.sample.mvp.BasePresenter;
-import vn.tiki.sample.mvp.Mvp;
+import vn.tiki.architecture.mvp.BasePresenter;
+import vn.tiki.architecture.mvp.Mvp;
 
 /**
  * Created by Giang Nguyen on 9/5/17.

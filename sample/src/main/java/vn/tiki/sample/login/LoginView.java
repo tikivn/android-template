@@ -1,6 +1,6 @@
 package vn.tiki.sample.login;
 
-import vn.tiki.sample.mvp.Mvp;
+import vn.tiki.architecture.mvp.Mvp;
 
 /**
  * Created by Giang Nguyen on 8/25/17.

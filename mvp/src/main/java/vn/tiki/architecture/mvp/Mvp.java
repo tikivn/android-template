@@ -1,4 +1,4 @@
-package vn.tiki.sample.mvp;
+package vn.tiki.architecture.mvp;
 
 /**
  * Created by Giang Nguyen on 9/4/17.

@@ -1,4 +1,4 @@
-package vn.tiki.sample.mvp;
+package vn.tiki.architecture.mvp;
 
 import android.support.annotation.NonNull;
 
