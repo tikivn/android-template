@@ -11,7 +11,7 @@ import android.view.View;
 
 public class MvpFragment<V extends Mvp.View, P extends Mvp.Presenter<V>> extends Fragment {
 
-  @Nullable Binder<V, P> binder;
+  @Nullable MvpBinding<V, P> mvpBinding;
 
   /**
    * Connect Presenter to View then Presenter will attach/detach view and destroy base on lifecycle.
@@ -20,27 +20,27 @@ public class MvpFragment<V extends Mvp.View, P extends Mvp.Presenter<V>> extends
    * @param view the View
    */
   public void connect(P presenter, V view) {
-    binder = new Binder<>(presenter, view);
+    mvpBinding = new MvpBinding<>(presenter, view);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (binder != null) {
-      binder.bind();
+    if (mvpBinding != null) {
+      mvpBinding.bind();
     }
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    if (binder != null) {
-      binder.unbind();
+    if (mvpBinding != null) {
+      mvpBinding.unbind();
     }
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (binder != null) {
-      binder.destroy();
+    if (mvpBinding != null) {
+      mvpBinding.destroy();
     }
   }
 }
