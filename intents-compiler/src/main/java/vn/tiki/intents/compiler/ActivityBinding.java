@@ -55,8 +55,8 @@ final class ActivityBinding {
   }
 
   private MethodSpec createIntentBuilderFactoryMethod() {
-    final String intentBuilderClassName = targetClassName.simpleName() +
-        "_IntentBuilder";
+    final String intentBuilderClassName = targetClassName.simpleName()
+        + "_IntentBuilder";
     final ClassName intentBuilderType = ClassName.get(
         targetClassName.packageName(),
         intentBuilderClassName);

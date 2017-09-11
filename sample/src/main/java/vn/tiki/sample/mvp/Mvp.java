@@ -6,7 +6,8 @@ package vn.tiki.sample.mvp;
 
 public interface Mvp {
 
-  interface View {}
+  interface View {
+  }
 
   interface Presenter<V extends View> {
 

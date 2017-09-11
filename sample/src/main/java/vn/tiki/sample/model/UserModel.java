@@ -15,7 +15,7 @@ public class UserModel {
         if (System.currentTimeMillis() % 2 == 0) {
           throw new Exception("server error");
         } else {
-          return email.equals("foo@gmail.com") && password.equals("123456");
+          return "foo@gmail.com".equals(email) && "123456".equals(password);
         }
       }
     });

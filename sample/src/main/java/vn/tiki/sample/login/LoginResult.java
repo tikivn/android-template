@@ -49,10 +49,13 @@ public final class LoginResult {
   }
 
   @Override public String toString() {
-    return "LoginResult{" +
-        "inFlight=" + inFlight +
-        ", error=" + error +
-        ", success=" + success +
-        '}';
+    return "LoginResult{"
+        + "inFlight="
+        + inFlight
+        + ", error="
+        + error
+        + ", success="
+        + success
+        + '}';
   }
 }

@@ -53,6 +53,12 @@ buildscript {
           'java': 'io.reactivex.rxjava2:rxjava:2.1.2',
           'android': 'io.reactivex.rxjava2:rxandroid:2.0.1',
       ],
+      tiki: [
+          'intents': 'com.github.tikivn.android-template:intents:-SNAPSHOT',
+          'intents-annotations': 'com.github.tikivn.android-template:intents-annotations:-SNAPSHOT',
+          'intents-compiler': 'com.github.tikivn.android-template:intents-compiler:-SNAPSHOT',
+          'daggers': 'com.github.tikivn.android-template:daggers:-SNAPSHOT',
+      ],
 
       test: [
           'junit': 'junit:junit:4.12',
@@ -68,7 +74,6 @@ buildscript {
     mavenCentral()
     google()
     maven { url "https://plugins.gradle.org/m2/" }
-    maven { url "https://jitpack.io" }
   }
 
   dependencies {
@@ -85,9 +90,8 @@ subprojects { project ->
   repositories {
     mavenCentral()
     google()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url 'https://jitpack.io' }
   }
 
   apply plugin: 'checkstyle'
@@ -108,5 +112,3 @@ subprojects { project ->
     }
   }
 }
-
-apply from: rootProject.file('gradle/script-java-code-coverage-root.gradle')

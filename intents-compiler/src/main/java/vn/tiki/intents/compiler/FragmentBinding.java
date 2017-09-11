@@ -52,8 +52,8 @@ final class FragmentBinding {
   }
 
   private MethodSpec createBuilderFactoryMethod() {
-    final String builderClassName = targetClassName.simpleName() +
-        "_Builder";
+    final String builderClassName = targetClassName.simpleName()
+        + "_Builder";
     final ClassName builderType = ClassName.get(
         targetClassName.packageName(),
         builderClassName);
