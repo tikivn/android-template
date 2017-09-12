@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import vn.tiki.intents.Extra;
+import vn.tiki.intents.BindExtra;
 import vn.tiki.sample.R;
 
 public class ExtraInjectionFragment extends Fragment {
@@ -17,8 +17,12 @@ public class ExtraInjectionFragment extends Fragment {
   @BindView(R.id.tvHeight) TextView tvHeight;
   @BindView(R.id.tvWeight) TextView tvWeight;
 
-  @Extra int height;
-  @Extra int weight;
+  @BindExtra int height;
+  @BindExtra int weight;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
 
   @Nullable @Override
   public View onCreateView(

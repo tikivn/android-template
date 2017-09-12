@@ -8,16 +8,16 @@ import vn.tiki.intents.compiler.IntentsProcessor;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 
-public class ExtraTest {
+public class BindExtraTest {
 
   @Test public void bindingExtraForActivity() {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
         + "package test;\n"
         + "import android.app.Activity;\n"
-        + "import vn.tiki.intents.Extra;\n"
+        + "import vn.tiki.intents.BindExtra;\n"
         + "public class Test extends Activity {\n"
-        + "    @Extra String name;\n"
-        + "    @Extra int age;\n"
+        + "    @BindExtra String name;\n"
+        + "    @BindExtra int age;\n"
         + "}"
     );
 
@@ -80,10 +80,10 @@ public class ExtraTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", ""
         + "package test;\n"
         + "import android.app.Fragment;\n"
-        + "import vn.tiki.intents.Extra;\n"
+        + "import vn.tiki.intents.BindExtra;\n"
         + "public class Test extends Fragment {\n"
-        + "    @Extra String name;\n"
-        + "    @Extra int age;\n"
+        + "    @BindExtra String name;\n"
+        + "    @BindExtra int age;\n"
         + "}"
     );
 

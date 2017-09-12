@@ -9,7 +9,7 @@ import butterknife.ButterKnife;
 import javax.inject.Inject;
 import vn.tiki.daggers.ActivityInjector;
 import vn.tiki.daggers.Daggers;
-import vn.tiki.intents.Extra;
+import vn.tiki.intents.BindExtra;
 import vn.tiki.sample.R;
 import vn.tiki.sample.model.UserModel;
 
@@ -21,8 +21,8 @@ public class ExtraInjectionActivity extends AppCompatActivity implements Activit
   @BindView(R.id.tvName) TextView tvName;
   @BindView(R.id.tvAge) TextView tvAge;
 
-  @Extra String name;
-  @Extra int age;
+  @BindExtra String name;
+  @BindExtra int age;
 
   @Inject UserModel userModel;
 
