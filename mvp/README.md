@@ -64,12 +64,12 @@ Download
 allprojects {
   repositories {
 	 ...
-    maven { url ‘https://jitpack.io’ }
+    maven { url 'https://jitpack.io' }
   }
 }
 
 dependencies {
-  compile 'com.github.tikivn.android-template:mvp:-SNAPSHOT’
+  compile 'com.github.tikivn.android-template:mvp:-SNAPSHOT'
 }
 ```
 
