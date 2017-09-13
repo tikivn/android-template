@@ -101,10 +101,12 @@ final class ActivityBinding {
       MethodSpec.Builder bindExtrasMethodBuilder,
       FieldExtraBinding fieldExtraBinding) {
 
+    final String name = fieldExtraBinding.getName();
     CodeBlock.Builder builder = CodeBlock.builder()
-        .add("target.$L = ", fieldExtraBinding.getName())
-        .add("$T.get(source, \"$L\")", BUNDLES, fieldExtraBinding.getName());
-
-    bindExtrasMethodBuilder.addStatement("$L", builder.build());
+        .add("if ($T.has(source, \"$L\")) {", BUNDLES, name)
+        .add("target.$L = ", name)
+        .add("$T.get(source, \"$L\");", BUNDLES, name)
+        .add("}");
+    bindExtrasMethodBuilder.addCode(builder.build());
   }
 }
