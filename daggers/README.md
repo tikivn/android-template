@@ -83,6 +83,8 @@ public class ExampleViewGroup extends FrameLayout {
  * `Daggers.inject(this, context.getApplicationContext())` // injected by `AppComponent`
  * `Daggers.inject(this, context /** activity **/)` // injected by `ActivityComponent`
 
+For example and additional information see [sample](../sample).
+
 Download
 --------
 
