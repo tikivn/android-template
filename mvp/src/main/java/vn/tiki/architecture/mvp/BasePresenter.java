@@ -15,6 +15,8 @@ public class BasePresenter<V extends Mvp.View> implements Mvp.Presenter<V> {
 
   @NonNull private Queue<ViewAction<V>> pendingViewActions = new LinkedList<>();
   @Nullable private V view;
+  private boolean attached;
+  private boolean detached;
 
   /**
    * Return view. NOTE: view is nullable.
@@ -63,14 +65,26 @@ public class BasePresenter<V extends Mvp.View> implements Mvp.Presenter<V> {
       final ViewAction<V> action = pendingViewActions.remove();
       action.call(view);
     } while (pendingViewActions.size() > 0);
+    attached = true;
+    detached = false;
   }
 
   @CallSuper
   @Override public void detach() {
     this.view = null;
+    attached = false;
+    detached = true;
   }
 
   @Override public void destroy() {
 
+  }
+
+  public boolean isAttached() {
+    return attached;
+  }
+
+  public boolean isDetached() {
+    return detached;
   }
 }
