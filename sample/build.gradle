@@ -22,6 +22,11 @@ android {
     }
   }
 
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
   testOptions {
     unitTests {
       includeAndroidResources = true
@@ -49,11 +54,10 @@ dependencies {
   implementation project(':mvp')
   implementation project(':intents')
   annotationProcessor project(':intents-compiler')
-//  implementation deps.tiki.daggers
-//  implementation deps.tiki.mvp
-//  implementation deps.tiki.intents.intents
-//  annotationProcessor deps.tiki.intents.compiler
-
+  //  implementation deps.tiki.daggers
+  //  implementation deps.tiki.mvp
+  //  implementation deps.tiki.intents.intents
+  //  annotationProcessor deps.tiki.intents.compiler
 
   testImplementation deps.test.junit
   testImplementation deps.test.mockito

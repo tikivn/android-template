@@ -34,11 +34,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     ActivityInjector, LoginView {
 
   private static final ButterKnife.Setter<View, Boolean> ENABLE =
-      new ButterKnife.Setter<View, Boolean>() {
-        @Override public void set(@NonNull View view, Boolean value, int index) {
-          view.setEnabled(value);
-        }
-      };
+      (view, value, index) -> view.setEnabled(value);
 
   @BindView(android.R.id.content) View vRoot;
   @BindView(R.id.tilEmail) TextInputLayout tilEmail;
