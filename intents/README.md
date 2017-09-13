@@ -52,6 +52,8 @@ class CallerActivity extends Activity {
 }
 ```
 
+For example and additional information see [sample](../sample).
+
 Download
 --------
 
