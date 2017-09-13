@@ -97,7 +97,7 @@ allprojects {
 }
 
 dependencies {
-  compile 'com.github.tikivn.android-template:daggers:-SNAPSHOT’
+  compile 'com.github.tikivn.android-template:daggers:-SNAPSHOT'
 }
 ```
 
