@@ -1,0 +1,33 @@
+{
+  "name": "shop-backend",
+  "version": "1.0.0",
+  "description": "Backend for e-commerce demo",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tikivn/android-template.git"
+  },
+  "keywords": [
+    "e-commerce",
+    "archiectue",
+    "mobile"
+  ],
+  "author": "Giang Nguyen",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/tikivn/android-template/issues"
+  },
+  "homepage": "https://github.com/tikivn/android-template#readme",
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.0"
+  }
+}
