@@ -8,6 +8,16 @@ Template for android development at Tiki
 [![Build Status](https://travis-ci.org/tikivn/android-template.svg?branch=master)](https://travis-ci.org/tikivn/android-template)
 [![codecov](https://codecov.io/gh/tikivn/android-template/branch/master/graph/badge.svg)](https://codecov.io/gh/tikivn/android-template)
 
+Libraries
+ 
+ * [intents](./intents) Intent/Bundle extras binding and builder for Activity and Fragment which uses annotation processing to generate boilerplate code for you.
+ * [daggers](./daggers) Dagger2 configuration and injection which uses reflection to eleminate boilderplate code for you.
+ * [mvp](./mvp) Simple MVP set for you to apply MVP architecture.
+
+Example
+
+ * [sample](./sample) demo usage of above libraries
+ 
 License
 -------
 
