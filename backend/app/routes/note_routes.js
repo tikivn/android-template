@@ -23,13 +23,13 @@ module.exports = (app, database) => {
       title,
       body,
     };
-
-    db.insert(note, (err, result) => {
-      if (err) {
+    console.log(note);
+    db
+      .insert(note)
+      .then(result => res.send(result.ops[0]))
+      .catch((err) => {
+        console.log(err);
         res.send({ error: 'An error occurred' });
-      } else {
-        res.send(result.ops[0]);
-      }
-    });
+      });
   });
 };
