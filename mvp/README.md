@@ -97,6 +97,8 @@ Good practices
  * Presenter handles user input then name of its public methods (which will be called by View) should be event descriptive and started by prefix `on`. (e.g. onEmailInput, onUserSubmit, etc.).
  * View handle output then name of its public methods (which will be called by Presenter) should be display descriptive. (e.g. showError, showLogoutButton, etc.).
 
+For example and additional information see [sample](../sample).
+
 Download
 --------
 
