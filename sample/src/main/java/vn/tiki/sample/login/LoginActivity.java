@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,8 +19,6 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import java.util.List;
 import javax.inject.Inject;
 import vn.tiki.architecture.mvp.MvpActivity;
@@ -72,6 +69,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
     ButterKnife.bind(this);
+    ButterKnife.bind(presenter, this);
     Daggers.inject(this, this);
 
     connect(presenter, this);
@@ -87,20 +85,6 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
   @Override protected void onPause() {
     super.onPause();
     unregisterReceiver(networkStatusReceiver);
-  }
-
-  @OnTextChanged(value = R.id.etEmail, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-  public void afterEmailInput(Editable editable) {
-    presenter.onInputEmail(editable.toString());
-  }
-
-  @OnTextChanged(value = R.id.etPassword, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-  public void afterPasswordInput(Editable editable) {
-    presenter.onInputPassword(editable.toString());
-  }
-
-  @OnClick(R.id.btLogin) public void onViewClicked() {
-    presenter.onClickLogin();
   }
 
   @Override public void showLoading() {

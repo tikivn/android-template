@@ -1,11 +1,15 @@
 package vn.tiki.sample.login;
 
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import vn.tiki.architecture.mvp.ViewAction;
+import vn.tiki.sample.R;
 import vn.tiki.sample.model.UserModel;
 import vn.tiki.sample.mvp.rx.RxBasePresenter;
 import vn.tiki.sample.util.EmailValidator;
@@ -117,15 +121,18 @@ class LoginPresenter extends RxBasePresenter<LoginView> {
     networkStatusChanges.onNext(connected);
   }
 
-  void onInputEmail(String email) {
-    emailInputs.onNext(email);
+  @OnTextChanged(value = R.id.etEmail, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+  public void onInputEmail(Editable editable) {
+    emailInputs.onNext(editable.toString());
   }
 
-  void onInputPassword(String password) {
-    passwordInputs.onNext(password);
+  @OnTextChanged(value = R.id.etPassword, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+  public void onInputPassword(Editable editable) {
+    passwordInputs.onNext(editable.toString());
   }
 
-  void onClickLogin() {
+  @OnClick(R.id.btLogin)
+  public void onClickLogin() {
     loginClicks.onNext(new Object());
   }
 }
