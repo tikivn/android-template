@@ -37,14 +37,14 @@ public final class ActivityResult {
   }
 
   public boolean isCanceled() {
-    return resultCode() == Activity.RESULT_CANCELED;
+    return resultCode == Activity.RESULT_CANCELED;
   }
 
   public boolean isOk() {
-    return resultCode() == Activity.RESULT_OK;
+    return resultCode == Activity.RESULT_OK;
   }
 
   public boolean isRequestCode(final int v) {
-    return requestCode() == v;
+    return requestCode == v;
   }
 }

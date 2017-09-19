@@ -3,59 +3,99 @@ MVP
 
 ![Logo](../logo.png)
 
+Simple implementation of MVP architecture.
 
-```java
+ * Implement Presenter, provides some elegant methods to interact with view.
+ * Provides base classes: `MvpActivity`, `MvpFragment`, `MvpBinding` that will
+ automatically attach/detach views base on appropriate lifecycle callback.
 
-interface ExampleView extends Mvp.View {
-  void showLoading();
+Usage
+-----
 
-  void showUser(User user);
+for Activity
 
-  void showError();
-}
+ * Extends from MvpActivity.
+ * call connect(Presenter, View) on `onCreate()` callback.
 
-class ExamplePresenter extends BasePresenter<ExampleView> {
-
-  private UserModel userModel;
-
-  @Override public void attach(ExampleView view) {
-    super.attach(view);
-  }
-
-  void onLoad() {
-    getViewOrThrow().showLoading();
-    userModel.loadUser()
-        .subscribe(
-            user -> sendToView(view -> view.showUser(user)),
-            throwable -> sendToView(view -> view.showError()))
-  }
-}
-
-public class ExampleActivity extends MvpActivity<ExampleView, ExamplePresenter> implements ActivityInjector{
+~~~java
+public class ExampleActivity extends MvpActivity<ExampleView, ExamplePresenter>
+implements ExampleView {
   @Inject ExamplePresenter presenter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Daggers.inject(this, this);
+    // Dependencies injection
 
-    connect(presenter, new ExampleView() {
-      @Override public void showLoading() {
+    connect(presenter, this);
+  }
+}
+~~~
 
-      }
+for Fragment
 
-      @Override public void showUser(User user) {
+ * Extends from MvpFragment.
+ * call connect(Presenter, View) before `onViewCreated()` callback.
 
-      }
+~~~java
+public class ExampleFragment extends MvpFragment<ExampleView, ExamplePresenter>
+implements ExampleView {
+  @Inject ExamplePresenter presenter;
 
-      @Override public void showError() {
+  @Nullable @Override
+  public View onCreateView(
+      LayoutInflater inflater,
+      @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    final View view = // view inflation
+    // Dependencies injection
+    connect(presenter, this);
+    return view;
+  }
+}
+~~~
 
-      }
-    });
-    presenter.onLoad();
+for custom View
+
+ * call addOnAttachStateChangeListener(MvpBinding).
+
+~~~java
+public class ExampleView extends FrameLayout implements ExampleView {
+  @Inject ExamplePresenter presenter;
+
+  public ExampleView(
+      @NonNull Context context,
+      @Nullable AttributeSet attrs) {
+    super(context, attrs);
+    // dependencies injection
+    addOnAttachStateChangeListener(new MvpBinding<>(presenter, this));
+  }
+}
+~~~
+
+to handle `onActivityResult()` from your Presenter, just implement `ActivityResultDelegate`
+
+```java
+class ExamplePresenter extends BasePresenter<ExampleView> 
+implement ActivityResultDelegate {
+
+  void onActivityResult(@NonNull ActivityResult activityResult) {
+    if (activityResult.isCancel()) {
+      // TODO handle cancelled.
+      return;
+    } 
+    if (activityResult.isRequestCode(RQ_LOGIN)) {
+      // TODO handle login success.
+    }
   }
 }
 
 ```
+
+Good practices
+--------------
+
+ * Presenter handles user input then name of its public methods (which will be called by View) should be event descriptive and started by prefix `on`. (e.g. onEmailInput, onUserSubmit, etc.).
+ * View handle output then name of its public methods (which will be called by Presenter) should be display descriptive. (e.g. showError, showLogoutButton, etc.).
 
 Download
 --------

@@ -32,7 +32,7 @@ public class BasePresenter<V extends Mvp.View> implements Mvp.Presenter<V> {
    *
    * @return View
    */
-  @NonNull public V getViewOrThrow() {
+  @NonNull protected V getViewOrThrow() {
     final V view = getView();
     if (view == null) {
       throw new IllegalStateException("view not attached");
@@ -45,8 +45,7 @@ public class BasePresenter<V extends Mvp.View> implements Mvp.Presenter<V> {
    *
    * @param action to run.
    */
-  @MainThread
-  public void sendToView(ViewAction<V> action) {
+  @MainThread protected void sendToView(ViewAction<V> action) {
     if (view == null) {
       pendingViewActions.add(action);
     } else {
