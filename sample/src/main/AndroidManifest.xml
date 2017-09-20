@@ -3,6 +3,7 @@
           package="vn.tiki.sample">
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
 
   <application
       android:name=".SampleApp"
@@ -30,6 +31,9 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppDesignTheme"/>
 
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="b1cff2955798017c1408feb840f1520497e8f44e"/>
   </application>
 
 </manifest>

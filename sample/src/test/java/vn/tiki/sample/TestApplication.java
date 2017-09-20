@@ -15,7 +15,7 @@ public class TestApplication extends SampleApp {
         .appModule(appModule)
         .build();
 
-    setupDagger();
+    configureDagger();
   }
 
   @Override public Object appComponent() {

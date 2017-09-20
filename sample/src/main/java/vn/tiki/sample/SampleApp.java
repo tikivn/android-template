@@ -3,6 +3,9 @@ package vn.tiki.sample;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+import io.fabric.sdk.android.Fabric;
 import vn.tiki.daggers.ActivityInjector;
 import vn.tiki.daggers.AppInjector;
 import vn.tiki.daggers.Daggers;
@@ -16,14 +19,16 @@ public class SampleApp extends Application implements AppInjector {
 
   @Override public void onCreate() {
     super.onCreate();
+
     appComponent = DaggerAppComponent.builder()
         .appModule(new AppModule())
         .build();
 
-    setupDagger();
+    configureDagger();
+    configureFabric();
   }
 
-  protected void setupDagger() {
+  protected void configureDagger() {
     Daggers.installAppInjector(this);
 
     registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
@@ -39,6 +44,13 @@ public class SampleApp extends Application implements AppInjector {
         }
       }
     });
+  }
+
+  private void configureFabric() {
+    final Crashlytics crashlyticsKit = new Crashlytics.Builder()
+        .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+        .build();
+    Fabric.with(this, crashlyticsKit);
   }
 
   @Override public Object appComponent() {
