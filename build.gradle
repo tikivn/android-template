@@ -67,6 +67,7 @@ buildscript {
           autoValueAnnotation: "com.jakewharton.auto.value:auto-value-annotations:1.5",
       ],
       noadapter: "vn.tiki.noadapter2:noadapter:2.0.1",
+      timber: "com.jakewharton.timber:timber:4.5.1",
       test: [
           'junit': 'junit:junit:4.12',
           'truth': 'com.google.truth:truth:0.34',
@@ -79,6 +80,7 @@ buildscript {
 
   repositories {
     google()
+    jcenter()
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
   }
@@ -96,6 +98,7 @@ subprojects { project ->
 
   repositories {
     google()
+    jcenter()
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url 'https://jitpack.io' }
