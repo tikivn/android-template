@@ -37,6 +37,24 @@ android {
       }
     }
   }
+
+  flavorDimensions "default"
+  productFlavors {
+    dev {
+      dimension "default"
+      resValue "string", "app_name", "Temp_Dev"
+    }
+    prod {
+      dimension "default"
+      resValue "string", "app_name", "Template"
+    }
+  }
+
+  applicationVariants.all { variant ->
+    variant.outputs.all {
+      outputFileName = "${variant.name}-${variant.versionName}.apk"
+    }
+  }
 }
 
 dependencies {
@@ -58,6 +76,12 @@ dependencies {
   //  implementation deps.tiki.mvp
   //  implementation deps.tiki.intents.intents
   //  annotationProcessor deps.tiki.intents.compiler
+  implementation deps.retrofit.retrofit
+  implementation deps.retrofit.gsonConverter
+  implementation deps.retrofit.rxJavaAdapter
+  compileOnly deps.autoValue.autoValueAnnotation
+  annotationProcessor deps.autoValue.autoValue
+  implementation deps.noadapter
 
   testImplementation deps.test.junit
   testImplementation deps.test.mockito

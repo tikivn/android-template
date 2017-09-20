@@ -12,8 +12,7 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-    <activity android:name=".MainActivity"
-    >
+    <activity android:name=".MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
@@ -22,12 +21,15 @@
     </activity>
     <activity
         android:name=".login.LoginActivity"
-        android:screenOrientation="portrait"
-    />
+        android:screenOrientation="portrait"/>
     <activity
         android:name=".extra.ExtraInjectionActivity"
+        android:screenOrientation="portrait"/>
+    <activity
+        android:name=".productlist.ProductListingActivity"
         android:screenOrientation="portrait"
-    />
+        android:theme="@style/AppDesignTheme"/>
+
   </application>
 
 </manifest>

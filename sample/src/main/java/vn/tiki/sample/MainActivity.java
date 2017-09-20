@@ -8,6 +8,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.tiki.sample.extra.ExtraInjectionActivity_;
 import vn.tiki.sample.login.LoginActivity;
+import vn.tiki.sample.productlist.ProductListingActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,5 +31,10 @@ public class MainActivity extends AppCompatActivity {
   @OnClick(R.id.btOpenLogin)
   public void openLogin(View view) {
     startActivity(LoginActivity.intent(this));
+  }
+
+  @OnClick(R.id.btOpenProductListing)
+  public void openProductListing(View view) {
+    startActivity(ProductListingActivity.intent(this));
   }
 }

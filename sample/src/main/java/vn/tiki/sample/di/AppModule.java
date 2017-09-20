@@ -3,6 +3,7 @@ package vn.tiki.sample.di;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import vn.tiki.sample.model.ProductModel;
 import vn.tiki.sample.model.UserModel;
 
 /**
@@ -12,5 +13,9 @@ import vn.tiki.sample.model.UserModel;
 public class AppModule {
   @Singleton @Provides public UserModel providerUserModel() {
     return new UserModel();
+  }
+
+  @Singleton @Provides ProductModel provideProductModel() {
+    return new ProductModel();
   }
 }

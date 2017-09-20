@@ -13,14 +13,21 @@
       android:id="@+id/btOpenExtraInjection"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Open Extra Injection"
+      android:text="@string/main_open_extra_injection"
   />
 
   <Button
       android:id="@+id/btOpenLogin"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Open Login"
+      android:text="@string/main_open_login"
+  />
+
+  <Button
+      android:id="@+id/btOpenProductListing"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/main_open_product_listing"
   />
 
 </LinearLayout>
