@@ -22,15 +22,14 @@ We actively welcome your pull requests!
 Coding Style & Convention
 -------------------------
 
-Please follow our [coding style](https://github.com/tikivn/java-code-styles) and our
-[conventions](./CONVENTION.md)
+Please follow our [coding style](https://github.com/tikivn/java-code-styles) and our [conventions]()
 
 Most importantly, be consistent with existing code.  Look around the codebase and match the style.
 
 License
 -------
 
-Copyright (C) 2017 Tiki Corp
+    Copyright (C) 2017 Tiki Corp
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
