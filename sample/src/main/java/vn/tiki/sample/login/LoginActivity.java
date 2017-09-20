@@ -1,14 +1,8 @@
 package vn.tiki.sample.login;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
@@ -21,19 +15,18 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import java.util.List;
 import javax.inject.Inject;
-import vn.tiki.architecture.mvp.MvpActivity;
 import vn.tiki.daggers.ActivityInjector;
 import vn.tiki.daggers.Daggers;
 import vn.tiki.sample.R;
-import vn.tiki.sample.util.NetworkUtil;
+import vn.tiki.sample.base.BaseMvpActivity;
+import vn.tiki.sample.base.NetworkStatusObserver;
 
-public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implements
-    ActivityInjector, LoginView {
+public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> implements
+    NetworkStatusObserver, ActivityInjector, LoginView {
 
   private static final ButterKnife.Setter<View, Boolean> ENABLE =
       (view, value, index) -> view.setEnabled(value);
 
-  @BindView(android.R.id.content) View vRoot;
   @BindView(R.id.tilEmail) TextInputLayout tilEmail;
   @BindView(R.id.etEmail) EditText etEmail;
   @BindView(R.id.tilPassword) TextInputLayout tilPassword;
@@ -41,20 +34,14 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
   @BindView(R.id.btLogin) Button btLogin;
   @BindView(R.id.pbLoading) View pbLoading;
   @BindViews({ R.id.etEmail, R.id.etPassword }) List<View> inputViews;
-  @BindString(R.string.error_invalid_email) String errorInvalidEmail;
-  @BindString(R.string.error_invalid_password) String errorInvalidPassword;
-  @BindString(R.string.error_wrong_password) String errorWrongPassword;
-  @BindString(R.string.msg_you_are_offline) String msgYouAreOffline;
-  @BindString(R.string.msg_successful) String msgSuccessful;
+
+  @BindString(R.string.login_error_invalid_email) String errorInvalidEmail;
+  @BindString(R.string.login_error_invalid_password) String errorInvalidPassword;
+  @BindString(R.string.login_error_wrong_password) String errorWrongPassword;
+  @BindString(R.string.login_msg_successful) String msgSuccessful;
   @BindColor(R.color.colorAccent) int colorAccent;
 
   @Inject LoginPresenter presenter;
-  @NonNull private final BroadcastReceiver networkStatusReceiver = new BroadcastReceiver() {
-    @Override public void onReceive(Context context, Intent intent) {
-      presenter.onNetworkStatusChanged(NetworkUtil.isConnected(context));
-    }
-  };
-  @Nullable private Snackbar sbNetworkError;
 
   public static Intent intent(Context context) {
     return new Intent(context, LoginActivity.class);
@@ -64,27 +51,20 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     return new LoginModule.Module();
   }
 
+  @Override public void onNetworkStatusChanged(boolean isConnected) {
+    presenter.onNetworkStatusChanged(isConnected);
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Daggers.inject(this, this);
+
     setContentView(R.layout.activity_login);
     ButterKnife.bind(this);
     ButterKnife.bind(presenter, this);
-    Daggers.inject(this, this);
 
     connect(presenter, this);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
-    registerReceiver(
-        networkStatusReceiver,
-        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
-    unregisterReceiver(networkStatusReceiver);
   }
 
   @Override public void showLoading() {
@@ -115,36 +95,20 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     tilPassword.setError(null);
   }
 
-  @Override public void showAuthenticationError() {
-    tilPassword.setError(errorWrongPassword);
-  }
-
-  @Override public void hideAuthenticationError() {
-    tilPassword.setError(null);
-  }
-
-  @Override public void showNetworkError() {
-    if (sbNetworkError != null) {
-      return;
-    }
-    sbNetworkError = Snackbar.make(vRoot, msgYouAreOffline, Snackbar.LENGTH_INDEFINITE);
-    sbNetworkError.show();
-  }
-
-  @Override public void hideNetworkError() {
-    if (sbNetworkError == null) {
-      return;
-    }
-    sbNetworkError.dismiss();
-    sbNetworkError = null;
-  }
-
   @Override public void enableSubmit() {
     btLogin.setEnabled(true);
   }
 
   @Override public void disableSubmit() {
     btLogin.setEnabled(false);
+  }
+
+  @Override public void showAuthenticationError() {
+    tilPassword.setError(errorWrongPassword);
+  }
+
+  @Override public void hideAuthenticationError() {
+    tilPassword.setError(null);
   }
 
   @Override public void showLoginSuccess() {

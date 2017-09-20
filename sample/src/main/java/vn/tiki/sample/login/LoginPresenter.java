@@ -57,15 +57,6 @@ class LoginPresenter extends RxBasePresenter<LoginView> {
           }
         }));
 
-    disposeOnDestroy(networkStatusChanges.distinctUntilChanged()
-        .subscribe(isConnected -> {
-          if (isConnected) {
-            getViewOrThrow().hideNetworkError();
-          } else {
-            getViewOrThrow().showNetworkError();
-          }
-        }));
-
     disposeOnDestroy(Observable.combineLatest(
         emailValidations,
         passwordValidations,
@@ -101,7 +92,6 @@ class LoginPresenter extends RxBasePresenter<LoginView> {
             viewAction = view -> {
               view.disableSubmit();
               view.hideAuthenticationError();
-              view.hideNetworkError();
               view.showLoading();
             };
           } else if (loginResult.isError()) {
@@ -122,17 +112,16 @@ class LoginPresenter extends RxBasePresenter<LoginView> {
   }
 
   @OnTextChanged(value = R.id.etEmail, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-  public void onInputEmail(Editable editable) {
+  void onInputEmail(Editable editable) {
     emailInputs.onNext(editable.toString());
   }
 
   @OnTextChanged(value = R.id.etPassword, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-  public void onInputPassword(Editable editable) {
+  void onInputPassword(Editable editable) {
     passwordInputs.onNext(editable.toString());
   }
 
-  @OnClick(R.id.btLogin)
-  public void onClickLogin() {
+  @OnClick(R.id.btLogin) void onClickLogin() {
     loginClicks.onNext(new Object());
   }
 }

@@ -1,11 +1,22 @@
 <resources>
-  <string name="app_name">Sample</string>
-  <string name="email">Email</string>
-  <string name="password">Password</string>
-  <string name="login">Login</string>
-  <string name="error_invalid_email">Email is invalid.</string>
-  <string name="error_invalid_password">Password must at least 6 characters.</string>
-  <string name="error_wrong_password">Wrong password.</string>
   <string name="msg_you_are_offline">You are offline.</string>
-  <string name="msg_successful">Successful</string>
+
+  <!--login-->
+  <string name="login_email">Email</string>
+  <string name="login_password">Password</string>
+  <string name="login_login">Login</string>
+  <string name="login_error_invalid_email">Email is invalid.</string>
+  <string name="login_error_invalid_password">Password must at least 6 characters.</string>
+  <string name="login_error_wrong_password">Wrong password.</string>
+  <string name="login_msg_successful">Successful</string>
+
+  <!--Main-->
+  <string name="main_open_extra_injection">Open Extra Injection</string>
+  <string name="main_open_login">Open Login</string>
+  <string name="main_open_product_listing">Open Product Listing</string>
+
+  <!--Product Listing-->
+  <string name="product_listing_try_again">Try again.</string>
+  <string name="product_listing_error_occurred">Error occurred.</string>
+  <string name="product_listing">Product Listing</string>
 </resources>

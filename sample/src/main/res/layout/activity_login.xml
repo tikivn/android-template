@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="32dp"
-    tools:context="vn.tiki.architecture.MainActivity">
+    tools:context="vn.tiki.sample.login.LoginActivity">
 
   <ImageView
       android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
         android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email"
+        android:hint="@string/login_email"
         android:inputType="textEmailAddress"
         android:maxLines="1"
     />
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="@string/password"
+        android:hint="@string/login_password"
         android:inputType="textPassword"
         android:maxLines="1"
     />
@@ -53,7 +53,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
       android:enabled="false"
-      android:text="@string/login"
+      android:text="@string/login_login"
   />
 
   <ProgressBar

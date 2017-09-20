@@ -28,9 +28,5 @@ public interface LoginView extends Mvp.View {
 
   void hideAuthenticationError();
 
-  void showNetworkError();
-
-  void hideNetworkError();
-
   void showLoginSuccess();
 }
