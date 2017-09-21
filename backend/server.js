@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const bodyParser = require('body-parser');
 const db = require('./config/db');
 const routes = require('./app/routes');
+const os = require('os');
 
 const app = express();
 
@@ -17,8 +18,13 @@ MongoClient.connect(db.url, (err, database) => {
     return;
   }
   routes(app, database);
-
   app.listen(port, () => {
-    console.log(`we are listening on ${port}`);
+    const networkInterfaces = os.networkInterfaces();
+    Object.keys(networkInterfaces).forEach((key) => {
+      networkInterfaces[key]
+        .filter(networkInterface => networkInterface.family === 'IPv4' && !networkInterface.internal)
+        .forEach(networkInterface =>
+          console.log(`we are listening on ${networkInterface.address}:${port}`));
+    });
   });
 });
