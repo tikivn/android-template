@@ -47,9 +47,10 @@ public class ProductListingActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Daggers.inject(this, this);
+
     setContentView(R.layout.activity_product_listing);
     ButterKnife.bind(this);
-    Daggers.inject(this, this);
 
     configureToolbar();
     configureList();
