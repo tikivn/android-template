@@ -10,8 +10,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import vn.tiki.sample.BuildConfig;
 import vn.tiki.sample.api.ApiService;
-import vn.tiki.sample.model.ProductModel;
-import vn.tiki.sample.model.UserModel;
 
 /**
  * Created by Giang Nguyen on 8/25/17.
@@ -35,13 +33,5 @@ public class AppModule {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
         .create(ApiService.class);
-  }
-
-  @Singleton @Provides public UserModel providerUserModel() {
-    return new UserModel();
-  }
-
-  @Singleton @Provides ProductModel provideProductModel(ApiService apiService) {
-    return new ProductModel(apiService);
   }
 }

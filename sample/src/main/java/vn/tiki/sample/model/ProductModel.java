@@ -3,15 +3,19 @@ package vn.tiki.sample.model;
 import android.support.annotation.NonNull;
 import io.reactivex.Observable;
 import ix.Ix;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import vn.tiki.sample.BuildConfig;
 import vn.tiki.sample.api.ApiService;
 import vn.tiki.sample.entity.ListData;
 import vn.tiki.sample.entity.Product;
 
+@Singleton
 public class ProductModel {
 
   private final ApiService apiService;
 
+  @Inject
   public ProductModel(ApiService apiService) {
     this.apiService = apiService;
   }
