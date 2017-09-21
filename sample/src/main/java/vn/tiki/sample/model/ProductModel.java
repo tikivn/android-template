@@ -1,33 +1,40 @@
 package vn.tiki.sample.model;
 
+import android.support.annotation.NonNull;
 import io.reactivex.Observable;
-import java.util.Arrays;
+import ix.Ix;
+import vn.tiki.sample.BuildConfig;
+import vn.tiki.sample.api.ApiService;
 import vn.tiki.sample.entity.ListData;
 import vn.tiki.sample.entity.Product;
 
 public class ProductModel {
 
+  private final ApiService apiService;
+
+  public ProductModel(ApiService apiService) {
+    this.apiService = apiService;
+  }
+
   public Observable<ListData<Product>> getProducts(int page) {
-    final ListData<Product> data = ListData.<Product>builder()
-        .currentPage(1)
-        .lastPage(2)
-        .total(19)
-        .items(
-            Arrays.asList(
-                Product.builder()
-                    .title("Ladies Chrome T-Shirt")
-                    .description("")
-                    .imageUrl("https://data/images/10-23169B.jpg")
-                    .price(13.3f)
-                    .make(),
-                Product.builder()
-                    .title("Ladies Chrome T-Shirt")
-                    .description("")
-                    .imageUrl("https://data/images/10-23169B.jpg")
-                    .price(13.3f)
-                    .make()
-            ))
-        .make();
-    return Observable.just(data);
+    return apiService.getProducts(page, 10)
+        .map(response -> ListData.<Product>builder()
+            .total(response.getTotal())
+            .currentPage(response.getCurrentPage())
+            .lastPage(response.getLastPage())
+            .items(
+                Ix.from(response.getItems())
+                    .map(productResponse -> Product.builder()
+                        .title(productResponse.getTitle())
+                        .price(productResponse.getPrice())
+                        .imageUrl(resolveImageUrl(productResponse.getImage()))
+                        .description(productResponse.getDescription())
+                        .make())
+                    .toList())
+            .make());
+  }
+
+  @NonNull private String resolveImageUrl(String imageUrl) {
+    return BuildConfig.BASE_URL + imageUrl;
   }
 }
