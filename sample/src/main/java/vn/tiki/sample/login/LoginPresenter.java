@@ -8,13 +8,16 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import javax.inject.Inject;
 import vn.tiki.architecture.mvp.ViewAction;
 import vn.tiki.sample.R;
+import vn.tiki.sample.di.ActivityScope;
 import vn.tiki.sample.model.UserModel;
 import vn.tiki.sample.mvp.rx.RxBasePresenter;
 import vn.tiki.sample.util.EmailValidator;
 import vn.tiki.sample.util.PasswordValidator;
 
+@ActivityScope
 class LoginPresenter extends RxBasePresenter<LoginView> {
 
   @NonNull private final PublishSubject<String> emailInputs = PublishSubject.create();
@@ -25,7 +28,7 @@ class LoginPresenter extends RxBasePresenter<LoginView> {
   private String email;
   private String password;
 
-  LoginPresenter(@NonNull final UserModel userModel) {
+  @Inject LoginPresenter(@NonNull final UserModel userModel) {
     final EmailValidator emailValidator = new EmailValidator();
     final PasswordValidator passwordValidator = new PasswordValidator();
 

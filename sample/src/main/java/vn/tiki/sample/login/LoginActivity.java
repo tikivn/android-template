@@ -15,14 +15,13 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import java.util.List;
 import javax.inject.Inject;
-import vn.tiki.daggers.ActivityInjector;
 import vn.tiki.daggers.Daggers;
 import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseMvpActivity;
 import vn.tiki.sample.base.NetworkStatusObserver;
 
 public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> implements
-    NetworkStatusObserver, ActivityInjector, LoginView {
+    NetworkStatusObserver, LoginView {
 
   private static final ButterKnife.Setter<View, Boolean> ENABLE =
       (view, value, index) -> view.setEnabled(value);
@@ -45,10 +44,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
   public static Intent intent(Context context) {
     return new Intent(context, LoginActivity.class);
-  }
-
-  @Override public Object activityModule() {
-    return new LoginModule.Module();
   }
 
   @Override public void onNetworkStatusChanged(boolean isConnected) {

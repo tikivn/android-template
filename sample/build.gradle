@@ -1,17 +1,17 @@
 buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
+  repositories {
+    maven { url 'https://maven.fabric.io/public' }
+  }
 
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
+  dependencies {
+    classpath 'io.fabric.tools:gradle:1.+'
+  }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
+  maven { url 'https://maven.fabric.io/public' }
 }
 
 apply plugin: 'jacoco'
@@ -60,11 +60,13 @@ android {
   productFlavors {
     dev {
       dimension "default"
-      resValue "string", "app_name", "Temp_Dev"
+      resValue "string", "app_name", "Temp Dev"
+      buildConfigField 'String', 'BASE_URL', '"http://10.100.203.33:8000/"'
     }
     prod {
       dimension "default"
       resValue "string", "app_name", "Template"
+      buildConfigField 'String', 'BASE_URL', '"http://10.100.203.33:8000/"'
     }
   }
 
@@ -94,21 +96,24 @@ dependencies {
   //  implementation deps.tiki.mvp
   //  implementation deps.tiki.intents.intents
   //  annotationProcessor deps.tiki.intents.compiler
-  implementation deps.retrofit.retrofit
-  implementation deps.retrofit.gsonConverter
-  implementation deps.retrofit.rxJavaAdapter
+  implementation deps.http.retrofit
+  implementation deps.http.gsonConverter
+  implementation deps.http.rxJavaAdapter
+  implementation deps.http.okhttp
+  implementation deps.http.logging
   compileOnly deps.autoValue.autoValueAnnotation
   annotationProcessor deps.autoValue.autoValue
   implementation deps.noadapter
   implementation deps.timber
+  implementation(deps.crashlytics) {
+    transitive = true
+  }
+  implementation deps.ix
 
   testImplementation deps.test.junit
   testImplementation deps.test.mockito
   testImplementation deps.test.truth
   testImplementation deps.test.robolectric
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {

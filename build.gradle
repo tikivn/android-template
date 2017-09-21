@@ -57,17 +57,23 @@ buildscript {
           'daggers': 'com.github.tikivn.android-template:daggers:-SNAPSHOT',
           'mvp': 'com.github.tikivn.android-template:mvp:-SNAPSHOT',
       ],
-      retrofit: [
+      http: [
           'retrofit': 'com.squareup.retrofit2:retrofit:2.3.0',
           'gsonConverter': 'com.squareup.retrofit2:converter-gson:2.3.0',
           'rxJavaAdapter': 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
+          'logging': 'com.squareup.okhttp3:logging-interceptor:3.9.0',
+          'okhttp': 'com.squareup.okhttp3:okhttp:3.9.0',
+
       ],
       autoValue: [
           autoValue: "com.google.auto.value:auto-value:1.5",
           autoValueAnnotation: "com.jakewharton.auto.value:auto-value-annotations:1.5",
       ],
       noadapter: "vn.tiki.noadapter2:noadapter:2.0.1",
+      crashlytics: "com.crashlytics.sdk.android:crashlytics:2.6.8@aar",
       timber: "com.jakewharton.timber:timber:4.5.1",
+      ix: "com.github.akarnokd:ixjava:1.0.0-RC5",
+
       test: [
           'junit': 'junit:junit:4.12',
           'truth': 'com.google.truth:truth:0.34',

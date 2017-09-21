@@ -3,25 +3,26 @@ package vn.tiki.sample.productlist;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
+import vn.tiki.sample.di.ActivityScope;
 import vn.tiki.sample.entity.ListData;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.model.ProductModel;
 import vn.tiki.sample.mvp.rx.RxBasePresenter;
 
+@ActivityScope
 public class ProductListingPresenter extends RxBasePresenter<ProductListingView> {
 
   private final ProductModel productModel;
   private ListData<Product> productListData;
 
-  @Inject
-  public ProductListingPresenter(ProductModel productModel) {
+  @Inject ProductListingPresenter(ProductModel productModel) {
     this.productModel = productModel;
   }
 
   @Override public void attach(ProductListingView view) {
     super.attach(view);
 
-    loadProducts(0);
+    loadProducts(1);
   }
 
   private void loadProducts(int page) {
@@ -36,6 +37,6 @@ public class ProductListingPresenter extends RxBasePresenter<ProductListingView>
   }
 
   void onRetry() {
-    loadProducts(0);
+    loadProducts(1);
   }
 }

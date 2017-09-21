@@ -16,7 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import java.util.List;
 import javax.inject.Inject;
-import vn.tiki.daggers.ActivityInjector;
 import vn.tiki.daggers.Daggers;
 import vn.tiki.noadapter2.DiffCallback;
 import vn.tiki.noadapter2.OnlyAdapter;
@@ -26,7 +25,7 @@ import vn.tiki.sample.entity.Product;
 
 public class ProductListingActivity
     extends BaseMvpActivity<ProductListingView, ProductListingPresenter>
-    implements ActivityInjector, ProductListingView {
+    implements ProductListingView {
 
   @BindView(android.R.id.content) View rootView;
   @BindView(R.id.rvProducts) RecyclerView rvProducts;
@@ -43,10 +42,6 @@ public class ProductListingActivity
 
   public static Intent intent(Context context) {
     return new Intent(context, ProductListingActivity.class);
-  }
-
-  @Override public Object activityModule() {
-    return new ProductListing.Module(this);
   }
 
   @Override

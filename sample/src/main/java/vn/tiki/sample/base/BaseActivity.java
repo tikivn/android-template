@@ -1,11 +1,9 @@
 package vn.tiki.sample.base;
 
-import vn.tiki.architecture.mvp.Mvp;
-import vn.tiki.architecture.mvp.MvpActivity;
+import android.support.v7.app.AppCompatActivity;
 import vn.tiki.daggers.ActivityInjector;
 
-public abstract class BaseMvpActivity<V extends Mvp.View, P extends Mvp.Presenter<V>>
-    extends MvpActivity<V, P> implements ActivityInjector {
+public abstract class BaseActivity extends AppCompatActivity implements ActivityInjector {
 
   private ActivityDelegate activityDelegate = new ActivityDelegate();
 
