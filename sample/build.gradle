@@ -61,12 +61,12 @@ android {
     dev {
       dimension "default"
       resValue "string", "app_name", "Temp Dev"
-      buildConfigField 'String', 'BASE_URL', '"http://10.100.203.33:8000/"'
+      buildConfigField 'String', 'BASE_URL', '"http://192.168.1.64:8000/"'
     }
     prod {
       dimension "default"
       resValue "string", "app_name", "Template"
-      buildConfigField 'String', 'BASE_URL', '"http://10.100.203.33:8000/"'
+      buildConfigField 'String', 'BASE_URL', '"http://192.168.1.64:8000/"'
     }
   }
 

@@ -11,4 +11,9 @@ public interface ProductListingView extends Mvp.View {
   void showContent(List<Product> items);
 
   void showLoadError();
+
+  void showRefreshing();
+
+  void showRefreshError();
+
 }

@@ -22,6 +22,7 @@ import vn.tiki.noadapter2.OnlyAdapter;
 import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseMvpActivity;
 import vn.tiki.sample.entity.Product;
+import vn.tiki.sample.misc.EndReachDetector;
 
 public class ProductListingActivity
     extends BaseMvpActivity<ProductListingView, ProductListingPresenter>
@@ -54,6 +55,7 @@ public class ProductListingActivity
 
     configureToolbar();
     configureList();
+    configureSwipeRefresh();
 
     connect(presenter, this);
   }
@@ -68,11 +70,12 @@ public class ProductListingActivity
   }
 
   private void configureList() {
-    rvProducts.setLayoutManager(new GridLayoutManager(
+    final GridLayoutManager layoutManager = new GridLayoutManager(
         this,
         2,
-        LinearLayoutManager.VERTICAL,
-        false));
+        LinearLayoutManager.HORIZONTAL,
+        false);
+    rvProducts.setLayoutManager(layoutManager);
     rvProducts.setAdapter(new OnlyAdapter.Builder()
         .viewHolderFactory((parent, type) -> ProductViewHolder.create(parent))
         .diffCallback(new DiffCallback() {
@@ -86,6 +89,13 @@ public class ProductListingActivity
           }
         })
         .build());
+    rvProducts.addOnScrollListener(new EndReachDetector(
+        layoutManager,
+        () -> presenter.onLoadMore()));
+  }
+
+  private void configureSwipeRefresh() {
+    swipeRefreshLayout.setOnRefreshListener(() -> presenter.onRefresh());
   }
 
   @Override public void showLoading() {
@@ -104,6 +114,19 @@ public class ProductListingActivity
     swipeRefreshLayout.setRefreshing(false);
     snackbar = Snackbar.make(rootView, textError, Snackbar.LENGTH_INDEFINITE)
         .setAction(textTryAgain, __ -> presenter.onRetry());
+    snackbar.show();
+  }
+
+  @Override public void showRefreshing() {
+    swipeRefreshLayout.setRefreshing(true);
+    if (snackbar != null) {
+      snackbar.dismiss();
+    }
+  }
+
+  @Override public void showRefreshError() {
+    swipeRefreshLayout.setRefreshing(false);
+    snackbar = Snackbar.make(rootView, textError, Snackbar.LENGTH_SHORT);
     snackbar.show();
   }
 }
