@@ -19,25 +19,7 @@ public class SampleApp extends Application implements AppInjector {
         .appModule(new AppModule())
         .build();
 
-    setupDagger();
-  }
-
-  protected void setupDagger() {
-    Daggers.installAppInjector(this);
-
-    registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
-      @Override public void onActivityCreated(Activity activity, Bundle bundle) {
-        if (activity instanceof ActivityInjector) {
-          Daggers.installActivityInjector((ActivityInjector) activity);
-        }
-      }
-
-      @Override public void onActivityDestroyed(Activity activity) {
-        if (activity instanceof ActivityInjector) {
-          Daggers.uninstallActivityInjector((ActivityInjector) activity);
-        }
-      }
-    });
+    Daggers.configure(this);
   }
 
   @Override public Object appComponent() {
