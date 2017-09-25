@@ -1,6 +1,7 @@
 package vn.tiki.sample;
 
 import android.annotation.SuppressLint;
+import vn.tiki.daggers.Daggers;
 import vn.tiki.sample.di.AppComponent;
 import vn.tiki.sample.di.AppModule;
 import vn.tiki.sample.di.DaggerAppComponent;
@@ -15,7 +16,7 @@ public class TestApplication extends SampleApp {
         .appModule(appModule)
         .build();
 
-    configureDagger();
+    Daggers.configure(this);
   }
 
   @Override public Object appComponent() {

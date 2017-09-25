@@ -1,18 +1,11 @@
 package vn.tiki.sample.model;
 
 import io.reactivex.Observable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by Giang Nguyen on 8/25/17.
  */
-@Singleton
 public class UserModel {
-
-  @Inject
-  public UserModel() {
-  }
 
   public Observable<Boolean> login(final String email, final String password) {
     return Observable.fromCallable(() -> {

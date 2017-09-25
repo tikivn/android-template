@@ -36,7 +36,7 @@ public class LoginTest {
     MockitoAnnotations.initMocks(this);
     TestApplication testApplication = (TestApplication) RuntimeEnvironment.application;
     testApplication.setAppModule(new AppModule() {
-      @Override public UserModel providerUserModel() {
+      @Override public UserModel provideUserModel() {
         return userModel;
       }
     });
@@ -64,9 +64,10 @@ public class LoginTest {
   public void testLoginFailure() throws Exception {
     final String email = "foo@gmail.com";
     final String password = "123456";
+    System.out.println(userModel.toString());
     when(userModel.login(
         anyString(),
-        anyString())).thenReturn(Observable.<Boolean>error(new Exception("")));
+        anyString())).thenReturn(Observable.error(new Exception("")));
 
     loginActivity.etEmail.setText(email);
     loginActivity.etPassword.setText(password);
