@@ -53,7 +53,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Daggers.inject(this, this);
+    Daggers.inject(this);
 
     setContentView(R.layout.activity_login);
     ButterKnife.bind(this);

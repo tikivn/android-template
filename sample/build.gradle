@@ -26,7 +26,7 @@ android {
     targetSdkVersion versions.compileSdk
     versionCode 1
     versionName "1.0"
-
+    vectorDrawables.useSupportLibrary true
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
@@ -61,12 +61,12 @@ android {
     dev {
       dimension "default"
       resValue "string", "app_name", "Temp Dev"
-      buildConfigField 'String', 'BASE_URL', '"http://192.168.1.64:8000/"'
+      buildConfigField 'String', 'BASE_URL', "\"${baseUrl}\""
     }
     prod {
       dimension "default"
       resValue "string", "app_name", "Template"
-      buildConfigField 'String', 'BASE_URL', '"http://192.168.1.64:8000/"'
+      buildConfigField 'String', 'BASE_URL', "\"${baseUrl}\""
     }
   }
 
@@ -101,8 +101,9 @@ dependencies {
   implementation deps.http.rxJavaAdapter
   implementation deps.http.okhttp
   implementation deps.http.logging
-  compileOnly deps.autoValue.autoValueAnnotation
+  compileOnly deps.autoValue.annotations
   annotationProcessor deps.autoValue.autoValue
+  annotationProcessor deps.autoValue.parcel
   implementation deps.noadapter
   implementation deps.timber
   implementation(deps.crashlytics) {

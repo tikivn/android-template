@@ -10,6 +10,7 @@ import butterknife.ButterKnife;
 import vn.tiki.noadapter2.AbsViewHolder;
 import vn.tiki.sample.R;
 import vn.tiki.sample.entity.Product;
+import vn.tiki.sample.util.TextViews;
 
 public class ProductViewHolder extends AbsViewHolder {
   @BindView(R.id.ivThumb) ImageView ivThumb;
@@ -36,6 +37,6 @@ public class ProductViewHolder extends AbsViewHolder {
     final Product product = (Product) item;
 
     tvTitle.setText(product.title());
-    tvPrice.setText(String.valueOf(product.price()));
+    TextViews.setPrice(tvPrice, product.price());
   }
 }

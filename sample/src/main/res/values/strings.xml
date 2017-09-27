@@ -19,4 +19,8 @@
   <string name="product_listing_try_again">Try again.</string>
   <string name="product_listing_error_occurred">Error occurred.</string>
   <string name="product_listing">Product Listing</string>
+
+  <!--Product Detail-->
+  <string name="product_detail_description">Description</string>
+  <string name="product_detail_add_to_cart">Add to cart</string>
 </resources>

@@ -1,7 +1,9 @@
 package vn.tiki.sample.entity;
 
+import android.os.Parcelable;
+
 @com.google.auto.value.AutoValue
-public abstract class Product {
+public abstract class Product implements Parcelable {
 
   public static Builder builder() {
     return new AutoValue_Product.Builder();

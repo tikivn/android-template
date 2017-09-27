@@ -67,7 +67,8 @@ buildscript {
       ],
       autoValue: [
           autoValue: "com.google.auto.value:auto-value:1.5",
-          autoValueAnnotation: "com.jakewharton.auto.value:auto-value-annotations:1.5",
+          annotations: "com.jakewharton.auto.value:auto-value-annotations:1.5",
+          parcel: "com.ryanharter.auto.value:auto-value-parcel:0.2.5",
       ],
       noadapter: "vn.tiki.noadapter2:noadapter:2.0.2",
       crashlytics: "com.crashlytics.sdk.android:crashlytics:2.6.8@aar",

@@ -23,6 +23,7 @@ import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseMvpActivity;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.misc.EndReachDetector;
+import vn.tiki.sample.productdetail.ProductDetailActivity_;
 
 public class ProductListingActivity
     extends BaseMvpActivity<ProductListingView, ProductListingPresenter>
@@ -48,7 +49,7 @@ public class ProductListingActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Daggers.inject(this, this);
+    Daggers.inject(this);
 
     setContentView(R.layout.activity_product_listing);
     ButterKnife.bind(this);
@@ -73,7 +74,7 @@ public class ProductListingActivity
     final GridLayoutManager layoutManager = new GridLayoutManager(
         this,
         2,
-        LinearLayoutManager.HORIZONTAL,
+        LinearLayoutManager.VERTICAL,
         false);
     rvProducts.setLayoutManager(layoutManager);
     rvProducts.setAdapter(new OnlyAdapter.Builder()
@@ -88,6 +89,11 @@ public class ProductListingActivity
             return oldItem.equals(newItem);
           }
         })
+        .onItemClickListener((view, item, position) -> startActivity(
+            ProductDetailActivity_.intentBuilder(
+                ProductListingActivity.this)
+                .product(((Product) item))
+                .make()))
         .build());
     rvProducts.addOnScrollListener(new EndReachDetector(
         layoutManager,
