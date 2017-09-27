@@ -2,9 +2,11 @@ package vn.tiki.daggers;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Bundle;
+import android.view.View;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Map;
@@ -40,6 +42,18 @@ public final class Daggers {
     } else {
       throw new IllegalArgumentException(application + " must implement " + AppInjector.class);
     }
+  }
+
+  public static void inject(Activity activity) {
+    inject(activity, activity);
+  }
+
+  public static void inject(Fragment fragment) {
+    inject(fragment, fragment.getActivity());
+  }
+
+  public static void inject(View view) {
+    inject(view, view.getContext());
   }
 
   public static void inject(Object target, Context context) {
