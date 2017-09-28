@@ -22,7 +22,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestApplication.class)
+@Config(
+    application = TestApplication.class,
+    packageName = "vn.tiki.sample")
 public class LoginTest {
 
   @Rule public final RxSchedulerTestRule rxSchedulerTestRule = new RxSchedulerTestRule();

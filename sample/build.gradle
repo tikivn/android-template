@@ -59,6 +59,7 @@ android {
   flavorDimensions "default"
   productFlavors {
     dev {
+      applicationIdSuffix ".dev"
       dimension "default"
       resValue "string", "app_name", "Temp Dev"
       buildConfigField 'String', 'BASE_URL', "\"${baseUrl}\""

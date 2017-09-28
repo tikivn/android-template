@@ -8,7 +8,8 @@ import vn.tiki.sample.response.ProductResponse;
 
 public interface ApiService {
 
-  @GET("products") Observable<ListResponse<ProductResponse>> getProducts(
+  @SuppressWarnings("SameParameterValue") @GET("products")
+  Observable<ListResponse<ProductResponse>> getProducts(
       @Query("page") int page,
       @Query("per_page") int perPage);
 }
