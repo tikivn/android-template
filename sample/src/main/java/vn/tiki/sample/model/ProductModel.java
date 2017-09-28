@@ -9,6 +9,7 @@ import vn.tiki.sample.BuildConfig;
 import vn.tiki.sample.api.ApiService;
 import vn.tiki.sample.entity.ListData;
 import vn.tiki.sample.entity.Product;
+import vn.tiki.sample.util.Strings;
 
 @Singleton
 public class ProductModel {
@@ -32,7 +33,7 @@ public class ProductModel {
                         .title(productResponse.getTitle())
                         .price(productResponse.getPrice())
                         .imageUrl(resolveImageUrl(productResponse.getImage()))
-                        .description(productResponse.getDescription())
+                        .description(Strings.toHtml(productResponse.getDescription()).toString())
                         .make())
                     .toList())
             .make());

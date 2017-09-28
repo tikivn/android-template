@@ -8,9 +8,9 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.tiki.noadapter2.AbsViewHolder;
-import vn.tiki.sample.GlideApp;
 import vn.tiki.sample.R;
 import vn.tiki.sample.entity.Product;
+import vn.tiki.sample.glide.GlideApp;
 import vn.tiki.sample.util.TextViews;
 
 public class ProductViewHolder extends AbsViewHolder {
@@ -42,8 +42,6 @@ public class ProductViewHolder extends AbsViewHolder {
     GlideApp
         .with(itemView.getContext())
         .load(product.imageUrl())
-        .centerCrop()
-        .placeholder(R.drawable.ic_placeholder)
         .into(ivThumb);
   }
 }

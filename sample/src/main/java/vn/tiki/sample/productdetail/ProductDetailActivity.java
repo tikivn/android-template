@@ -16,6 +16,7 @@ import vn.tiki.intents.BindExtra;
 import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseMvpActivity;
 import vn.tiki.sample.entity.Product;
+import vn.tiki.sample.glide.GlideApp;
 import vn.tiki.sample.util.TextViews;
 
 public class ProductDetailActivity
@@ -73,7 +74,11 @@ public class ProductDetailActivity
   private void bind(Product product) {
     tvName.setText(product.title());
     TextViews.setPrice(tvPrice, product.price());
-    tvDescription.setText(product.description());
+    TextViews.setHtml(tvDescription, product.description());
+    GlideApp
+        .with(this)
+        .load(product.imageUrl())
+        .into(ivThumb);
   }
 
   @OnClick(R.id.btAddToCart) public void onAddToCartClicked() {

@@ -1,5 +1,6 @@
 package vn.tiki.sample.util;
 
+import android.text.Spanned;
 import android.widget.TextView;
 import java.text.DecimalFormat;
 
@@ -18,5 +19,10 @@ public final class TextViews {
   private static CharSequence formatPrice(float price) {
     final String result = formatter.format(price);
     return String.format("$%s", result);
+  }
+
+  public static void setHtml(TextView textView, String htmlContent) {
+    final Spanned html = Strings.toHtml(htmlContent);
+    textView.setText(html);
   }
 }

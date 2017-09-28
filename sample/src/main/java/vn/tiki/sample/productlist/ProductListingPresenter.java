@@ -42,7 +42,8 @@ public class ProductListingPresenter extends RxBasePresenter<ProductListingView>
     return productModel.getProducts(page)
         .subscribeOn(Schedulers.io())
         .doOnNext(productListData -> this.productListData = productListData)
-        .map(ListData::items);
+        .map(ListData::items)
+        .doOnError(Throwable::printStackTrace);
   }
 
   void onRetry() {
