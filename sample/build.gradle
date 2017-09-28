@@ -105,6 +105,9 @@ dependencies {
   annotationProcessor deps.autoValue.autoValue
   annotationProcessor deps.autoValue.parcel
   implementation deps.noadapter
+  implementation deps.glide.glide
+  annotationProcessor deps.glide.compiler
+  annotationProcessor deps.javapoet
   implementation deps.timber
   implementation(deps.crashlytics) {
     transitive = true
