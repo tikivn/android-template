@@ -11,6 +11,7 @@ const port = 8000;
 
 app.use(bodyParser.urlencoded({ extended: true })); // config to parse urlencoded
 app.use(bodyParser.json({ type: 'application/json' })); // config to parse json
+app.use(express.static('app/data/images'));
 
 MongoClient.connect(db.url, (err, database) => {
   if (err) {
