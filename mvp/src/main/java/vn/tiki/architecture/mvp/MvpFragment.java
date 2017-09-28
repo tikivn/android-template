@@ -54,7 +54,7 @@ public class MvpFragment<V extends Mvp.View, P extends Mvp.Presenter<V>> extends
   @Override public void onDestroy() {
     super.onDestroy();
     if (mvpBinding != null) {
-      mvpBinding.destroy();
+      mvpBinding.destroy(getActivity());
     }
   }
 }

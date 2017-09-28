@@ -1,5 +1,8 @@
 package vn.tiki.architecture.mvp;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.support.annotation.NonNull;
 import android.view.View;
 
@@ -17,24 +20,39 @@ public final class MvpBinding<V extends Mvp.View, P extends Mvp.Presenter<V>>
     this.view = view;
   }
 
-  void bind() {
-    presenter.attach(view);
+  private static Activity findActivity(Context context) {
+    if (context instanceof Activity) {
+      return ((Activity) context);
+    }
+
+    if (context instanceof ContextWrapper) {
+      return findActivity(((ContextWrapper) context).getBaseContext());
+    } else {
+      throw new IllegalArgumentException("context or baseContext must be instance of "
+          + Activity.class.getName());
+    }
   }
 
   void unbind() {
     presenter.detach();
   }
 
-  void destroy() {
-    presenter.destroy();
+  void destroy(Activity activity) {
+    if (activity.isFinishing()) {
+      presenter.destroy();
+    }
   }
 
   @Override public void onViewAttachedToWindow(View view) {
     bind();
   }
 
+  void bind() {
+    presenter.attach(view);
+  }
+
   @Override public void onViewDetachedFromWindow(View view) {
     unbind();
-    destroy();
+    destroy(findActivity(view.getContext()));
   }
 }

@@ -54,7 +54,7 @@ public abstract class MvpActivity<V extends Mvp.View, P extends Mvp.Presenter<V>
   @Override protected void onDestroy() {
     super.onDestroy();
     if (mvpBinding != null) {
-      mvpBinding.destroy();
+      mvpBinding.destroy(this);
     }
   }
 }
