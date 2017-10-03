@@ -9,12 +9,10 @@ import com.squareup.javapoet.TypeSpec;
 import java.util.List;
 
 import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 import static vn.tiki.intents.compiler.IntentsProcessor.BUNDLE;
 import static vn.tiki.intents.compiler.IntentsProcessor.BUNDLES;
-import static vn.tiki.intents.compiler.IntentsProcessor.CONTEXT;
 
 final class ExtraBinding {
 

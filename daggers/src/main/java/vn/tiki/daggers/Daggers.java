@@ -28,7 +28,6 @@ public final class Daggers {
           }
         }
       };
-  ;
 
   private Daggers() {
     throw new InstantiationError();

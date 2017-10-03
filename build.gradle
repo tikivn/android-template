@@ -122,6 +122,7 @@ subprojects { project ->
     ignoreFailures false
     showViolations true
     include '**/*.java'
+    exclude ''
 
     classpath = files()
   }

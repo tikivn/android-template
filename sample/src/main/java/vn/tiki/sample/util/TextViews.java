@@ -5,7 +5,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 public final class TextViews {
-  private static final DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+  private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###,###,###");
 
   private TextViews() {
     throw new InstantiationError();
@@ -17,7 +17,7 @@ public final class TextViews {
   }
 
   private static CharSequence formatPrice(float price) {
-    final String result = formatter.format(price);
+    final String result = DECIMAL_FORMAT.format(price);
     return String.format("$%s", result);
   }
 
