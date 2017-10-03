@@ -10,6 +10,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import intents.Intents;
 import javax.inject.Inject;
 import vn.tiki.daggers.Daggers;
 import vn.tiki.intents.BindExtra;
@@ -37,7 +38,7 @@ public class ProductDetailActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Daggers.inject(this);
-    ProductDetailActivity_.bindExtras(this);
+    Intents.bind(this);
 
     setContentView(R.layout.activity_product_detail);
     ButterKnife.bind(this);

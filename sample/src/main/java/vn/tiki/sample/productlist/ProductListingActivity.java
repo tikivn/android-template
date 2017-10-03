@@ -14,6 +14,7 @@ import android.view.View;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import intents.Intents;
 import java.util.List;
 import javax.inject.Inject;
 import vn.tiki.daggers.Daggers;
@@ -23,7 +24,6 @@ import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseMvpActivity;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.misc.EndReachDetector;
-import vn.tiki.sample.productdetail.ProductDetailActivity_;
 
 public class ProductListingActivity
     extends BaseMvpActivity<ProductListingView, ProductListingPresenter>
@@ -90,8 +90,7 @@ public class ProductListingActivity
           }
         })
         .onItemClickListener((view, item, position) -> startActivity(
-            ProductDetailActivity_.intentBuilder(
-                ProductListingActivity.this)
+            Intents.productDetailActivity(ProductListingActivity.this)
                 .product(((Product) item))
                 .make()))
         .build());

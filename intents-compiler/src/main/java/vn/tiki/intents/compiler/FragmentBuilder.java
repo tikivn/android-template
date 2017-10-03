@@ -19,11 +19,16 @@ final class FragmentBuilder {
   private final String name;
   private final ClassName builderClassName;
 
+
+  static ClassName fragmentBuilderClassName(ClassName targetClassName) {
+    return ClassName.get(targetClassName.packageName(), targetClassName.simpleName() + "_Builder");
+  }
+
   FragmentBuilder(BindingSet bindingSet) {
     this.targetClassName = bindingSet.targetClassName;
     this.fieldExtraBindings = bindingSet.fieldExtraBindings;
-    name = targetClassName.simpleName() + "_Builder";
-    builderClassName = ClassName.get(targetClassName.packageName(), name);
+    builderClassName = fragmentBuilderClassName(bindingSet.targetClassName);
+    name = builderClassName.simpleName();
   }
 
   JavaFile brewJava() {
@@ -76,6 +81,7 @@ final class FragmentBuilder {
 
   private MethodSpec createConstructor() {
     return MethodSpec.constructorBuilder()
+        .addModifiers(PUBLIC)
         .addStatement("args = new Intent()")
         .build();
   }

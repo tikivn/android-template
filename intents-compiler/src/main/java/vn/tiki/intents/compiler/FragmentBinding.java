@@ -19,13 +19,11 @@ final class FragmentBinding {
 
   private final TypeName targetTypeName;
   private final ClassName targetClassName;
-  private final boolean isActivity;
   private final List<FieldExtraBinding> fieldExtraBindings;
 
   FragmentBinding(BindingSet bindingSet) {
     this.targetTypeName = bindingSet.targetTypeName;
     this.targetClassName = bindingSet.targetClassName;
-    this.isActivity = bindingSet.isActivity;
     this.fieldExtraBindings = bindingSet.fieldExtraBindings;
   }
 
