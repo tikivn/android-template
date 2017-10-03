@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import intents.Intents;
 import vn.tiki.intents.BindExtra;
 import vn.tiki.sample.R;
 
@@ -20,10 +21,6 @@ public class ExtraInjectionFragment extends Fragment {
   @BindExtra int height;
   @BindExtra int weight;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
   @Nullable @Override
   public View onCreateView(
       LayoutInflater inflater,
@@ -32,7 +29,7 @@ public class ExtraInjectionFragment extends Fragment {
     final View view = inflater.inflate(R.layout.fragment_extra_injection, container, false);
 
     ButterKnife.bind(this, view);
-    ExtraInjectionFragment_.bindExtras(this);
+    Intents.bind(this);
 
     tvHeight.setText(height + " cm");
     tvWeight.setText(weight + " kg");

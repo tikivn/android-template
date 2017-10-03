@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import vn.tiki.sample.extra.ExtraInjectionActivity_;
+import intents.Intents;
 import vn.tiki.sample.login.LoginActivity;
 import vn.tiki.sample.productlist.ProductListingActivity;
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
   @OnClick(R.id.btOpenExtraInjection)
   public void openExtraInjection(View view) {
-    final Intent intent = ExtraInjectionActivity_.intentBuilder(this)
+    final Intent intent = Intents.extraInjectionActivity(this)
         .name("Giang")
         .age(29)
         .make();
