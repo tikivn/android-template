@@ -114,18 +114,14 @@ public final class IntentsProcessor extends AbstractProcessor {
           new IntentBuilder(binding)
               .brewJava()
               .writeTo(filer);
-          new ActivityBinding(binding)
-              .brewJava()
-              .writeTo(filer);
         } else if (binding.isFragment) {
           new FragmentBuilder(binding)
               .brewJava()
               .writeTo(filer);
-
-          new FragmentBinding(binding)
-              .brewJava()
-              .writeTo(filer);
         }
+        new ExtraBinding(binding)
+            .brewJava()
+            .writeTo(filer);
         intentsBuilder.addBinding(binding);
         intentsBuilder.addBuilderFactory(binding);
       } catch (IOException e) {

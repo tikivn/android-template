@@ -16,13 +16,13 @@ import static vn.tiki.intents.compiler.IntentsProcessor.BUNDLE;
 import static vn.tiki.intents.compiler.IntentsProcessor.BUNDLES;
 import static vn.tiki.intents.compiler.IntentsProcessor.CONTEXT;
 
-final class ActivityBinding {
+final class ExtraBinding {
 
   private final TypeName targetTypeName;
   private final ClassName targetClassName;
   private final List<FieldExtraBinding> fieldExtraBindings;
 
-  ActivityBinding(BindingSet bindingSet) {
+  ExtraBinding(BindingSet bindingSet) {
     this.targetTypeName = bindingSet.targetTypeName;
     this.targetClassName = bindingSet.targetClassName;
     this.fieldExtraBindings = bindingSet.fieldExtraBindings;

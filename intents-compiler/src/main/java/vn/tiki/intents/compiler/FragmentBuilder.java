@@ -81,6 +81,7 @@ final class FragmentBuilder {
 
   private MethodSpec createConstructor() {
     return MethodSpec.constructorBuilder()
+        .addModifiers(PUBLIC)
         .addStatement("args = new Intent()")
         .build();
   }

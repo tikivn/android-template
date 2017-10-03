@@ -109,7 +109,7 @@ public class BindExtraTest {
             + "import java.lang.String;\n"
             + "public final class Test_Builder {\n"
             + "  private final Intent args;\n"
-            + "  Test_Builder() {\n"
+            + "  public Test_Builder() {\n"
             + "    args = new Intent();\n"
             + "  }\n"
             + "  public Test_Builder name(String name) {\n"
@@ -128,16 +128,11 @@ public class BindExtraTest {
             + "}"
     );
 
-    JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_", ""
+    JavaFileObject bindingSource = JavaFileObjects.forSourceString("test/Test_ExtraBinding", ""
         + "package test;\n"
         + "import android.os.Bundle;\n"
         + "import vn.tiki.intents.internal.Bundles;\n"
-        + "public final class Test_ {\n"
-        + "  private Test_() {\n"
-        + "  }\n"
-        + "  public static void bindExtras(Test target) {\n"
-        + "    bindExtras(target, target.getArguments());\n"
-        + "  }\n"
+        + "public final class Test_ExtraBinding {\n"
         + "  public static void bindExtras(Test target, Bundle source) {\n"
         + "    if (Bundles.has(source, \"name\")) {\n"
         + "      target.name = Bundles.get(source, \"name\");\n"
@@ -146,7 +141,22 @@ public class BindExtraTest {
         + "      target.age = Bundles.get(source, \"age\");\n"
         + "    }\n"
         + "  }\n"
-        + "  public static Test_Builder builder() {\n"
+        + "}"
+    );
+
+    JavaFileObject intentsSource = JavaFileObjects.forSourceString("intents/Intents", ""
+        + "package intents;\n"
+        + "import android.os.Bundle;\n"
+        + "import test.Test;\n"
+        + "import test.Test_Builder;\n"
+        + "import test.Test_ExtraBinding;\n"
+        + "public final class Intents {\n"
+        + "  private Intents() {}\n"
+        + "  public static void bind(Test target) {\n"
+        + "    Bundle source = target.getArguments();\n"
+        + "    Test_ExtraBinding.bindExtras(target, source);\n"
+        + "  }\n"
+        + "  public static Test_Builder test() {\n"
         + "    return new Test_Builder();\n"
         + "  }\n"
         + "}"
@@ -157,6 +167,6 @@ public class BindExtraTest {
         .processedWith(new IntentsProcessor())
         .compilesWithoutWarnings()
         .and()
-        .generatesSources(fragmentBuilderSource, bindingSource);
+        .generatesSources(fragmentBuilderSource, bindingSource, intentsSource);
   }
 }
