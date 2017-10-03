@@ -1,5 +1,6 @@
 package vn.tiki.intents.compiler;
 
+import android.support.annotation.NonNull;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -20,11 +21,17 @@ final class IntentBuilder {
   private final String name;
   private final ClassName builderClassName;
 
+  @NonNull static ClassName intentBuilderClassName(ClassName targetClassName) {
+    return ClassName.get(
+        targetClassName.packageName(),
+        targetClassName.simpleName() + "_IntentBuilder");
+  }
+
   IntentBuilder(BindingSet bindingSet) {
     this.targetClassName = bindingSet.targetClassName;
     this.fieldExtraBindings = bindingSet.fieldExtraBindings;
-    name = targetClassName.simpleName() + "_IntentBuilder";
-    builderClassName = ClassName.get(targetClassName.packageName(), name);
+    builderClassName = intentBuilderClassName(targetClassName);
+    name = builderClassName.simpleName();
   }
 
   JavaFile brewJava() {
@@ -72,6 +79,7 @@ final class IntentBuilder {
 
   private MethodSpec createConstructor() {
     return MethodSpec.constructorBuilder()
+        .addModifiers(PUBLIC)
         .addParameter(CONTEXT, "context")
         .addStatement("intent = new Intent(context, $L.class)", targetClassName.simpleName())
         .build();

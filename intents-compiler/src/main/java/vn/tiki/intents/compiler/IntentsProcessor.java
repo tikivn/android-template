@@ -104,17 +104,16 @@ public final class IntentsProcessor extends AbstractProcessor {
   public boolean process(Set<? extends TypeElement> set, RoundEnvironment env) {
     Map<TypeElement, BindingSet> bindingMap = findAndParseTargets(env);
 
+    final IntentsBuilder intentsBuilder = new IntentsBuilder();
     for (Map.Entry<TypeElement, BindingSet> entry : bindingMap.entrySet()) {
       TypeElement typeElement = entry.getKey();
       BindingSet binding = entry.getValue();
 
       try {
-
         if (binding.isActivity) {
           new IntentBuilder(binding)
               .brewJava()
               .writeTo(filer);
-
           new ActivityBinding(binding)
               .brewJava()
               .writeTo(filer);
@@ -127,8 +126,16 @@ public final class IntentsProcessor extends AbstractProcessor {
               .brewJava()
               .writeTo(filer);
         }
+        intentsBuilder.addBinding(binding);
+        intentsBuilder.addBuilderFactory(binding);
       } catch (IOException e) {
         error(typeElement, "Unable to write binding for type %s: %s", typeElement, e.getMessage());
+      }
+
+      try {
+        intentsBuilder.brewJava().writeTo(filer);
+      } catch (IOException e) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Unable to write Intents");
       }
     }
 

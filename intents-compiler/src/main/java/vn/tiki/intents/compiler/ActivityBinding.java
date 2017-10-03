@@ -20,13 +20,11 @@ final class ActivityBinding {
 
   private final TypeName targetTypeName;
   private final ClassName targetClassName;
-  private final boolean isActivity;
   private final List<FieldExtraBinding> fieldExtraBindings;
 
   ActivityBinding(BindingSet bindingSet) {
     this.targetTypeName = bindingSet.targetTypeName;
     this.targetClassName = bindingSet.targetClassName;
-    this.isActivity = bindingSet.isActivity;
     this.fieldExtraBindings = bindingSet.fieldExtraBindings;
   }
 
@@ -37,49 +35,10 @@ final class ActivityBinding {
   }
 
   private TypeSpec createType() {
-    TypeSpec.Builder result = TypeSpec.classBuilder(targetClassName.simpleName() + "_")
+    return TypeSpec.classBuilder(targetClassName.simpleName() + "_ExtraBinding")
         .addModifiers(PUBLIC)
-        .addModifiers(FINAL);
-
-    result.addMethod(createPrivateDefaultConstructor());
-
-    if (isActivity) {
-      result.addMethod(createBindingMethodForActivity());
-    }
-
-    result.addMethod(createBindingMethod());
-
-    result.addMethod(createIntentBuilderFactoryMethod());
-
-    return result.build();
-  }
-
-  private MethodSpec createIntentBuilderFactoryMethod() {
-    final String intentBuilderClassName = targetClassName.simpleName()
-        + "_IntentBuilder";
-    final ClassName intentBuilderType = ClassName.get(
-        targetClassName.packageName(),
-        intentBuilderClassName);
-    return MethodSpec.methodBuilder("intentBuilder")
-        .addModifiers(PUBLIC, STATIC)
-        .returns(intentBuilderType)
-        .addParameter(CONTEXT, "context")
-        .addStatement("return new $L(context)", intentBuilderClassName)
-        .build();
-  }
-
-  private MethodSpec createPrivateDefaultConstructor() {
-    return MethodSpec.constructorBuilder()
-        .addModifiers(PRIVATE)
-        .build();
-  }
-
-  private MethodSpec createBindingMethodForActivity() {
-    return MethodSpec.methodBuilder("bindExtras")
-        .addModifiers(PUBLIC)
-        .addModifiers(STATIC)
-        .addParameter(targetTypeName, "target")
-        .addStatement("bindExtras(target, target.getIntent().getExtras())")
+        .addModifiers(FINAL)
+        .addMethod(createBindingMethod())
         .build();
   }
 
@@ -106,7 +65,7 @@ final class ActivityBinding {
         .add("if ($T.has(source, \"$L\")) {", BUNDLES, name)
         .add("target.$L = ", name)
         .add("$T.get(source, \"$L\");", BUNDLES, name)
-        .add("}");
+        .add("}\n");
     bindExtrasMethodBuilder.addCode(builder.build());
   }
 }
