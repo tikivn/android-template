@@ -23,4 +23,5 @@
   <!--Product Detail-->
   <string name="product_detail_description">Description</string>
   <string name="product_detail_add_to_cart">Add to cart</string>
+  <string name="cart">Cart</string>
 </resources>

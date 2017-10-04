@@ -25,7 +25,7 @@ public class SampleApp extends Application implements AppInjector {
 
   protected void configureDagger() {
     appComponent = DaggerAppComponent.builder()
-        .appModule(new AppModule())
+        .appModule(new AppModule(this))
         .build();
     Daggers.configure(this);
   }

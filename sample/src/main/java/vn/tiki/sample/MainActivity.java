@@ -2,15 +2,16 @@ package vn.tiki.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import intents.Intents;
+import vn.tiki.sample.base.BaseActivity;
 import vn.tiki.sample.login.LoginActivity;
 import vn.tiki.sample.productlist.ProductListingActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,5 +37,10 @@ public class MainActivity extends AppCompatActivity {
   @OnClick(R.id.btOpenProductListing)
   public void openProductListing(View view) {
     startActivity(ProductListingActivity.intent(this));
+  }
+
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_cart, menu);
+    return true;
   }
 }

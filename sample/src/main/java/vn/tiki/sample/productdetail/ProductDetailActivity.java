@@ -1,6 +1,7 @@
 package vn.tiki.sample.productdetail;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,6 +35,15 @@ public class ProductDetailActivity
 
   @BindExtra Product product;
 
+  @OnClick(R.id.btAddToCart) public void onAddToCartClicked() {
+    presenter.onAddToCartClick();
+  }
+
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_cart, menu);
+    return true;
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -46,6 +56,7 @@ public class ProductDetailActivity
     configureSizeOptions();
     connect(presenter, this);
     bind(product);
+    presenter.setProduct(product);
   }
 
   private void configureSizeOptions() {
@@ -80,9 +91,5 @@ public class ProductDetailActivity
         .with(this)
         .load(product.imageUrl())
         .into(ivThumb);
-  }
-
-  @OnClick(R.id.btAddToCart) public void onAddToCartClicked() {
-    presenter.onAddToCartClick();
   }
 }

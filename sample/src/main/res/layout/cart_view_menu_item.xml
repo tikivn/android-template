@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+  <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_margin="8dp"
+      app:srcCompat="@drawable/ic_shopping_cart"
+      tools:ignore="ContentDescription"/>
+
+  <TextView
+      android:id="@+id/tvItemCount"
+      android:layout_width="wrap_content"
+      android:layout_height="16dp"
+      android:layout_gravity="end"
+      android:background="@drawable/oval_red"
+      android:gravity="center"
+      android:maxLines="1"
+      android:minWidth="16dp"
+      android:paddingEnd="4dp"
+      android:paddingLeft="4dp"
+      android:paddingRight="4dp"
+      android:paddingStart="4dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+      android:textColor="@color/white"
+      android:textSize="10sp"
+      android:visibility="gone"
+      tools:ignore="SmallSp"
+      tools:text="10"/>
+
+  <ProgressBar
+      android:id="@+id/vProgress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      style="?android:attr/progressBarStyleSmall"/>
+</FrameLayout>
