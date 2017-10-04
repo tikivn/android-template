@@ -31,6 +31,7 @@ public class ProductRepository {
             .items(
                 Ix.from(response.getItems())
                     .map(productResponse -> Product.builder()
+                        .id(productResponse.getId())
                         .title(productResponse.getTitle())
                         .price(productResponse.getPrice())
                         .imageUrl(resolveImageUrl(productResponse.getImage()))

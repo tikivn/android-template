@@ -9,6 +9,8 @@ public abstract class Product implements Parcelable {
     return new AutoValue_Product.Builder();
   }
 
+  public abstract String id();
+
   public abstract String title();
 
   public abstract float price();
@@ -19,6 +21,8 @@ public abstract class Product implements Parcelable {
 
   @com.google.auto.value.AutoValue.Builder
   public static abstract class Builder {
+    public abstract Builder id(String id);
+
     public abstract Builder title(String title);
 
     public abstract Builder price(float price);

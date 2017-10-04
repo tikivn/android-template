@@ -16,6 +16,9 @@ public class ProductResponse {
   @SerializedName("title")
   private String title;
 
+  @SerializedName("id")
+  private String id;
+
   public String getImage() {
     return image;
   }
@@ -30,5 +33,9 @@ public class ProductResponse {
 
   public String getTitle() {
     return title;
+  }
+
+  public String getId() {
+    return id;
   }
 }
