@@ -37,7 +37,7 @@ public class LoginTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     TestApplication testApplication = (TestApplication) RuntimeEnvironment.application;
-    testApplication.setAppModule(new AppModule() {
+    testApplication.setAppModule(new AppModule(testApplication) {
       @Override public UserModel provideUserModel() {
         return userModel;
       }
