@@ -20,6 +20,6 @@ public interface CartDao {
   @Update(onConflict = OnConflictStrategy.REPLACE)
   int update(CartItem cartItem);
 
-  @Query("SELECT * FROM CartItem where id = :id LIMIT 1")
+  @Query("SELECT * FROM CartItem WHERE id = :id LIMIT 1")
   CartItem getById(String id);
 }
