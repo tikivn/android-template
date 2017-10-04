@@ -114,6 +114,8 @@ dependencies {
     transitive = true
   }
   implementation deps.ix
+  implementation deps.room.runtime
+  annotationProcessor deps.room.compiler
 
   testImplementation deps.test.junit
   testImplementation deps.test.mockito
