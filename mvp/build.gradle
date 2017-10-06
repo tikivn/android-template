@@ -1,11 +1,14 @@
+import vn.tiki.Deps
+
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion versions.compileSdk
-  buildToolsVersion versions.buildTools
+  compileSdkVersion Deps.Version.compileSdk
+  buildToolsVersion Deps.Version.buildTools
 
   defaultConfig {
-    minSdkVersion versions.minSdk
+    minSdkVersion Deps.Version.minSdk
+    targetSdkVersion Deps.Version.compileSdk
 
     consumerProguardFiles 'proguard-rules.txt'
 
@@ -27,11 +30,11 @@ android {
 }
 
 dependencies {
-  implementation deps.support.annotations
-  implementation deps.support.appCompat
+  implementation Deps.AndroidSupport.annotations
+  implementation Deps.AndroidSupport.appCompat
 
-  testImplementation deps.test.junit
-  testImplementation deps.test.truth
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.truth
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
