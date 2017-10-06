@@ -1,99 +1,8 @@
+import vn.tiki.Deps
+
 apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
-  ext.versions = [
-      'minSdk': 16,
-      'compileSdk': 26,
-      'buildTools': '26.0.1',
-
-      'supportLibrary': '26.1.0',
-      'androidPlugin': '3.0.0-beta6',
-      'kotlin': '1.1.3-2',
-
-      'release': '8.8.1',
-      'room': '1.0.0-beta1'
-  ]
-
-  ext.deps = [
-      android: [
-          'runtime': 'com.google.android:android:4.1.1.4',
-          'gradlePlugin': "com.android.tools.build:gradle:${versions.androidPlugin}",
-      ],
-      'support': [
-          'compat': "com.android.support:support-compat:${versions.supportLibrary}",
-          'appCompat': "com.android.support:appcompat-v7:${versions.supportLibrary}",
-          'annotations': "com.android.support:support-annotations:${versions.supportLibrary}",
-          'recyclerview': "com.android.support:recyclerview-v7:${versions.supportLibrary}",
-          'design': "com.android.support:design:${versions.supportLibrary}",
-          'constrain': "com.android.support.constraint:constraint-layout:1.0.2",
-          'test': [
-              'runner': 'com.android.support.test:runner:1.0.0',
-          ],
-      ],
-      javapoet: 'com.squareup:javapoet:1.9.0',
-      javaparser: 'com.github.javaparser:javaparser-core:3.3.0',
-      'auto': [
-          'service': 'com.google.auto.service:auto-service:1.0-rc3',
-          'common': 'com.google.auto:auto-common:0.8',
-      ],
-      'kotlin': [
-          'stdLibJre8': "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
-      ],
-      'butterknife': [
-          'butterknife': 'com.jakewharton:butterknife:8.8.1',
-          'compiler': 'com.jakewharton:butterknife-compiler:8.8.1',
-      ],
-      dagger: [
-          'dagger': "com.google.dagger:dagger:2.11",
-          'compiler': "com.google.dagger:dagger-compiler:2.11",
-      ],
-      rx: [
-          'java': 'io.reactivex.rxjava2:rxjava:2.1.2',
-          'android': 'io.reactivex.rxjava2:rxandroid:2.0.1',
-      ],
-      tiki: [
-          'intents': [
-              'intents': 'com.github.tikivn.android-template:intents:-SNAPSHOT',
-              'compiler': 'com.github.tikivn.android-template:intents-compiler:-SNAPSHOT',
-          ],
-          'daggers': 'com.github.tikivn.android-template:daggers:-SNAPSHOT',
-          'mvp': 'com.github.tikivn.android-template:mvp:master-SNAPSHOT',
-      ],
-      http: [
-          'retrofit': 'com.squareup.retrofit2:retrofit:2.3.0',
-          'gsonConverter': 'com.squareup.retrofit2:converter-gson:2.3.0',
-          'rxJavaAdapter': 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
-          'logging': 'com.squareup.okhttp3:logging-interceptor:3.9.0',
-          'okhttp': 'com.squareup.okhttp3:okhttp:3.9.0',
-
-      ],
-      autoValue: [
-          autoValue: "com.google.auto.value:auto-value:1.5",
-          annotations: "com.jakewharton.auto.value:auto-value-annotations:1.5",
-          parcel: "com.ryanharter.auto.value:auto-value-parcel:0.2.5",
-      ],
-      noadapter: "vn.tiki.noadapter2:noadapter:2.0.2",
-      crashlytics: "com.crashlytics.sdk.android:crashlytics:2.6.8@aar",
-      timber: "com.jakewharton.timber:timber:4.5.1",
-      ix: "com.github.akarnokd:ixjava:1.0.0-RC5",
-      glide: [
-          glide: "com.github.bumptech.glide:glide:4.1.1",
-          compiler: "com.github.bumptech.glide:compiler:4.1.1"
-      ],
-      room: [
-          runtime: "android.arch.persistence.room:runtime:${versions.room}",
-          compiler: "android.arch.persistence.room:compiler:${versions.room}",
-      ],
-      test: [
-          'junit': 'junit:junit:4.12',
-          'truth': 'com.google.truth:truth:0.34',
-          'mockito': 'org.mockito:mockito-core:2.9.0',
-          'robolectric': 'org.robolectric:robolectric:3.4.2',
-          'compiletesting': 'com.google.testing.compile:compile-testing:0.11',
-      ],
-
-  ]
-
   repositories {
     google()
     jcenter()
@@ -102,8 +11,8 @@ buildscript {
   }
 
   dependencies {
-    classpath deps.android.gradlePlugin
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+    classpath Deps.Android.gradlePlugin
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.Version.kotlin}"
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
   }
 }
@@ -138,7 +47,4 @@ subprojects { project ->
       check.dependsOn('checkstyle')
     }
   }
-}
-configurations.all {
-  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

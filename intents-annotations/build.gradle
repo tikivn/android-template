@@ -1,3 +1,5 @@
+import vn.tiki.Deps
+
 apply plugin: 'java-library'
 apply plugin: 'checkstyle'
 
@@ -10,8 +12,8 @@ checkstyle {
 }
 
 dependencies {
-  compileOnly deps.android.runtime
-  api deps.support.annotations
+  compileOnly Deps.Android.runtime
+  api Deps.AndroidSupport.annotations
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

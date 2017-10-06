@@ -1,3 +1,5 @@
+import vn.tiki.Deps
+
 buildscript {
   repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -17,13 +19,13 @@ repositories {
 apply plugin: 'jacoco'
 
 android {
-  compileSdkVersion versions.compileSdk
-  buildToolsVersion versions.buildTools
+  compileSdkVersion Deps.Version.compileSdk
+  buildToolsVersion Deps.Version.buildTools
 
   defaultConfig {
     applicationId "vn.tiki.sample"
-    minSdkVersion versions.minSdk
-    targetSdkVersion versions.compileSdk
+    minSdkVersion Deps.Version.minSdk
+    targetSdkVersion Deps.Version.compileSdk
     versionCode 1
     versionName "1.0"
     vectorDrawables.useSupportLibrary true
@@ -80,15 +82,15 @@ android {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
-  implementation deps.support.appCompat
-  implementation deps.support.design
-  implementation deps.support.constrain
-  implementation deps.dagger.dagger
-  annotationProcessor deps.dagger.compiler
-  implementation deps.butterknife.butterknife
-  annotationProcessor deps.butterknife.compiler
-  implementation deps.rx.java
-  implementation deps.rx.android
+  implementation Deps.AndroidSupport.appCompat
+  implementation Deps.AndroidSupport.design
+  implementation Deps.AndroidSupport.constraint
+  implementation Deps.Dagger.runtime
+  annotationProcessor Deps.Dagger.compiler
+  implementation Deps.ButterKnife.runtime
+  annotationProcessor Deps.ButterKnife.compiler
+  implementation Deps.rxJava
+  implementation Deps.rxAndroid
   implementation project(':daggers')
   implementation project(':mvp')
   implementation project(':intents')
@@ -97,30 +99,31 @@ dependencies {
   //  implementation deps.tiki.mvp
   //  implementation deps.tiki.intents.intents
   //  annotationProcessor deps.tiki.intents.compiler
-  implementation deps.http.retrofit
-  implementation deps.http.gsonConverter
-  implementation deps.http.rxJavaAdapter
-  implementation deps.http.okhttp
-  implementation deps.http.logging
-  compileOnly deps.autoValue.annotations
-  annotationProcessor deps.autoValue.autoValue
-  annotationProcessor deps.autoValue.parcel
-  implementation deps.noadapter
-  implementation deps.glide.glide
-  annotationProcessor deps.glide.compiler
-  annotationProcessor deps.javapoet
-  implementation deps.timber
-  implementation(deps.crashlytics) {
+  implementation Deps.Http.retrofit
+  implementation Deps.Http.gsonConverter
+  implementation Deps.Http.rxJavaAdapter
+  implementation Deps.Http.okhttp
+  implementation Deps.Http.logging
+  compileOnly Deps.AutoValue.annotations
+  annotationProcessor Deps.AutoValue.autoValue
+  annotationProcessor Deps.AutoValue.parcel
+  implementation Deps.noadapter
+  implementation Deps.Glide.runtime
+  annotationProcessor Deps.Glide.compiler
+  annotationProcessor Deps.javapoet
+  implementation Deps.timber
+  implementation(Deps.crashlytics) {
     transitive = true
   }
-  implementation deps.ix
-  implementation deps.room.runtime
-  annotationProcessor deps.room.compiler
 
-  testImplementation deps.test.junit
-  testImplementation deps.test.mockito
-  testImplementation deps.test.truth
-  testImplementation deps.test.robolectric
+  implementation Deps.ixJava
+  implementation Deps.Room.runtime
+  annotationProcessor Deps.Room.compiler
+
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.mockito
+  testImplementation Deps.Test.truth
+  testImplementation Deps.Test.robolectric
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {

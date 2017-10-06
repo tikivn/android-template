@@ -1,3 +1,5 @@
+import vn.tiki.Deps
+
 apply plugin: 'java-library'
 apply plugin: 'checkstyle'
 
@@ -6,13 +8,13 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
   implementation project(':intents-annotations')
-  implementation deps.auto.common
-  api deps.javapoet
-  compileOnly deps.auto.service
+  api Deps.javapoet
+  implementation Deps.Auto.common
+  compileOnly Deps.Auto.service
   compileOnly files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
-  testImplementation deps.test.junit
-  testImplementation deps.test.truth
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.truth
 }
 
 checkstyle {

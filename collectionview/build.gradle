@@ -1,11 +1,14 @@
+import vn.tiki.Deps
+
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion versions.compileSdk
-  buildToolsVersion versions.buildTools
+  compileSdkVersion Deps.Version.compileSdk
+  buildToolsVersion Deps.Version.buildTools
 
   defaultConfig {
-    minSdkVersion versions.minSdk
+    minSdkVersion Deps.Version.minSdk
+    targetSdkVersion Deps.Version.compileSdk
 
     consumerProguardFiles 'proguard-rules.txt'
 
@@ -27,15 +30,15 @@ android {
 }
 
 dependencies {
-  implementation deps.support.annotations
-  implementation deps.support.appCompat
-  implementation deps.support.recyclerview
-  implementation deps.rx.java
-  implementation deps.rx.android
+  implementation Deps.AndroidSupport.annotations
+  implementation Deps.AndroidSupport.appCompat
+  implementation Deps.AndroidSupport.recyclerview
+  implementation Deps.rxJava
+  implementation Deps.rxAndroid
 
-  testImplementation deps.test.junit
-  testImplementation deps.test.truth
-  testImplementation deps.test.robolectric
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.truth
+  testImplementation Deps.Test.robolectric
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

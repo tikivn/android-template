@@ -1,11 +1,14 @@
+import vn.tiki.Deps
+
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion versions.compileSdk
-  buildToolsVersion versions.buildTools
+  compileSdkVersion Deps.Version.compileSdk
+  buildToolsVersion Deps.Version.buildTools
 
   defaultConfig {
-    minSdkVersion versions.minSdk
+    minSdkVersion Deps.Version.minSdk
+    targetSdkVersion Deps.Version.compileSdk
 
     consumerProguardFiles 'proguard-rules.txt'
 
@@ -28,15 +31,15 @@ android {
 
 dependencies {
   api project(':intents-annotations')
-  implementation deps.support.annotations
+  implementation Deps.AndroidSupport.annotations
 
-  androidTestImplementation deps.test.junit
-  androidTestImplementation deps.test.truth
-  androidTestImplementation deps.support.test.runner
+  androidTestImplementation Deps.Test.junit
+  androidTestImplementation Deps.Test.truth
+  androidTestImplementation Deps.AndroidSupport.testRunner
 
-  testImplementation deps.test.junit
-  testImplementation deps.test.truth
-  testImplementation deps.test.compiletesting
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.truth
+  testImplementation Deps.Test.compileTesting
   testImplementation files(getRuntimeJar())
   testImplementation files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
   testImplementation project(':intents-compiler')
