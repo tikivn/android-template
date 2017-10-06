@@ -23,6 +23,7 @@ buildscript {
           'compat': "com.android.support:support-compat:${versions.supportLibrary}",
           'appCompat': "com.android.support:appcompat-v7:${versions.supportLibrary}",
           'annotations': "com.android.support:support-annotations:${versions.supportLibrary}",
+          'recyclerview': "com.android.support:recyclerview-v7:${versions.supportLibrary}",
           'design': "com.android.support:design:${versions.supportLibrary}",
           'constrain': "com.android.support.constraint:constraint-layout:1.0.2",
           'test': [
