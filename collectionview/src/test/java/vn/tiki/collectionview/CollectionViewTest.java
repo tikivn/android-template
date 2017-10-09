@@ -2,6 +2,7 @@ package vn.tiki.collectionview;
 
 import android.app.Application;
 import android.view.View;
+import android.view.ViewGroup;
 import io.reactivex.Observable;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +39,8 @@ public class CollectionViewTest {
     application = RuntimeEnvironment.application;
     when(mockedDataProvider.fetch(anyInt())).thenReturn(Observable.empty());
     when(mockedAdapter.getDataProvider()).thenReturn(mockedDataProvider);
-    when(mockedAdapter.onCreateErrorView(any(Throwable.class))).thenReturn(new View(application));
+    when(mockedAdapter.onCreateErrorView(any(ViewGroup.class), any(Throwable.class)))
+        .thenReturn(new View(application));
     tested = new CollectionView(application, null);
     tested.setAdapter(mockedAdapter);
     tested.onAttachedToWindow();

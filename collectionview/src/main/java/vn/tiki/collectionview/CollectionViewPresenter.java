@@ -1,5 +1,7 @@
 package vn.tiki.collectionview;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -11,12 +13,12 @@ import java.util.List;
 
 class CollectionViewPresenter {
 
-  private final DataProvider<?> dataProvider;
+  @NonNull private final DataProvider<?> dataProvider;
   CollectionView collectionView;
-  private ListData<?> listData;
-  private Disposable disposable;
+  @Nullable private ListData<?> listData;
+  @Nullable private Disposable disposable;
 
-  CollectionViewPresenter(DataProvider<?> dataProvider) {
+  CollectionViewPresenter(@NonNull DataProvider<?> dataProvider) {
     this.dataProvider = dataProvider;
   }
 
@@ -25,7 +27,7 @@ class CollectionViewPresenter {
     onLoad();
   }
 
-  private void onLoad() {
+  void onLoad() {
     collectionView.showLoading();
     disposable = map(dataProvider.fetch(1))
         .subscribe(
@@ -66,10 +68,17 @@ class CollectionViewPresenter {
   }
 
   private void checkToHideLoadMore() {
+    if (listData == null) {
+      return;
+    }
     final Paging paging = listData.paging();
-    if (paging.currentPage() == paging.lastPage()) {
+    if (isCurrentLastPage(paging)) {
       collectionView.hideLoadMore();
     }
+  }
+
+  private boolean isCurrentLastPage(@NonNull Paging paging) {
+    return paging.currentPage() == paging.lastPage();
   }
 
   void detach() {
@@ -104,11 +113,11 @@ class CollectionViewPresenter {
 
   void onLoadMore() {
     disposeDisposable();
-    if (listData == null) {
+    if (listData == null || isCurrentLastPage(listData.paging())) {
       return;
     }
-    final List<?> currentItems = listData.items();
     final int nextPage = listData.paging().currentPage() + 1;
+    final List<?> currentItems = listData.items();
     disposable = map(dataProvider.fetch(nextPage))
         .subscribe(
             new Consumer<List<?>>() {

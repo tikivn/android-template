@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -46,8 +47,27 @@ public class CollectionView extends FrameLayout {
 
   public void setAdapter(@NonNull Adapter adapter) {
     this.adapter = adapter;
-    recyclerView.setLayoutManager(adapter.getLayoutManager());
+    final RecyclerView.LayoutManager layoutManager = adapter.getLayoutManager();
+    recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(adapter.getRecyclerViewAdapter());
+    if (layoutManager instanceof LinearLayoutManager) {
+      recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+          super.onScrollStateChanged(recyclerView, newState);
+          if (presenter == null || newState != RecyclerView.SCROLL_STATE_IDLE) {
+            return;
+          }
+
+          final int lastCompletelyVisibleItemPosition =
+              ((LinearLayoutManager) layoutManager).findLastCompletelyVisibleItemPosition();
+
+          if (lastCompletelyVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
+            presenter.onLoadMore();
+          }
+        }
+      });
+    }
+
     presenter = new CollectionViewPresenter(adapter.getDataProvider());
     if (isAttached) {
       presenter.attach(this);
@@ -96,7 +116,14 @@ public class CollectionView extends FrameLayout {
     }
     refreshLayout.setRefreshing(false);
     if (errorView == null) {
-      errorView = adapter.onCreateErrorView(throwable);
+      errorView = adapter.onCreateErrorView(this, throwable);
+      errorView.setOnClickListener(new OnClickListener() {
+        @Override public void onClick(View view) {
+          if (presenter != null) {
+            presenter.onLoad();
+          }
+        }
+      });
       addView(errorView, lpWrapWrapCenter());
     }
     errorView.setVisibility(VISIBLE);
