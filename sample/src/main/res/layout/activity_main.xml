@@ -30,4 +30,11 @@
       android:text="@string/main_open_product_listing"
   />
 
+  <Button
+      android:id="@+id/btOpenCollectionView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/main_open_collection_view"
+      />
+
 </LinearLayout>

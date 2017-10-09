@@ -33,9 +33,15 @@
     <activity
         android:name=".productdetail.ProductDetailActivity"
         android:screenOrientation="portrait"/>
+
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="b1cff2955798017c1408feb840f1520497e8f44e"/>
+
+    <activity android:name=".cart.CartActivity">
+    </activity>
+    <activity android:name=".collectionview.CollectionViewActivity">
+    </activity>
   </application>
 
 </manifest>

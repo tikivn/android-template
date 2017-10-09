@@ -14,6 +14,7 @@
   <string name="main_open_extra_injection">Open Extra Injection</string>
   <string name="main_open_login">Open Login</string>
   <string name="main_open_product_listing">Open Product Listing</string>
+  <string name="main_open_collection_view">Open Collection View</string>
 
   <!--Product Listing-->
   <string name="product_listing_try_again">Try again.</string>
@@ -24,4 +25,7 @@
   <string name="product_detail_description">Description</string>
   <string name="product_detail_add_to_cart">Add to cart</string>
   <string name="cart">Cart</string>
+
+  <!--CollectionView-->
+  <string name="clv_error_occurred">Error occurred.</string>
 </resources>

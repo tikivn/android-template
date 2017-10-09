@@ -72,17 +72,12 @@ android {
       buildConfigField 'String', 'BASE_URL', "\"${baseUrl}\""
     }
   }
-
-  applicationVariants.all { variant ->
-    variant.outputs.all {
-      outputFileName = "${variant.name}-${variant.versionName}.apk"
-    }
-  }
 }
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation Deps.AndroidSupport.appCompat
+  implementation Deps.AndroidSupport.recyclerview
   implementation Deps.AndroidSupport.design
   implementation Deps.AndroidSupport.constraint
   implementation Deps.Dagger.runtime
@@ -95,6 +90,7 @@ dependencies {
   implementation project(':mvp')
   implementation project(':intents')
   annotationProcessor project(':intents-compiler')
+  implementation project(':collectionview')
   //  implementation deps.tiki.daggers
   //  implementation deps.tiki.mvp
   //  implementation deps.tiki.intents.intents
@@ -115,7 +111,6 @@ dependencies {
   implementation(Deps.crashlytics) {
     transitive = true
   }
-
   implementation Deps.ixJava
   implementation Deps.Room.runtime
   annotationProcessor Deps.Room.compiler
