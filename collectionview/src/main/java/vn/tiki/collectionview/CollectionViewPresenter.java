@@ -55,7 +55,7 @@ class CollectionViewPresenter {
         })
         .map(new Function<ListData<?>, List<?>>() {
           @Override public List<?> apply(ListData<?> listData) throws Exception {
-            return listData.items();
+            return listData.getItems();
           }
         })
         .doOnError(new Consumer<Throwable>() {
@@ -71,7 +71,7 @@ class CollectionViewPresenter {
     if (listData == null) {
       return;
     }
-    final Paging paging = listData.paging();
+    final Paging paging = listData.getPaging();
     if (isCurrentLastPage(paging)) {
       collectionView.hideLoadMore();
     }
@@ -113,11 +113,11 @@ class CollectionViewPresenter {
 
   void onLoadMore() {
     disposeDisposable();
-    if (listData == null || isCurrentLastPage(listData.paging())) {
+    if (listData == null || isCurrentLastPage(listData.getPaging())) {
       return;
     }
-    final int nextPage = listData.paging().currentPage() + 1;
-    final List<?> currentItems = listData.items();
+    final int nextPage = listData.getPaging().currentPage() + 1;
+    final List<?> currentItems = listData.getItems();
     disposable = map(dataProvider.fetch(nextPage))
         .subscribe(
             new Consumer<List<?>>() {

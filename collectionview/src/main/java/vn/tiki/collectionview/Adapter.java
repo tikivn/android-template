@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import java.util.List;
 
 public interface Adapter<T> {
-  RecyclerView.LayoutManager getLayoutManager();
 
-  RecyclerView.Adapter<?> getRecyclerViewAdapter();
+  DataProvider<T> onCreateDataProvider();
 
-  DataProvider<T> getDataProvider();
+  RecyclerView.LayoutManager onCreateLayoutManager();
 
-  void setItems(List<T> items);
+  RecyclerView.Adapter<?> onCreateRecyclerViewAdapter();
+
+  void onBindItems(List<T> items);
 
   @NonNull View onCreateErrorView(ViewGroup parent, Throwable throwable);
 }

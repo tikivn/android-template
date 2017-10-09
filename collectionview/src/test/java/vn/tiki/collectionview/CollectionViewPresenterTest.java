@@ -2,7 +2,6 @@ package vn.tiki.collectionview;
 
 import io.reactivex.Observable;
 import java.util.Arrays;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,62 +17,31 @@ public class CollectionViewPresenterTest {
   @Rule public final RxSchedulerTestRule rxSchedulerTestRule = new RxSchedulerTestRule();
 
   @Mock DataProvider mockedDataProvider;
-  Paging page1 = new Paging() {
-    @Override public int total() {
-      return 6;
-    }
-
-    @Override public int currentPage() {
-      return 1;
-    }
-
-    @Override public int lastPage() {
-      return 2;
-    }
-  };
-  Paging page2 = new Paging() {
-    @Override public int total() {
-      return 6;
-    }
-
-    @Override public int currentPage() {
-      return 2;
-    }
-
-    @Override public int lastPage() {
-      return 2;
-    }
-  };
-  ListData<Integer> loadData = new ListData<Integer>() {
-    @Override public List<Integer> items() {
-      return Arrays.asList(1, 2, 3);
-    }
-
-    @Override public Paging paging() {
-      return page1;
-    }
-  };
-  ListData<Integer> loadMoreData = new ListData<Integer>() {
-    @Override public List<Integer> items() {
-      return Arrays.asList(4, 5, 6);
-    }
-
-    @Override public Paging paging() {
-      return page2;
-    }
-  };
-
-  ListData<Integer> refreshData = new ListData<Integer>() {
-    @Override public List<Integer> items() {
-      return Arrays.asList(1, 2, 3, 4);
-    }
-
-    @Override public Paging paging() {
-      return page1;
-    }
-  };
-
   @Mock CollectionView mockedView;
+
+  ListData<Integer> loadData = new ListData<>(
+      Arrays.asList(1, 2, 3),
+      Paging.builder()
+          .total(6)
+          .currentPage(1)
+          .lastPage(2)
+          .make());
+  ListData<Integer> loadMoreData = new ListData<>(
+      Arrays.asList(4, 5, 6),
+      Paging.builder()
+          .total(6)
+          .currentPage(2)
+          .lastPage(2)
+          .make());
+
+  ListData<Integer> refreshData = new ListData<>(
+      Arrays.asList(1, 2, 3, 4),
+      Paging.builder()
+          .total(6)
+          .currentPage(1)
+          .lastPage(2)
+          .make());
+
   private CollectionViewPresenter tested;
 
   @Before

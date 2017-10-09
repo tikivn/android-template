@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({ "ConstantConditions", "unchecked" })
+@SuppressWarnings({ "ConstantConditions", "unchecked", "WeakerAccess" })
 @RunWith(RobolectricTestRunner.class)
 public class CollectionViewTest {
   @Rule public final RxSchedulerTestRule rxSchedulerTestRule = new RxSchedulerTestRule();
@@ -38,7 +38,7 @@ public class CollectionViewTest {
     MockitoAnnotations.initMocks(this);
     application = RuntimeEnvironment.application;
     when(mockedDataProvider.fetch(anyInt())).thenReturn(Observable.empty());
-    when(mockedAdapter.getDataProvider()).thenReturn(mockedDataProvider);
+    when(mockedAdapter.onCreateDataProvider()).thenReturn(mockedDataProvider);
     when(mockedAdapter.onCreateErrorView(any(ViewGroup.class), any(Throwable.class)))
         .thenReturn(new View(application));
     tested = new CollectionView(application, null);
@@ -82,7 +82,7 @@ public class CollectionViewTest {
   public void testSetItems() throws Exception {
     final List<Integer> items = Arrays.asList(1, 2, 3);
     tested.setItems(items);
-    Mockito.verify(mockedAdapter).setItems(eq(items));
+    Mockito.verify(mockedAdapter).onBindItems(eq(items));
   }
 
   @Test

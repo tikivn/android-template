@@ -47,9 +47,9 @@ public class CollectionView extends FrameLayout {
 
   public void setAdapter(@NonNull Adapter adapter) {
     this.adapter = adapter;
-    final RecyclerView.LayoutManager layoutManager = adapter.getLayoutManager();
+    final RecyclerView.LayoutManager layoutManager = adapter.onCreateLayoutManager();
     recyclerView.setLayoutManager(layoutManager);
-    recyclerView.setAdapter(adapter.getRecyclerViewAdapter());
+    recyclerView.setAdapter(adapter.onCreateRecyclerViewAdapter());
     if (layoutManager instanceof LinearLayoutManager) {
       recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
         @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -68,7 +68,7 @@ public class CollectionView extends FrameLayout {
       });
     }
 
-    presenter = new CollectionViewPresenter(adapter.getDataProvider());
+    presenter = new CollectionViewPresenter(adapter.onCreateDataProvider());
     if (isAttached) {
       presenter.attach(this);
     }
@@ -106,7 +106,7 @@ public class CollectionView extends FrameLayout {
 
   @SuppressWarnings("unchecked") void setItems(List<?> items) {
     if (adapter != null) {
-      adapter.setItems(items);
+      adapter.onBindItems(items);
     }
   }
 
