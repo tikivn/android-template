@@ -37,6 +37,7 @@ dependencies {
   implementation Deps.rxAndroid
 
   testImplementation Deps.Test.junit
+  testImplementation Deps.Test.mockito
   testImplementation Deps.Test.truth
   testImplementation Deps.Test.robolectric
 }
