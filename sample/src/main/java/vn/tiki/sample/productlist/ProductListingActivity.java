@@ -3,42 +3,44 @@ package vn.tiki.sample.productlist;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import intents.Intents;
+import io.reactivex.Observable;
 import java.util.List;
 import javax.inject.Inject;
+import vn.tiki.collectionview.Adapter;
+import vn.tiki.collectionview.CollectionView;
+import vn.tiki.collectionview.DataProvider;
+import vn.tiki.collectionview.ListData;
 import vn.tiki.daggers.Daggers;
 import vn.tiki.noadapter2.DiffCallback;
 import vn.tiki.noadapter2.OnlyAdapter;
 import vn.tiki.sample.R;
-import vn.tiki.sample.base.BaseMvpActivity;
+import vn.tiki.sample.base.BaseActivity;
 import vn.tiki.sample.entity.Product;
-import vn.tiki.sample.misc.EndReachDetector;
+import vn.tiki.sample.repository.ProductRepository;
 
-public class ProductListingActivity
-    extends BaseMvpActivity<ProductListingView, ProductListingPresenter>
-    implements ProductListingView {
+public class ProductListingActivity extends BaseActivity {
 
   @BindView(android.R.id.content) View rootView;
-  @BindView(R.id.rvProducts) RecyclerView rvProducts;
   @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout swipeRefreshLayout;
+  @BindView(R.id.vCollectionView) CollectionView vCollectionView;
 
   @BindString(R.string.product_listing) String textProductListing;
   @BindString(R.string.product_listing_try_again) String textTryAgain;
   @BindString(R.string.product_listing_error_occurred) String textError;
 
-  @Inject ProductListingPresenter presenter;
+  @Inject ProductRepository productRepository;
 
   private Snackbar snackbar;
 
@@ -55,10 +57,7 @@ public class ProductListingActivity
     ButterKnife.bind(this);
 
     configureToolbar();
-    configureList();
-    configureSwipeRefresh();
-
-    connect(presenter, this);
+    configureCollectionView();
   }
 
   private void configureToolbar() {
@@ -70,19 +69,14 @@ public class ProductListingActivity
     setTitle(textProductListing);
   }
 
-  private void configureList() {
-    final GridLayoutManager layoutManager = new GridLayoutManager(
-        this,
-        2,
-        LinearLayoutManager.VERTICAL,
-        false);
-    rvProducts.setLayoutManager(layoutManager);
-    rvProducts.setAdapter(new OnlyAdapter.Builder()
+  private void configureCollectionView() {
+    final OnlyAdapter adapter = new OnlyAdapter.Builder()
         .viewHolderFactory((parent, type) -> ProductViewHolder.create(parent))
         .diffCallback(new DiffCallback() {
           @Override public boolean areItemsTheSame(Object oldItem, Object newItem) {
             return oldItem instanceof Product
-                && newItem instanceof Product;
+                && newItem instanceof Product
+                && ((Product) oldItem).id().equals(((Product) newItem).id());
           }
 
           @Override public boolean areContentsTheSame(Object oldItem, Object newItem) {
@@ -93,45 +87,40 @@ public class ProductListingActivity
             Intents.productDetailActivity(ProductListingActivity.this)
                 .product(((Product) item))
                 .make()))
-        .build());
-    rvProducts.addOnScrollListener(new EndReachDetector(
-        layoutManager,
-        () -> presenter.onLoadMore()));
-  }
+        .build();
+    vCollectionView.setAdapter(new Adapter() {
+      @Override public DataProvider onCreateDataProvider() {
+        return new DataProvider() {
+          @Override public Observable<ListData<Product>> fetchNewest() {
+            return productRepository.getProducts(1, true)
+                .map(it -> it);
+          }
 
-  private void configureSwipeRefresh() {
-    swipeRefreshLayout.setOnRefreshListener(() -> presenter.onRefresh());
-  }
+          @Override public Observable<ListData> fetch(int page) {
+            return productRepository.getProducts(page, false)
+                .map(it -> it);
+          }
+        };
+      }
 
-  @Override public void showLoading() {
-    swipeRefreshLayout.setRefreshing(true);
-    if (snackbar != null) {
-      snackbar.dismiss();
-    }
-  }
+      @Override public RecyclerView.LayoutManager onCreateLayoutManager() {
+        return new LinearLayoutManager(
+            ProductListingActivity.this,
+            LinearLayoutManager.VERTICAL,
+            false);
+      }
 
-  @Override public void showContent(List<Product> items) {
-    swipeRefreshLayout.setRefreshing(false);
-    ((OnlyAdapter) rvProducts.getAdapter()).setItems(items);
-  }
+      @Override public RecyclerView.Adapter<?> onCreateRecyclerViewAdapter() {
+        return adapter;
+      }
 
-  @Override public void showLoadError() {
-    swipeRefreshLayout.setRefreshing(false);
-    snackbar = Snackbar.make(rootView, textError, Snackbar.LENGTH_INDEFINITE)
-        .setAction(textTryAgain, __ -> presenter.onRetry());
-    snackbar.show();
-  }
+      @Override public void onBindItems(List items) {
+        adapter.setItems(items);
+      }
 
-  @Override public void showRefreshing() {
-    swipeRefreshLayout.setRefreshing(true);
-    if (snackbar != null) {
-      snackbar.dismiss();
-    }
-  }
-
-  @Override public void showRefreshError() {
-    swipeRefreshLayout.setRefreshing(false);
-    snackbar = Snackbar.make(rootView, textError, Snackbar.LENGTH_SHORT);
-    snackbar.show();
+      @NonNull @Override public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
+        return getLayoutInflater().inflate(R.layout.view_error, parent);
+      }
+    });
   }
 }

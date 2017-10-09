@@ -31,7 +31,11 @@ public class TodoDataProvider implements DataProvider<String> {
       final int index = i + startIndex;
       result.add("Item " + index);
     }
-    final Paging paging = new PagingImpl(LAST_PAGE * PER_PAGE, page, LAST_PAGE);
-    return new ListDataImpl<>(result, paging);
+    final Paging paging = Paging.builder()
+        .currentPage(page)
+        .lastPage(LAST_PAGE)
+        .total(LAST_PAGE * PER_PAGE)
+        .make();
+    return new ListData<>(result, paging);
   }
 }

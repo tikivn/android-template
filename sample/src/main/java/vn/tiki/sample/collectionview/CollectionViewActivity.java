@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import java.util.List;
@@ -38,27 +39,27 @@ public class CollectionViewActivity extends AppCompatActivity {
         .build();
 
     vCollectionView.setAdapter(new Adapter<String>() {
-      @Override public RecyclerView.LayoutManager getLayoutManager() {
+      @Override public DataProvider<String> onCreateDataProvider() {
+        return new TodoDataProvider();
+      }
+
+      @Override public RecyclerView.LayoutManager onCreateLayoutManager() {
         return new LinearLayoutManager(
             CollectionViewActivity.this,
             LinearLayoutManager.VERTICAL,
             false);
       }
 
-      @Override public RecyclerView.Adapter<?> getRecyclerViewAdapter() {
+      @Override public RecyclerView.Adapter<?> onCreateRecyclerViewAdapter() {
         return adapter;
       }
 
-      @Override public DataProvider<String> getDataProvider() {
-        return new TodoDataProvider();
-      }
-
-      @Override public void setItems(List<String> items) {
+      @Override public void onBindItems(List<String> items) {
         adapter.setItems(items);
       }
 
-      @NonNull @Override public View onCreateErrorView(Throwable throwable) {
-        return getLayoutInflater().inflate(R.layout.view_error, null);
+      @NonNull @Override public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
+        return getLayoutInflater().inflate(R.layout.view_error, parent);
       }
     });
   }
