@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,8 +40,6 @@ public class ProductListingActivity extends BaseActivity {
   @BindString(R.string.product_listing_error_occurred) String textError;
 
   @Inject ProductRepository productRepository;
-
-  private Snackbar snackbar;
 
   public static Intent intent(Context context) {
     return new Intent(context, ProductListingActivity.class);
@@ -88,17 +85,16 @@ public class ProductListingActivity extends BaseActivity {
                 .product(((Product) item))
                 .make()))
         .build();
+
     vCollectionView.setAdapter(new Adapter() {
       @Override public DataProvider onCreateDataProvider() {
         return new DataProvider() {
           @Override public Observable<ListData<Product>> fetchNewest() {
-            return productRepository.getProducts(1, true)
-                .map(it -> it);
+            return productRepository.getProducts(1, true);
           }
 
-          @Override public Observable<ListData> fetch(int page) {
-            return productRepository.getProducts(page, false)
-                .map(it -> it);
+          @Override public Observable<ListData<Product>> fetch(int page) {
+            return productRepository.getProducts(page, false);
           }
         };
       }
@@ -110,7 +106,8 @@ public class ProductListingActivity extends BaseActivity {
             false);
       }
 
-      @Override public RecyclerView.Adapter<?> onCreateRecyclerViewAdapter() {
+      @Override
+      public RecyclerView.Adapter<? extends RecyclerView.ViewHolder> onCreateRecyclerViewAdapter() {
         return adapter;
       }
 
@@ -119,7 +116,7 @@ public class ProductListingActivity extends BaseActivity {
       }
 
       @NonNull @Override public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
-        return getLayoutInflater().inflate(R.layout.view_error, parent);
+        return getLayoutInflater().inflate(R.layout.view_error, parent, false);
       }
     });
   }

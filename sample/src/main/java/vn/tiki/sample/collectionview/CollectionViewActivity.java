@@ -15,6 +15,7 @@ import java.util.List;
 import vn.tiki.collectionview.Adapter;
 import vn.tiki.collectionview.CollectionView;
 import vn.tiki.collectionview.DataProvider;
+import vn.tiki.collectionview.LoadingItem;
 import vn.tiki.noadapter2.OnlyAdapter;
 import vn.tiki.sample.R;
 
@@ -35,7 +36,20 @@ public class CollectionViewActivity extends AppCompatActivity {
     ButterKnife.bind(this);
 
     adapter = OnlyAdapter.builder()
-        .viewHolderFactory((parent, type) -> TextViewHolder.create(parent))
+        .typeFactory(item -> {
+          if (item instanceof LoadingItem) {
+            return 1;
+          } else {
+            return 2;
+          }
+        })
+        .viewHolderFactory((parent, type) -> {
+          if (type == 1) {
+            return LoadingViewHolder.create(parent);
+          } else {
+            return TextViewHolder.create(parent);
+          }
+        })
         .build();
 
     vCollectionView.setAdapter(new Adapter<String>() {
@@ -59,7 +73,7 @@ public class CollectionViewActivity extends AppCompatActivity {
       }
 
       @NonNull @Override public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
-        return getLayoutInflater().inflate(R.layout.view_error, parent);
+        return getLayoutInflater().inflate(R.layout.view_error, parent, false);
       }
     });
   }

@@ -13,6 +13,9 @@ import java.util.List;
 
 class CollectionViewPresenter {
 
+  static final LoadingItem LOADING_ITEM = new LoadingItem() {
+  };
+
   @NonNull private final DataProvider<?> dataProvider;
   CollectionView collectionView;
   @Nullable private ListData<?> listData;
@@ -30,12 +33,12 @@ class CollectionViewPresenter {
   void onLoad() {
     collectionView.showLoading();
     disposable = map(dataProvider.fetch(1))
+        .map(includeLoading())
         .subscribe(
             new Consumer<List<?>>() {
               @Override public void accept(List<?> items) throws Exception {
                 collectionView.showContent();
                 collectionView.setItems(items);
-                checkToHideLoadMore();
               }
             },
             new Consumer<Throwable>() {
@@ -67,18 +70,27 @@ class CollectionViewPresenter {
         .observeOn(AndroidSchedulers.mainThread());
   }
 
-  private void checkToHideLoadMore() {
-    if (listData == null) {
-      return;
-    }
-    final Paging paging = listData.getPaging();
-    if (isCurrentLastPage(paging)) {
-      collectionView.hideLoadMore();
-    }
+  @NonNull private Function<List<?>, List<?>> includeLoading() {
+    return new Function<List<?>, List<?>>() {
+      @Override public List<?> apply(List<?> objects) throws Exception {
+        if (listData == null || isCurrentLastPage(listData.getPaging())) {
+          return objects;
+        }
+        return append(objects, LOADING_ITEM);
+      }
+    };
   }
 
   private boolean isCurrentLastPage(@NonNull Paging paging) {
     return paging.currentPage() == paging.lastPage();
+  }
+
+  private static List<?> append(List<?> list1, Object item) {
+    final int size = list1.size() + 1;
+    final ArrayList<Object> result = new ArrayList<>(size);
+    result.addAll(list1);
+    result.add(item);
+    return result;
   }
 
   void detach() {
@@ -95,12 +107,12 @@ class CollectionViewPresenter {
   void onRefresh() {
     disposeDisposable();
     disposable = map(dataProvider.fetchNewest())
+        .map(includeLoading())
         .subscribe(
             new Consumer<List<?>>() {
               @Override public void accept(List<?> items) throws Exception {
                 collectionView.hideRefreshing();
                 collectionView.setItems(items);
-                checkToHideLoadMore();
               }
             },
             new Consumer<Throwable>() {
@@ -119,15 +131,16 @@ class CollectionViewPresenter {
     final int nextPage = listData.getPaging().currentPage() + 1;
     final List<?> currentItems = listData.getItems();
     disposable = map(dataProvider.fetch(nextPage))
+        .map(new Function<List<?>, List<?>>() {
+          @Override public List<?> apply(List<?> objects) throws Exception {
+            return concat(currentItems, objects);
+          }
+        })
+        .map(includeLoading())
         .subscribe(
             new Consumer<List<?>>() {
               @Override public void accept(List<?> items) throws Exception {
-                final int size = currentItems.size() + items.size();
-                final ArrayList<Object> mergedItems = new ArrayList<>(size);
-                mergedItems.addAll(currentItems);
-                mergedItems.addAll(items);
-                collectionView.setItems(mergedItems);
-                checkToHideLoadMore();
+                collectionView.setItems(items);
               }
             },
             new Consumer<Throwable>() {
@@ -136,5 +149,13 @@ class CollectionViewPresenter {
                 collectionView.hideLoadMore();
               }
             });
+  }
+
+  private static List<?> concat(List<?> list1, List<?> list2) {
+    final int size = list1.size() + list2.size();
+    final ArrayList<Object> result = new ArrayList<>(size);
+    result.addAll(list1);
+    result.addAll(list2);
+    return result;
   }
 }

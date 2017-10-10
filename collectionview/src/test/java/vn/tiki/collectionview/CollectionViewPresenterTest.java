@@ -70,7 +70,7 @@ public class CollectionViewPresenterTest {
   @Test
   public void testLoadSuccess() throws Exception {
     verify(mockedView).showContent();
-    verify(mockedView).setItems(eq(Arrays.asList(1, 2, 3)));
+    verify(mockedView).setItems(eq(Arrays.asList(1, 2, 3, CollectionViewPresenter.LOADING_ITEM)));
   }
 
   @Test
@@ -87,7 +87,12 @@ public class CollectionViewPresenterTest {
   public void testRefreshSuccess() throws Exception {
     tested.onRefresh();
     verify(mockedView).hideRefreshing();
-    verify(mockedView).setItems(eq(Arrays.asList(1, 2, 3, 4)));
+    verify(mockedView).setItems(eq(Arrays.asList(
+        1,
+        2,
+        3,
+        4,
+        CollectionViewPresenter.LOADING_ITEM)));
   }
 
   @Test

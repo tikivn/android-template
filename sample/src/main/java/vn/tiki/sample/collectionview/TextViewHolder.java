@@ -15,7 +15,7 @@ public class TextViewHolder extends AbsViewHolder {
 
   public static TextViewHolder create(ViewGroup parent) {
     final View view = LayoutInflater.from(parent.getContext()).inflate(
-        R.layout.item_text,
+        R.layout.clv_item_text,
         parent,
         false);
     return new TextViewHolder(view);
