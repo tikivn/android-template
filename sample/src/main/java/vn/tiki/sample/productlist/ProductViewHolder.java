@@ -37,7 +37,7 @@ public class ProductViewHolder extends AbsViewHolder {
 
     final Product product = (Product) item;
 
-    tvTitle.setText(product.title());
+    tvTitle.setText(product.id() + " - " + product.title());
     TextViews.setPrice(tvPrice, product.price());
     GlideApp
         .with(itemView.getContext())

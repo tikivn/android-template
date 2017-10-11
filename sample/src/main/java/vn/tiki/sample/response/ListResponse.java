@@ -14,7 +14,7 @@ public class ListResponse<T> {
   @SerializedName("current_Page")
   private int currentPage;
 
-  @SerializedName("items")
+  @SerializedName("getItems")
   private List<T> items;
 
   public int getTotal() {

@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import vn.tiki.sample.entity.ListData;
+import vn.tiki.collectionview.ListData;
 
 public class ObjectCache<K, V> {
   private final LruCache<K, LivingObject<V>> cache;
@@ -15,7 +15,7 @@ public class ObjectCache<K, V> {
         if (value.getObject() instanceof List) {
           return ((List) value.getObject()).size();
         } else if (value.getObject() instanceof ListData) {
-          return ((ListData) value.getObject()).items().size();
+          return ((ListData) value.getObject()).getItems().size();
         } else {
           return 1;
         }

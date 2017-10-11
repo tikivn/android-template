@@ -35,6 +35,7 @@ public interface Deps {
     String compat = "com.android.support:support-compat:" + Version.support;
     String appCompat = "com.android.support:appcompat-v7:" + Version.support;
     String design = "com.android.support:design:" + Version.support;
+    String recyclerview = "com.android.support:recyclerview-v7:" + Version.support;
     String constraint = "com.android.support.constraint:constraint-layout:1.0.2";
     String testRunner = "com.android.support.test:runner:1.0.0";
   }

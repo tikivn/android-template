@@ -6,9 +6,10 @@ import ix.Ix;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import vn.tiki.collectionview.ListData;
+import vn.tiki.collectionview.Paging;
 import vn.tiki.sample.BuildConfig;
 import vn.tiki.sample.api.ApiService;
-import vn.tiki.sample.entity.ListData;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.util.Strings;
 
@@ -24,21 +25,20 @@ public class ProductRepository {
         10,
         TimeUnit.MINUTES);
     final ApiSource<Integer, ListData<Product>> apiSource = key -> api.getProducts(key, 10)
-        .map(response -> ListData.<Product>builder()
-            .total(response.getTotal())
-            .currentPage(response.getCurrentPage())
-            .lastPage(response.getLastPage())
-            .items(
-                Ix.from(response.getItems())
-                    .map(productResponse -> Product.builder()
-                        .id(productResponse.getId())
-                        .title(productResponse.getTitle())
-                        .price(productResponse.getPrice())
-                        .imageUrl(resolveImageUrl(productResponse.getImage()))
-                        .description(Strings.toHtml(productResponse.getDescription()).toString())
-                        .make())
-                    .toList())
-            .make());
+        .map(response -> new ListData<>(
+            Ix.from(response.getItems())
+                .map(productResponse -> Product.builder()
+                    .id(productResponse.getId())
+                    .title(productResponse.getTitle())
+                    .price(productResponse.getPrice())
+                    .imageUrl(resolveImageUrl(productResponse.getImage()))
+                    .description(Strings.toHtml(productResponse.getDescription()).toString())
+                    .make())
+                .toList(),
+            Paging.builder()
+                .currentPage(response.getCurrentPage())
+                .lastPage(response.getLastPage())
+                .total(response.getTotal()).make()));
     resource = new BoundResource<>(cacheSource, apiSource);
   }
 

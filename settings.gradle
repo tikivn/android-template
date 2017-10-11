@@ -4,5 +4,6 @@ include ':intents-annotations'
 include ':intents-compiler'
 include ':daggers'
 include ':mvp'
+include ':collectionview'
 
 rootProject.name = 'android-template'

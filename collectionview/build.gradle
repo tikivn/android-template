@@ -1,0 +1,45 @@
+import vn.tiki.Deps
+
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion Deps.Version.compileSdk
+  buildToolsVersion Deps.Version.buildTools
+
+  defaultConfig {
+    minSdkVersion Deps.Version.minSdk
+    targetSdkVersion Deps.Version.compileSdk
+
+    consumerProguardFiles 'proguard-rules.txt'
+
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath = true
+      }
+    }
+  }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+    // We run a full lint analysis as build part in CI, so skip vital checks for assemble tasks.
+    checkReleaseBuilds false
+  }
+}
+
+dependencies {
+  implementation Deps.AndroidSupport.annotations
+  implementation Deps.AndroidSupport.appCompat
+  implementation Deps.AndroidSupport.recyclerview
+  implementation Deps.rxJava
+  implementation Deps.rxAndroid
+
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.mockito
+  testImplementation Deps.Test.truth
+  testImplementation Deps.Test.robolectric
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

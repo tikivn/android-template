@@ -6,8 +6,8 @@ module.exports = (app, database) => {
   app.get('/products', (req, res) => {
     if (products.length === 0) {
       const fileContent = fs.readFileSync('app/data/products.json', 'utf-8');
-      products = JSON.parse(fileContent).map((product, index) => ({
-        id: index,
+      products = JSON.parse(fileContent).map((product, id) => ({
+        id,
         title: product.title,
         price: product.price,
         image: product.image,
