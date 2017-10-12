@@ -20,7 +20,6 @@ apply plugin: 'jacoco'
 
 android {
   compileSdkVersion Deps.Version.compileSdk
-  buildToolsVersion Deps.Version.buildTools
 
   defaultConfig {
     applicationId "vn.tiki.sample"

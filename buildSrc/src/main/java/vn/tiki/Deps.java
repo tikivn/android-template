@@ -4,7 +4,6 @@ public interface Deps {
   interface Version {
     int minSdk = 16;
     int compileSdk = 26;
-    String buildTools = "26.0.1";
     String kotlin = "1.1.3-2";
     String support = "26.1.0";
     String dagger = "2.11";
@@ -42,7 +41,7 @@ public interface Deps {
 
   interface Android {
     String runtime = "com.google.android:android:4.1.1.4";
-    String gradlePlugin = "com.android.tools.build:gradle:3.0.0-beta6";
+    String gradlePlugin = "com.android.tools.build:gradle:3.0.0-beta7";
   }
 
   interface Auto {
