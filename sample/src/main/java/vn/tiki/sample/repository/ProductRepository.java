@@ -12,8 +12,8 @@ import javax.inject.Singleton;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import vn.tiki.collectionview.ListData;
-import vn.tiki.collectionview.Paging;
 import vn.tiki.sample.api.ApiService;
+import vn.tiki.sample.entity.Paging;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.util.Stores;
 

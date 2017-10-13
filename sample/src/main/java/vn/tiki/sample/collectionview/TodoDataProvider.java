@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import vn.tiki.collectionview.DataProvider;
 import vn.tiki.collectionview.ListData;
-import vn.tiki.collectionview.Paging;
+import vn.tiki.sample.entity.Paging;
 
 public class TodoDataProvider implements DataProvider<String> {
 
