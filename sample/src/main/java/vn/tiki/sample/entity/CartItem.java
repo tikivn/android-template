@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 @Entity
 public final class CartItem {
+
   @PrimaryKey
   @NonNull private final String id;
   @NonNull private final String productId;
@@ -23,11 +24,13 @@ public final class CartItem {
     this.quantity = quantity;
   }
 
-  @NonNull public String getId() {
+  @NonNull
+  public String getId() {
     return id;
   }
 
-  @NonNull public String getProductId() {
+  @NonNull
+  public String getProductId() {
     return productId;
   }
 

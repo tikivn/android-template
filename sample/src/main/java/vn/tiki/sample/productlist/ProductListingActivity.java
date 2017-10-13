@@ -87,12 +87,12 @@ public class ProductListingActivity extends BaseActivity {
       public DataProvider onCreateDataProvider() {
         return new DataProvider() {
           @Override
-          public Single<ListData<Product>> fetch(int page) {
+          public Single<? extends ListData<Product>> fetch(int page) {
             return productRepository.getProducts(page, false);
           }
 
           @Override
-          public Single<ListData<Product>> fetchNewest() {
+          public Single<? extends ListData<Product>> fetchNewest() {
             return productRepository.getProducts(1, true);
           }
         };

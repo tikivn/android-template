@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import io.reactivex.Single;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.*;
 import org.mockito.*;
 
@@ -39,21 +40,42 @@ public class CollectionViewPresenterTest {
     }
   }
 
+  private static class ListDataTest implements ListData<Integer> {
+
+    private final List<Integer> items;
+    private final Paging paging;
+
+    public ListDataTest(final List<Integer> items, final Paging paging) {
+      this.items = items;
+      this.paging = paging;
+    }
+
+    @Override
+    public List<Integer> items() {
+      return items;
+    }
+
+    @Override
+    public Paging paging() {
+      return paging;
+    }
+  }
+
   @Rule public final RxSchedulerTestRule rxSchedulerTestRule = new RxSchedulerTestRule();
 
   @Mock DataProvider mockedDataProvider;
   @Mock CollectionView mockedView;
 
-  ListData<Integer> loadData = new ListData<>(
+  ListData<Integer> loadData = new ListDataTest(
       Arrays.asList(1, 2, 3),
       new PagingImpl(1, 2, 6));
 
-  ListData<Integer> loadMoreData = new ListData<>(
+  ListData<Integer> loadMoreData = new ListDataTest(
       Arrays.asList(4, 5, 6),
       new PagingImpl(2, 2, 6));
 
 
-  ListData<Integer> refreshData = new ListData<>(
+  ListData<Integer> refreshData = new ListDataTest(
       Arrays.asList(1, 2, 3, 4),
       new PagingImpl(1, 2, 6));
 

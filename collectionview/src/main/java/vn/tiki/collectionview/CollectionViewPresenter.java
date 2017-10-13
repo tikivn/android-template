@@ -58,11 +58,11 @@ class CollectionViewPresenter {
 
   void onLoadMore() {
     disposeDisposable();
-    if (listData == null || isCurrentLastPage(listData.getPaging())) {
+    if (listData == null || isCurrentLastPage(listData.paging())) {
       return;
     }
-    final int nextPage = listData.getPaging().currentPage() + 1;
-    final List<?> currentItems = listData.getItems();
+    final int nextPage = listData.paging().currentPage() + 1;
+    final List<?> currentItems = listData.items();
     disposable = map(dataProvider.fetch(nextPage))
         .map(new Function<List<?>, List<?>>() {
           @Override
@@ -119,7 +119,7 @@ class CollectionViewPresenter {
     return new Function<List<?>, List<?>>() {
       @Override
       public List<?> apply(List<?> objects) throws Exception {
-        if (listData == null || isCurrentLastPage(listData.getPaging())) {
+        if (listData == null || isCurrentLastPage(listData.paging())) {
           return objects;
         }
         return append(objects, LOADING_ITEM);
@@ -146,7 +146,7 @@ class CollectionViewPresenter {
         .map(new Function<ListData<?>, List<?>>() {
           @Override
           public List<?> apply(ListData<?> listData) throws Exception {
-            return listData.getItems();
+            return listData.items();
           }
         })
         .subscribeOn(Schedulers.io())

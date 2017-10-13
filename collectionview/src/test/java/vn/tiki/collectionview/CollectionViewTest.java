@@ -1,43 +1,40 @@
 package vn.tiki.collectionview;
 
-import android.app.Application;
-import android.view.View;
-import android.view.ViewGroup;
-import io.reactivex.Observable;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@SuppressWarnings({ "ConstantConditions", "unchecked", "WeakerAccess" })
+import android.app.Application;
+import android.view.View;
+import android.view.ViewGroup;
+import io.reactivex.Single;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.*;
+import org.junit.runner.*;
+import org.mockito.*;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+
+@SuppressWarnings({"ConstantConditions", "unchecked", "WeakerAccess"})
 @RunWith(RobolectricTestRunner.class)
 public class CollectionViewTest {
+
   @Rule public final RxSchedulerTestRule rxSchedulerTestRule = new RxSchedulerTestRule();
 
   @Mock DataProvider mockedDataProvider;
   @Mock Adapter mockedAdapter;
-  private CollectionView tested;
   private Application application;
+  private CollectionView tested;
 
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     application = RuntimeEnvironment.application;
-    when(mockedDataProvider.fetch(anyInt())).thenReturn(Observable.empty());
+    when(mockedDataProvider.fetch(anyInt())).thenReturn(Single.error(new Throwable()));
     when(mockedAdapter.onCreateDataProvider()).thenReturn(mockedDataProvider);
     when(mockedAdapter.onCreateErrorView(any(ViewGroup.class), any(Throwable.class)))
         .thenReturn(new View(application));
@@ -65,16 +62,8 @@ public class CollectionViewTest {
   }
 
   @Test
-  public void testShowLoading() throws Exception {
-    tested.showLoading();
-    assertThat(tested.refreshLayout.isRefreshing()).isTrue();
-    assertTrue(tested.errorView == null || tested.errorView.getVisibility() == View.GONE);
-  }
-
-  @Test
-  public void testShowContent() throws Exception {
-    tested.showLoading();
-    tested.showContent();
+  public void testHideRefreshing() throws Exception {
+    tested.hideRefreshing();
     assertThat(tested.refreshLayout.isRefreshing()).isFalse();
   }
 
@@ -86,6 +75,13 @@ public class CollectionViewTest {
   }
 
   @Test
+  public void testShowContent() throws Exception {
+    tested.showLoading();
+    tested.showContent();
+    assertThat(tested.refreshLayout.isRefreshing()).isFalse();
+  }
+
+  @Test
   public void testShowError() throws Exception {
     tested.showLoading();
     tested.showError(new Throwable());
@@ -94,8 +90,9 @@ public class CollectionViewTest {
   }
 
   @Test
-  public void testHideRefreshing() throws Exception {
-    tested.hideRefreshing();
-    assertThat(tested.refreshLayout.isRefreshing()).isFalse();
+  public void testShowLoading() throws Exception {
+    tested.showLoading();
+    assertThat(tested.refreshLayout.isRefreshing()).isTrue();
+    assertTrue(tested.errorView == null || tested.errorView.getVisibility() == View.GONE);
   }
 }

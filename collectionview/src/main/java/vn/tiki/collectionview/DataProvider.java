@@ -11,12 +11,12 @@ public interface DataProvider<T> {
    * @param page the page number
    * @return an {@link Observable} object that will emit list of items
    */
-  Single<ListData<T>> fetch(int page);
+  Single<? extends ListData<T>> fetch(int page);
 
   /**
    * Which will be used to fetch data when user PullToRefresh
    *
    * @return an {@link Observable} object that will emit list of items
    */
-  Single<ListData<T>> fetchNewest();
+  Single<? extends ListData<T>> fetchNewest();
 }

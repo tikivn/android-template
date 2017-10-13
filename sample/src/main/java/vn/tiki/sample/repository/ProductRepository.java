@@ -11,20 +11,19 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
-import vn.tiki.collectionview.ListData;
 import vn.tiki.sample.api.ApiService;
-import vn.tiki.sample.entity.Paging;
+import vn.tiki.sample.entity.ListData;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.util.Stores;
 
 @Singleton
 public class ProductRepository {
 
-  private final Store<vn.tiki.sample.entity.ListData<Product>, Integer> store;
+  private final Store<ListData<Product>, Integer> store;
 
   @Inject
   ProductRepository(File cacheDir, ApiService api, Gson gson) {
-    final RealStoreBuilder<BufferedSource, vn.tiki.sample.entity.ListData<Product>, Integer> builder = StoreBuilder.<Integer, BufferedSource, vn.tiki.sample.entity.ListData<Product>>parsedWithKey()
+    final RealStoreBuilder<BufferedSource, ListData<Product>, Integer> builder = StoreBuilder.<Integer, BufferedSource, ListData<Product>>parsedWithKey()
         .fetcher(
             page -> api.getProducts(page, 10)
                 .map(ResponseBody::source))
@@ -41,20 +40,13 @@ public class ProductRepository {
   }
 
   public Single<ListData<Product>> getProducts(int page, boolean forceApi) {
-    final Single<vn.tiki.sample.entity.ListData<Product>> response;
+    final Single<ListData<Product>> response;
     if (forceApi) {
       response = store.fetch(page);
     } else {
       response = store.get(page);
     }
-    return response
-        .map(res -> new ListData<>(
-            res.items(),
-            Paging.builder()
-                .currentPage(res.currentPage())
-                .lastPage(res.lastPage())
-                .total(res.total())
-                .make()));
+    return response;
   }
 
 }

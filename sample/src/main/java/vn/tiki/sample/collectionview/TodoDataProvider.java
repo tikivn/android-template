@@ -13,12 +13,12 @@ public class TodoDataProvider implements DataProvider<String> {
   private static final int LAST_PAGE = 10;
 
   @Override
-  public Single<ListData<String>> fetch(int page) {
+  public Single<? extends ListData<String>> fetch(int page) {
     return Single.fromCallable(() -> generateItems(page));
   }
 
   @Override
-  public Single<ListData<String>> fetchNewest() {
+  public Single<? extends ListData<String>> fetchNewest() {
     return Single.fromCallable(() -> generateItems(1));
   }
 
@@ -38,6 +38,16 @@ public class TodoDataProvider implements DataProvider<String> {
         .lastPage(LAST_PAGE)
         .total(LAST_PAGE * PER_PAGE)
         .make();
-    return new ListData<>(result, paging);
+    return new ListData<String>() {
+      @Override
+      public List<String> items() {
+        return result;
+      }
+
+      @Override
+      public vn.tiki.collectionview.Paging paging() {
+        return paging;
+      }
+    };
   }
 }
