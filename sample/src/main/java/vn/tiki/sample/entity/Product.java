@@ -1,36 +1,29 @@
 package vn.tiki.sample.entity;
 
 import android.os.Parcelable;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.SerializedName;
 
 @com.google.auto.value.AutoValue
 public abstract class Product implements Parcelable {
 
-  public static Builder builder() {
-    return new AutoValue_Product.Builder();
-  }
-
-  public abstract String id();
-
-  public abstract String title();
-
-  public abstract float price();
-
+  @SerializedName("description")
   public abstract String description();
 
-  public abstract String imageUrl();
+  @SerializedName("id")
+  public abstract String id();
 
-  @com.google.auto.value.AutoValue.Builder
-  public static abstract class Builder {
-    public abstract Builder id(String id);
+  @SerializedName("image")
+  public abstract String image();
 
-    public abstract Builder title(String title);
+  @SerializedName("price")
+  public abstract float price();
 
-    public abstract Builder price(float price);
+  @SerializedName("title")
+  public abstract String title();
 
-    public abstract Builder description(String description);
-
-    public abstract Builder imageUrl(String imageUrl);
-
-    public abstract Product make();
+  static TypeAdapter<Product> typeAdapter(Gson gson) {
+    return new AutoValue_Product.GsonTypeAdapter(gson);
   }
 }

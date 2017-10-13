@@ -19,7 +19,9 @@ import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseMvpActivity;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.glide.GlideApp;
+import vn.tiki.sample.util.Strings;
 import vn.tiki.sample.util.TextViews;
+import vn.tiki.sample.util.Urls;
 
 public class ProductDetailActivity
     extends BaseMvpActivity<ProductDetailView, ProductDetailPresenter>
@@ -35,15 +37,6 @@ public class ProductDetailActivity
 
   @BindExtra Product product;
 
-  @OnClick(R.id.btAddToCart) public void onAddToCartClicked() {
-    presenter.onAddToCartClick();
-  }
-
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_cart, menu);
-    return true;
-  }
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -57,6 +50,27 @@ public class ProductDetailActivity
     connect(presenter, this);
     bind(product);
     presenter.setProduct(product);
+  }
+
+  @OnClick(R.id.btAddToCart)
+  public void onAddToCartClicked() {
+    presenter.onAddToCartClick();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_cart, menu);
+    return true;
+  }
+
+  private void bind(Product product) {
+    tvName.setText(product.title());
+    TextViews.setPrice(tvPrice, product.price());
+    TextViews.setHtml(tvDescription, Strings.toHtml(product.description()).toString());
+    GlideApp
+        .with(this)
+        .load(Urls.resolveImageUrl(product.image()))
+        .into(ivThumb);
   }
 
   private void configureSizeOptions() {
@@ -77,19 +91,10 @@ public class ProductDetailActivity
         presenter.onSizeSelected(selectedOption.toString());
       }
 
-      @Override public void onNothingSelected(AdapterView<?> adapterView) {
+      @Override
+      public void onNothingSelected(AdapterView<?> adapterView) {
 
       }
     });
-  }
-
-  private void bind(Product product) {
-    tvName.setText(product.title());
-    TextViews.setPrice(tvPrice, product.price());
-    TextViews.setHtml(tvDescription, product.description());
-    GlideApp
-        .with(this)
-        .load(product.imageUrl())
-        .into(ivThumb);
   }
 }

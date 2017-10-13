@@ -29,6 +29,12 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ['autovaluegson.defaultCollectionsToEmpty': 'true']
+            }
+        }
     }
 
     buildTypes {
@@ -94,6 +100,7 @@ dependencies {
     //  implementation deps.tiki.mvp
     //  implementation deps.tiki.intents.intents
     //  annotationProcessor deps.tiki.intents.compiler
+    implementation Deps.gson
     implementation Deps.Http.retrofit
     implementation Deps.Http.gsonConverter
     implementation Deps.Http.rxJavaAdapter

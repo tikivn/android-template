@@ -104,4 +104,5 @@ public interface Deps {
   String timber = "com.jakewharton.timber:timber:4.5.1";
   String noadapter = "vn.tiki.noadapter2:noadapter:2.0.2";
   String javapoet = "com.squareup:javapoet:1.9.0";
+  String gson = "com.google.code.gson:gson:2.8.0";
 }

@@ -9,8 +9,8 @@ public final class CartItem {
   @PrimaryKey
   @NonNull private final String id;
   @NonNull private final String productId;
-  @NonNull private final String size;
   private int quantity;
+  @NonNull private final String size;
 
   public CartItem(
       @NonNull String id,
@@ -31,15 +31,16 @@ public final class CartItem {
     return productId;
   }
 
-  @NonNull public String getSize() {
-    return size;
-  }
-
   public int getQuantity() {
     return quantity;
   }
 
   public void setQuantity(int quantity) {
     this.quantity = quantity;
+  }
+
+  @NonNull
+  public String getSize() {
+    return size;
   }
 }

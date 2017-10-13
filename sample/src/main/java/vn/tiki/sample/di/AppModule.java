@@ -2,6 +2,8 @@ package vn.tiki.sample.di;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dagger.Module;
 import dagger.Provides;
 import java.io.File;
@@ -15,6 +17,7 @@ import vn.tiki.sample.BuildConfig;
 import vn.tiki.sample.api.ApiService;
 import vn.tiki.sample.database.AppDatabase;
 import vn.tiki.sample.database.CartDao;
+import vn.tiki.sample.entity.MyAdapterFactory;
 import vn.tiki.sample.model.UserModel;
 
 /**
@@ -63,6 +66,13 @@ public class AppModule {
     return appDatabase.cartDao();
   }
 
+  @Provides
+  Gson provideGson() {
+    return new GsonBuilder()
+        .registerTypeAdapterFactory(MyAdapterFactory.create())
+        .create();
+  }
+
   @Singleton
   @Provides
   OkHttpClient provideOkHttpClient() {
@@ -72,4 +82,5 @@ public class AppModule {
         .addInterceptor(logging)
         .build();
   }
+
 }

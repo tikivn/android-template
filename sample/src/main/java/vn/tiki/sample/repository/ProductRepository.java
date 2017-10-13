@@ -1,13 +1,10 @@
 package vn.tiki.sample.repository;
 
-import android.support.annotation.NonNull;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nytimes.android.external.store3.base.impl.RealStoreBuilder;
 import com.nytimes.android.external.store3.base.impl.Store;
 import com.nytimes.android.external.store3.base.impl.StoreBuilder;
 import io.reactivex.Single;
-import ix.Ix;
 import java.io.File;
 import java.io.IOException;
 import javax.inject.Inject;
@@ -16,27 +13,22 @@ import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import vn.tiki.collectionview.ListData;
 import vn.tiki.collectionview.Paging;
-import vn.tiki.sample.BuildConfig;
 import vn.tiki.sample.api.ApiService;
 import vn.tiki.sample.entity.Product;
-import vn.tiki.sample.response.ListResponse;
-import vn.tiki.sample.response.ProductResponse;
 import vn.tiki.sample.util.Stores;
-import vn.tiki.sample.util.Strings;
 
 @Singleton
 public class ProductRepository {
 
-  private final Store<ListResponse<ProductResponse>, Integer> store;
+  private final Store<vn.tiki.sample.entity.ListData<Product>, Integer> store;
 
   @Inject
-  ProductRepository(File cacheDir, ApiService api) {
-    final RealStoreBuilder<BufferedSource, ListResponse<ProductResponse>, Integer> builder = StoreBuilder.<Integer, BufferedSource, ListResponse<ProductResponse>>parsedWithKey()
+  ProductRepository(File cacheDir, ApiService api, Gson gson) {
+    final RealStoreBuilder<BufferedSource, vn.tiki.sample.entity.ListData<Product>, Integer> builder = StoreBuilder.<Integer, BufferedSource, vn.tiki.sample.entity.ListData<Product>>parsedWithKey()
         .fetcher(
             page -> api.getProducts(page, 10)
                 .map(ResponseBody::source))
-        .parser(Stores.parser(new Gson(), new TypeToken<ListResponse<ProductResponse>>() {
-        }.getType()))
+        .parser(Stores.listDataParser(gson, Product.class))
         .memoryPolicy(Stores.memoryPolicy(10, 10));
 
     try {
@@ -49,7 +41,7 @@ public class ProductRepository {
   }
 
   public Single<ListData<Product>> getProducts(int page, boolean forceApi) {
-    final Single<ListResponse<ProductResponse>> response;
+    final Single<vn.tiki.sample.entity.ListData<Product>> response;
     if (forceApi) {
       response = store.fetch(page);
     } else {
@@ -57,25 +49,13 @@ public class ProductRepository {
     }
     return response
         .map(res -> new ListData<>(
-            Ix.from(res.getItems())
-                .map(productResponse -> Product.builder()
-                    .id(productResponse.getId())
-                    .title(productResponse.getTitle())
-                    .price(productResponse.getPrice())
-                    .imageUrl(resolveImageUrl(productResponse.getImage()))
-                    .description(Strings.toHtml(productResponse.getDescription()).toString())
-                    .make())
-                .toList(),
+            res.items(),
             Paging.builder()
-                .currentPage(res.getCurrentPage())
-                .lastPage(res.getLastPage())
-                .total(res.getTotal())
+                .currentPage(res.currentPage())
+                .lastPage(res.lastPage())
+                .total(res.total())
                 .make()));
   }
 
-  @NonNull
-  private String resolveImageUrl(String imageUrl) {
-    return BuildConfig.BASE_URL + imageUrl;
-  }
 }
 

@@ -12,6 +12,7 @@ import vn.tiki.sample.R;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.glide.GlideApp;
 import vn.tiki.sample.util.TextViews;
+import vn.tiki.sample.util.Urls;
 
 public class ProductViewHolder extends AbsViewHolder {
 
@@ -43,7 +44,7 @@ public class ProductViewHolder extends AbsViewHolder {
     TextViews.setPrice(tvPrice, product.price());
     GlideApp
         .with(itemView.getContext())
-        .load(product.imageUrl())
+        .load(Urls.resolveImageUrl(product.image()))
         .into(ivThumb);
   }
 }
