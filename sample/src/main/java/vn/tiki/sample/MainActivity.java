@@ -21,6 +21,17 @@ public class MainActivity extends BaseActivity {
     ButterKnife.bind(this);
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_cart, menu);
+    return true;
+  }
+
+  @OnClick(R.id.btOpenCollectionView)
+  public void openCollectionView(View view) {
+    startActivity(CollectionViewActivity.intent(this));
+  }
+
   @OnClick(R.id.btOpenExtraInjection)
   public void openExtraInjection(View view) {
     final Intent intent = Intents.extraInjectionActivity(this)
@@ -38,15 +49,5 @@ public class MainActivity extends BaseActivity {
   @OnClick(R.id.btOpenProductListing)
   public void openProductListing(View view) {
     startActivity(ProductListingActivity.intent(this));
-  }
-
-  @OnClick(R.id.btOpenCollectionView)
-  public void openCollectionView(View view) {
-    startActivity(CollectionViewActivity.intent(this));
-  }
-
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_cart, menu);
-    return true;
   }
 }

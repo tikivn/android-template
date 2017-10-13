@@ -22,8 +22,7 @@ We actively welcome your pull requests!
 Coding Style & Convention
 -------------------------
 
-Please follow our [coding style](https://github.com/tikivn/java-code-styles) and our
-[conventions](./CONVENTION.md)
+Please follow our [coding style](https://github.com/talenguyen/java-code-styles) and our [conventions](./CONVENTION.md)
 
 Most importantly, be consistent with existing code.  Look around the codebase and match the style.
 

@@ -13,14 +13,21 @@ import vn.tiki.sample.di.AppModule;
 import vn.tiki.sample.di.DaggerAppComponent;
 
 public class SampleApp extends Application implements AppInjector {
+
   private AppComponent appComponent;
 
-  @Override public void onCreate() {
+  @Override
+  public void onCreate() {
     super.onCreate();
 
     configureDagger();
     configureFabric();
     configureTimber();
+  }
+
+  @Override
+  public Object appComponent() {
+    return appComponent;
   }
 
   protected void configureDagger() {
@@ -42,7 +49,8 @@ public class SampleApp extends Application implements AppInjector {
       Timber.plant(new Timber.DebugTree());
     } else {
       Timber.plant(new Timber.Tree() {
-        @Override protected void log(int priority, String tag, String message, Throwable t) {
+        @Override
+        protected void log(int priority, String tag, String message, Throwable t) {
           if (priority == Log.VERBOSE || priority == Log.DEBUG) {
             return;
           }
@@ -55,9 +63,5 @@ public class SampleApp extends Application implements AppInjector {
         }
       });
     }
-  }
-
-  @Override public Object appComponent() {
-    return appComponent;
   }
 }

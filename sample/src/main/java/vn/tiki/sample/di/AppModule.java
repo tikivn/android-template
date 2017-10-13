@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
+import java.io.File;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,15 +29,15 @@ public class AppModule {
     this.appContext = appContext;
   }
 
-  @Singleton @Provides OkHttpClient provideOkHttpClient() {
-    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-    return new OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .build();
+  @Singleton
+  @Provides
+  public UserModel provideUserModel() {
+    return new UserModel();
   }
 
-  @Singleton @Provides ApiService provideApiService(OkHttpClient okHttpClient) {
+  @Singleton
+  @Provides
+  ApiService provideApiService(OkHttpClient okHttpClient) {
     return new Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
@@ -46,15 +47,29 @@ public class AppModule {
         .create(ApiService.class);
   }
 
-  @Singleton @Provides public UserModel provideUserModel() {
-    return new UserModel();
-  }
-
-  @Singleton @Provides AppDatabase provideAppDatabase() {
+  @Singleton
+  @Provides
+  AppDatabase provideAppDatabase() {
     return Room.databaseBuilder(appContext, AppDatabase.class, "shopping").build();
   }
 
-  @Singleton @Provides CartDao provideCartDao(AppDatabase appDatabase) {
+  @Provides
+  File provideCacheDir() {
+    return appContext.getCacheDir();
+  }
+
+  @Provides
+  CartDao provideCartDao(AppDatabase appDatabase) {
     return appDatabase.cartDao();
+  }
+
+  @Singleton
+  @Provides
+  OkHttpClient provideOkHttpClient() {
+    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+    return new OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .build();
   }
 }

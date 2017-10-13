@@ -14,7 +14,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import intents.Intents;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.List;
 import javax.inject.Inject;
 import vn.tiki.collectionview.Adapter;
@@ -31,15 +31,13 @@ import vn.tiki.sample.repository.ProductRepository;
 
 public class ProductListingActivity extends BaseActivity {
 
-  @BindView(android.R.id.content) View rootView;
-  @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.vCollectionView) CollectionView vCollectionView;
-
-  @BindString(R.string.product_listing) String textProductListing;
-  @BindString(R.string.product_listing_try_again) String textTryAgain;
-  @BindString(R.string.product_listing_error_occurred) String textError;
-
-  @Inject ProductRepository productRepository;
+  @Inject protected ProductRepository productRepository;
+  @BindView(android.R.id.content) protected View rootView;
+  @BindString(R.string.product_listing_error_occurred) protected String textError;
+  @BindString(R.string.product_listing) protected String textProductListing;
+  @BindString(R.string.product_listing_try_again) protected String textTryAgain;
+  @BindView(R.id.toolbar) protected Toolbar toolbar;
+  @BindView(R.id.vCollectionView) protected CollectionView vCollectionView;
 
   public static Intent intent(Context context) {
     return new Intent(context, ProductListingActivity.class);
@@ -57,27 +55,20 @@ public class ProductListingActivity extends BaseActivity {
     configureCollectionView();
   }
 
-  private void configureToolbar() {
-    setSupportActionBar(toolbar);
-    final ActionBar supportActionBar = getSupportActionBar();
-    if (supportActionBar == null) {
-      return;
-    }
-    setTitle(textProductListing);
-  }
-
   private void configureCollectionView() {
     final OnlyAdapter adapter = new OnlyAdapter.Builder()
         .viewHolderFactory((parent, type) -> ProductViewHolder.create(parent))
         .diffCallback(new DiffCallback() {
-          @Override public boolean areItemsTheSame(Object oldItem, Object newItem) {
-            return oldItem instanceof Product
-                && newItem instanceof Product
-                && ((Product) oldItem).id().equals(((Product) newItem).id());
+          @Override
+          public boolean areContentsTheSame(Object oldItem, Object newItem) {
+            return oldItem.equals(newItem);
           }
 
-          @Override public boolean areContentsTheSame(Object oldItem, Object newItem) {
-            return oldItem.equals(newItem);
+          @Override
+          public boolean areItemsTheSame(Object oldItem, Object newItem) {
+            return oldItem instanceof Product
+                   && newItem instanceof Product
+                   && ((Product) oldItem).id().equals(((Product) newItem).id());
           }
         })
         .onItemClickListener((view, item, position) -> startActivity(
@@ -87,19 +78,34 @@ public class ProductListingActivity extends BaseActivity {
         .build();
 
     vCollectionView.setAdapter(new Adapter() {
-      @Override public DataProvider onCreateDataProvider() {
+      @Override
+      public void onBindItems(List items) {
+        adapter.setItems(items);
+      }
+
+      @Override
+      public DataProvider onCreateDataProvider() {
         return new DataProvider() {
-          @Override public Observable<ListData<Product>> fetchNewest() {
-            return productRepository.getProducts(1, true);
+          @Override
+          public Single<ListData<Product>> fetch(int page) {
+            return productRepository.getProducts(page, false);
           }
 
-          @Override public Observable<ListData<Product>> fetch(int page) {
-            return productRepository.getProducts(page, false);
+          @Override
+          public Single<ListData<Product>> fetchNewest() {
+            return productRepository.getProducts(1, true);
           }
         };
       }
 
-      @Override public RecyclerView.LayoutManager onCreateLayoutManager() {
+      @NonNull
+      @Override
+      public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
+        return getLayoutInflater().inflate(R.layout.view_error, parent, false);
+      }
+
+      @Override
+      public RecyclerView.LayoutManager onCreateLayoutManager() {
         return new LinearLayoutManager(
             ProductListingActivity.this,
             LinearLayoutManager.VERTICAL,
@@ -110,14 +116,15 @@ public class ProductListingActivity extends BaseActivity {
       public RecyclerView.Adapter<? extends RecyclerView.ViewHolder> onCreateRecyclerViewAdapter() {
         return adapter;
       }
-
-      @Override public void onBindItems(List items) {
-        adapter.setItems(items);
-      }
-
-      @NonNull @Override public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
-        return getLayoutInflater().inflate(R.layout.view_error, parent, false);
-      }
     });
+  }
+
+  private void configureToolbar() {
+    setSupportActionBar(toolbar);
+    final ActionBar supportActionBar = getSupportActionBar();
+    if (supportActionBar == null) {
+      return;
+    }
+    setTitle(textProductListing);
   }
 }

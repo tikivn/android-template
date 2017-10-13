@@ -1,6 +1,6 @@
 package vn.tiki.sample.collectionview;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.ArrayList;
 import java.util.List;
 import vn.tiki.collectionview.DataProvider;
@@ -12,12 +12,14 @@ public class TodoDataProvider implements DataProvider<String> {
   private static final int PER_PAGE = 5;
   private static final int LAST_PAGE = 10;
 
-  @Override public Observable<ListData<String>> fetchNewest() {
-    return Observable.fromCallable(() -> generateItems(1));
+  @Override
+  public Single<ListData<String>> fetch(int page) {
+    return Single.fromCallable(() -> generateItems(page));
   }
 
-  @Override public Observable<ListData<String>> fetch(int page) {
-    return Observable.fromCallable(() -> generateItems(page));
+  @Override
+  public Single<ListData<String>> fetchNewest() {
+    return Single.fromCallable(() -> generateItems(1));
   }
 
   private ListData<String> generateItems(int page) throws Exception {

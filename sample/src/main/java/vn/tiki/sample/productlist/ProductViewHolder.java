@@ -14,14 +14,10 @@ import vn.tiki.sample.glide.GlideApp;
 import vn.tiki.sample.util.TextViews;
 
 public class ProductViewHolder extends AbsViewHolder {
-  @BindView(R.id.ivThumb) ImageView ivThumb;
-  @BindView(R.id.tvTitle) TextView tvTitle;
-  @BindView(R.id.tvPrice) TextView tvPrice;
 
-  private ProductViewHolder(View itemView) {
-    super(itemView);
-    ButterKnife.bind(this, itemView);
-  }
+  @BindView(R.id.ivThumb) ImageView ivThumb;
+  @BindView(R.id.tvPrice) TextView tvPrice;
+  @BindView(R.id.tvTitle) TextView tvTitle;
 
   public static ProductViewHolder create(ViewGroup parent) {
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -29,7 +25,13 @@ public class ProductViewHolder extends AbsViewHolder {
     return new ProductViewHolder(view);
   }
 
-  @Override public void bind(Object item) {
+  private ProductViewHolder(View itemView) {
+    super(itemView);
+    ButterKnife.bind(this, itemView);
+  }
+
+  @Override
+  public void bind(Object item) {
     super.bind(item);
     if (!(item instanceof Product)) {
       return;

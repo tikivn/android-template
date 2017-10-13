@@ -1,15 +1,9 @@
 package vn.tiki.collectionview;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public interface DataProvider<T> {
-
-  /**
-   * Which will be used to fetch data when user PullToRefresh
-   *
-   * @return an {@link Observable} object that will emit list of items
-   */
-  Observable<ListData<T>> fetchNewest();
 
   /**
    * Fetch data for the given page
@@ -17,5 +11,12 @@ public interface DataProvider<T> {
    * @param page the page number
    * @return an {@link Observable} object that will emit list of items
    */
-  Observable<ListData<T>> fetch(int page);
+  Single<ListData<T>> fetch(int page);
+
+  /**
+   * Which will be used to fetch data when user PullToRefresh
+   *
+   * @return an {@link Observable} object that will emit list of items
+   */
+  Single<ListData<T>> fetchNewest();
 }
