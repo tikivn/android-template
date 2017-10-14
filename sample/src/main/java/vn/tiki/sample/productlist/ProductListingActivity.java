@@ -26,18 +26,20 @@ import vn.tiki.noadapter2.DiffCallback;
 import vn.tiki.noadapter2.OnlyAdapter;
 import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseActivity;
+import vn.tiki.sample.base.NetworkStatusObserver;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.repository.ProductRepository;
 
-public class ProductListingActivity extends BaseActivity {
+public class ProductListingActivity extends BaseActivity implements NetworkStatusObserver {
 
-  @Inject protected ProductRepository productRepository;
-  @BindView(android.R.id.content) protected View rootView;
-  @BindString(R.string.product_listing_error_occurred) protected String textError;
-  @BindString(R.string.product_listing) protected String textProductListing;
-  @BindString(R.string.product_listing_try_again) protected String textTryAgain;
-  @BindView(R.id.toolbar) protected Toolbar toolbar;
-  @BindView(R.id.vCollectionView) protected CollectionView vCollectionView;
+  @BindString(R.string.product_listing_error_occurred) String textError;
+  @BindString(R.string.product_listing) String textProductListing;
+  @BindString(R.string.product_listing_try_again) String textTryAgain;
+  @BindView(android.R.id.content) View rootView;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.vCollectionView) CollectionView vCollectionView;
+
+  @Inject ProductRepository productRepository;
 
   public static Intent intent(Context context) {
     return new Intent(context, ProductListingActivity.class);
@@ -53,6 +55,11 @@ public class ProductListingActivity extends BaseActivity {
 
     configureToolbar();
     configureCollectionView();
+  }
+
+  @Override
+  public void onNetworkStatusChanged(final boolean isConnected) {
+
   }
 
   private void configureCollectionView() {
