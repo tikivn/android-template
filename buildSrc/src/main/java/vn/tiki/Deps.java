@@ -6,7 +6,7 @@ public interface Deps {
 
     int minSdk = 16;
     int compileSdk = 26;
-    String kotlin = "1.1.3-2";
+    String kotlin = "1.1.51";
     String support = "26.1.0";
     String dagger = "2.11";
     String butterKnife = "8.8.1";
@@ -41,7 +41,7 @@ public interface Deps {
   interface Android {
 
     String runtime = "com.google.android:android:4.1.1.4";
-    String gradlePlugin = "com.android.tools.build:gradle:3.0.0-beta7";
+    String gradlePlugin = "com.android.tools.build:gradle:3.0.0-rc1";
   }
 
   interface Auto {
@@ -97,6 +97,7 @@ public interface Deps {
     String compileTesting = "com.google.testing.compile:compile-testing:0.11";
   }
 
+  String kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jre7:" + Version.kotlin;
   String rxJava = "io.reactivex.rxjava2:rxjava:2.1.2";
   String rxAndroid = "io.reactivex.rxjava2:rxandroid:2.0.1";
   String ixJava = "com.github.akarnokd:ixjava:1.0.0-RC5";

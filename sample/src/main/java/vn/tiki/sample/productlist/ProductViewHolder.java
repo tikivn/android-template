@@ -44,7 +44,7 @@ public class ProductViewHolder extends AbsViewHolder {
     TextViews.setPrice(tvPrice, product.price());
     GlideApp
         .with(itemView.getContext())
-        .load(Urls.resolveImageUrl(product.image()))
+        .load(Urls.Companion.resolveImageUrl(product.image()))
         .into(ivThumb);
   }
 }

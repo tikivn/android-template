@@ -66,7 +66,7 @@ public class ProductDetailActivity
   private void bind(Product product) {
     tvName.setText(product.title());
     TextViews.setPrice(tvPrice, product.price());
-    TextViews.setHtml(tvDescription, Strings.toHtml(product.description()).toString());
+    TextViews.setHtml(tvDescription, Strings.Companion.toHtml(product.description()).toString());
     GlideApp
         .with(this)
         .load(Urls.resolveImageUrl(product.image()))

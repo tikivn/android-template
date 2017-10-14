@@ -3,6 +3,7 @@ import vn.tiki.Deps
 apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
+  ext.kotlin_version = '1.1.51'
   repositories {
     google()
     jcenter()
