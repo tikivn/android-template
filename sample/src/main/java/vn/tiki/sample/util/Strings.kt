@@ -3,41 +3,22 @@ package vn.tiki.sample.util
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
+import vn.tiki.sample.BuildConfig
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 
-//fun String.decode(encoded: String): String {
-//  return try {
-//    URLDecoder.decode(encoded, "utf-8")
-//  } catch (e: UnsupportedEncodingException) {
-//    e.printStackTrace()
-//    encoded
-//  }
-//}
-
-class Strings private constructor() {
-  init {
-    throw InstantiationError()
-  }
-
-  companion object {
-
-    fun decode(encoded: String): String {
-      return try {
-        URLDecoder.decode(encoded, "utf-8")
-      } catch (e: UnsupportedEncodingException) {
-        e.printStackTrace()
-        encoded
-      }
-
-    }
-
-    fun toHtml(htmlString: String): Spanned {
-      return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        Html.fromHtml(htmlString, Html.FROM_HTML_MODE_COMPACT)
-      } else {
-        Html.fromHtml(htmlString)
-      }
-    }
-  }
+@Suppress("DEPRECATION")
+fun String.toHtml(): Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+  Html.fromHtml(this, Html.FROM_HTML_MODE_COMPACT)
+} else {
+  Html.fromHtml(this)
 }
+
+fun String.decode(): String = try {
+  URLDecoder.decode(this, "utf-8")
+} catch (e: UnsupportedEncodingException) {
+  e.printStackTrace()
+  this
+}
+
+fun String.toUrl(): String = BuildConfig.BASE_URL + this

@@ -36,7 +36,10 @@ android {
 
     javaCompileOptions {
       annotationProcessorOptions {
-        arguments = ['autovaluegson.defaultCollectionsToEmpty': 'true']
+        arguments = [
+            'autovaluegson.defaultCollectionsToEmpty'        : 'true',
+            'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
+        ]
       }
     }
   }
