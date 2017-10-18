@@ -54,10 +54,10 @@ class ProductDetailActivity : BaseMvpActivity<ProductDetailView, ProductDetailPr
   }
 
   private fun bind(product: Product) {
-    tvName.text = product.title()
-    tvPrice.setPrice(product.price())
-    tvDescription.setHtml(product.description().toHtml().toString())
-    ivThumb.setImage(product.image())
+    tvName.text = product.title
+    tvPrice.setPrice(product.price)
+    tvDescription.setHtml(product.description.toHtml().toString())
+    ivThumb.setImage(product.image)
   }
 
   private fun configureSizeOptions() {

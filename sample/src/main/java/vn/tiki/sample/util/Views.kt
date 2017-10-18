@@ -1,6 +1,10 @@
 package vn.tiki.sample.util
 
+import android.annotation.SuppressLint
+import android.support.annotation.IdRes
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import vn.tiki.sample.glide.GlideApp
@@ -26,6 +30,12 @@ fun ImageView.setImage(image: String) {
       .with(this)
       .load(image.toUrl())
       .into(this)
+}
+
+@SuppressLint("ResourceType")
+fun ViewGroup.inflate(@IdRes id: Int): View {
+  return LayoutInflater.from(context)
+      .inflate(id, this, false)
 }
 
 private fun formatPrice(price: Float): CharSequence {

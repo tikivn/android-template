@@ -5,7 +5,7 @@ import vn.tiki.daggers.ActivityInjector
 
 abstract class BaseActivity : AppCompatActivity(), ActivityInjector {
 
-  protected val activityDelegate = ActivityDelegate()
+  private val activityDelegate = ActivityDelegate()
 
   override fun onPause() {
     super.onPause()
@@ -19,9 +19,5 @@ abstract class BaseActivity : AppCompatActivity(), ActivityInjector {
 
   override fun activityModule(): Any {
     return activityDelegate.makeActivityModule(this)
-  }
-
-  protected fun setOnNetworkStatusChanged(onNetworkStatusChanged: (Boolean) -> Unit) {
-    activityDelegate.onNetworkStatusChanged = onNetworkStatusChanged
   }
 }

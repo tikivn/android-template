@@ -21,8 +21,4 @@ abstract class BaseMvpActivity<V : Mvp.View, P : Mvp.Presenter<V>> : MvpActivity
   override fun activityModule(): Any {
     return activityDelegate.makeActivityModule(this)
   }
-
-  protected fun setOnNetworkStatusChanged(onNetworkStatusChanged: (Boolean) -> Unit?) {
-    activityDelegate.onNetworkStatusChanged = onNetworkStatusChanged
-  }
 }

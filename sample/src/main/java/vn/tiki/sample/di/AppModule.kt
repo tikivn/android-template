@@ -15,7 +15,6 @@ import vn.tiki.sample.BuildConfig
 import vn.tiki.sample.api.ApiService
 import vn.tiki.sample.database.AppDatabase
 import vn.tiki.sample.database.CartDao
-import vn.tiki.sample.entity.MyAdapterFactory
 import vn.tiki.sample.model.UserModel
 import java.io.File
 import javax.inject.Singleton
@@ -60,7 +59,6 @@ open class AppModule(private val appContext: Context) {
   @Provides
   internal fun provideGson(): Gson {
     return GsonBuilder()
-        .registerTypeAdapterFactory(MyAdapterFactory.create())
         .create()
   }
 

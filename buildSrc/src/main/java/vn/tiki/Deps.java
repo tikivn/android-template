@@ -97,6 +97,13 @@ public interface Deps {
     String compileTesting = "com.google.testing.compile:compile-testing:0.11";
   }
 
+  interface ParcelParcel {
+
+    String runtime = "nz.bradcampbell:paperparcel:2.0.4";
+    String kotlin = "nz.bradcampbell:paperparcel-kotlin:2.0.4";
+    String compiler = "nz.bradcampbell:paperparcel-compiler:2.0.4";
+  }
+
   String kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jre7:" + Version.kotlin;
   String rxJava = "io.reactivex.rxjava2:rxjava:2.1.2";
   String rxAndroid = "io.reactivex.rxjava2:rxandroid:2.0.1";

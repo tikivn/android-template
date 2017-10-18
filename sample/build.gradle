@@ -37,8 +37,7 @@ android {
     javaCompileOptions {
       annotationProcessorOptions {
         arguments = [
-            'autovaluegson.defaultCollectionsToEmpty'        : 'true',
-            'autovaluegson.mutableAdaptersWithDefaultSetters': 'true'
+            'autovaluegson.defaultCollectionsToEmpty': 'true',
         ]
       }
     }
@@ -133,6 +132,9 @@ dependencies {
   implementation Deps.Store.store
   implementation Deps.Store.fileSystem
   implementation Deps.Store.middleware
+  implementation Deps.ParcelParcel.runtime
+  implementation Deps.ParcelParcel.kotlin
+  kapt Deps.ParcelParcel.compiler
 
   testImplementation Deps.Test.junit
   testImplementation Deps.Test.mockito

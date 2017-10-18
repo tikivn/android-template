@@ -1,9 +1,9 @@
 package vn.tiki.sample.extra
 
 import android.os.Bundle
-import android.widget.TextView
-import butterknife.BindView
 import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.activity_extra_injection.tvAge
+import kotlinx.android.synthetic.main.activity_extra_injection.tvName
 import vn.tiki.sample.Extras
 import vn.tiki.sample.R
 import vn.tiki.sample.base.BaseActivity
@@ -16,11 +16,8 @@ import vn.tiki.sample.util.setFragment
  */
 class ExtraInjectionActivity : BaseActivity() {
 
-  @BindView(R.id.tvName) internal lateinit var tvName: TextView
-  @BindView(R.id.tvAge) internal lateinit var tvAge: TextView
-
-  val name: String by extra(Extras.NAME)
-  val age: Int by extraOrElse(Extras.AGE, 0)
+  private val name: String by extra(Extras.NAME)
+  private val age: Int by extraOrElse(Extras.AGE, 0)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

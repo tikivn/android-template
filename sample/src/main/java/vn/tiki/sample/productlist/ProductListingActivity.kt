@@ -59,7 +59,7 @@ class ProductListingActivity : BaseActivity(), NetworkStatusObserver {
           override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
             return (oldItem is Product
                 && newItem is Product
-                && oldItem.id() == newItem.id())
+                && oldItem.id == newItem.id)
           }
         })
         .onItemClickListener { _, item, _ ->
