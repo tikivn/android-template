@@ -1,7 +1,6 @@
 package vn.tiki.collectionview;
 
 import static com.google.common.truth.Truth.assertThat;
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import io.reactivex.Single;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -28,16 +28,24 @@ public class CollectionViewTest {
   @Mock DataProvider mockedDataProvider;
   @Mock Adapter mockedAdapter;
   private Application application;
+  private Throwable emptyError = new NoSuchElementException();
+  private View emptyView;
+  private View errorView;
+  private Throwable networkError = new Throwable();
   private CollectionView tested;
 
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     application = RuntimeEnvironment.application;
+    emptyView = new View(application);
+    errorView = new View(application);
     when(mockedDataProvider.fetch(anyInt())).thenReturn(Single.error(new Throwable()));
     when(mockedAdapter.onCreateDataProvider()).thenReturn(mockedDataProvider);
-    when(mockedAdapter.onCreateErrorView(any(ViewGroup.class), any(Throwable.class)))
-        .thenReturn(new View(application));
+    when(mockedAdapter.onCreateErrorView(any(ViewGroup.class), eq(networkError)))
+        .thenReturn(errorView);
+    when(mockedAdapter.onCreateErrorView(any(ViewGroup.class), eq(emptyError)))
+        .thenReturn(emptyView);
     tested = new CollectionView(application, null);
     tested.setAdapter(mockedAdapter);
     tested.onAttachedToWindow();
@@ -79,20 +87,26 @@ public class CollectionViewTest {
     tested.showLoading();
     tested.showContent();
     assertThat(tested.refreshLayout.isRefreshing()).isFalse();
+    assertThat(tested.getChildCount()).isEqualTo(1);
   }
 
   @Test
   public void testShowError() throws Exception {
     tested.showLoading();
-    tested.showError(new Throwable());
+    tested.showError(emptyError);
     assertThat(tested.refreshLayout.isRefreshing()).isFalse();
-    assertThat(tested.errorView.getVisibility()).isEqualTo(View.VISIBLE);
+    assertThat(tested.getChildAt(1)).isEqualTo(emptyView);
+
+    tested.showLoading();
+    tested.showError(networkError);
+    assertThat(tested.refreshLayout.isRefreshing()).isFalse();
+    assertThat(tested.getChildAt(1)).isEqualTo(errorView);
   }
 
   @Test
   public void testShowLoading() throws Exception {
     tested.showLoading();
     assertThat(tested.refreshLayout.isRefreshing()).isTrue();
-    assertTrue(tested.errorView == null || tested.errorView.getVisibility() == View.GONE);
+    assertThat(tested.getChildCount()).isEqualTo(1);
   }
 }

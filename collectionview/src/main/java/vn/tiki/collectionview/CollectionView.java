@@ -12,13 +12,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class CollectionView extends FrameLayout {
+
   @VisibleForTesting @NonNull final RecyclerView recyclerView;
   @VisibleForTesting @NonNull final SwipeRefreshLayout refreshLayout;
+  @VisibleForTesting @NonNull Map<Class<?>, View> errorViewHolder = new Hashtable<>();
   @VisibleForTesting @Nullable CollectionViewPresenter presenter;
-  @VisibleForTesting @Nullable View errorView;
   @Nullable private Adapter adapter;
   private boolean isAttached;
 
@@ -30,7 +33,8 @@ public class CollectionView extends FrameLayout {
     refreshLayout = new SwipeRefreshLayout(context);
     refreshLayout.addView(recyclerView, lpMatchMatch());
     refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-      @Override public void onRefresh() {
+      @Override
+      public void onRefresh() {
         if (presenter != null) {
           presenter.onRefresh();
         }
@@ -39,10 +43,24 @@ public class CollectionView extends FrameLayout {
     addView(refreshLayout, lpMatchMatch());
   }
 
-  @NonNull private LayoutParams lpMatchMatch() {
-    return new LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.MATCH_PARENT);
+  @SuppressWarnings("unchecked")
+  @Override
+  public void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    isAttached = true;
+    if (presenter != null) {
+      presenter.attach(this);
+    }
+  }
+
+  @Override
+  public void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    isAttached = false;
+    if (presenter != null) {
+      presenter.detach();
+    }
+    errorViewHolder.clear();
   }
 
   public void setAdapter(@NonNull Adapter adapter) {
@@ -52,7 +70,8 @@ public class CollectionView extends FrameLayout {
     recyclerView.setAdapter(adapter.onCreateRecyclerViewAdapter());
     if (layoutManager instanceof LinearLayoutManager) {
       recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-        @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
           super.onScrollStateChanged(recyclerView, newState);
           if (presenter == null || newState != RecyclerView.SCROLL_STATE_IDLE) {
             return;
@@ -74,40 +93,23 @@ public class CollectionView extends FrameLayout {
     }
   }
 
-  @SuppressWarnings("unchecked") @Override public void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    isAttached = true;
-    if (presenter != null) {
-      presenter.attach(this);
-    }
+  void hideLoadMore() {
+
   }
 
-  @Override public void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    isAttached = false;
-    if (presenter != null) {
-      presenter.detach();
-    }
+  void hideRefreshing() {
+    refreshLayout.setRefreshing(false);
   }
 
-  void showLoading() {
-    if (adapter == null) {
-      throw new NullPointerException("adapter is null");
+  @SuppressWarnings("unchecked")
+  void setItems(List<?> items) {
+    if (adapter != null) {
+      adapter.onBindItems(items);
     }
-    if (errorView != null) {
-      errorView.setVisibility(GONE);
-    }
-    refreshLayout.setRefreshing(true);
   }
 
   void showContent() {
     refreshLayout.setRefreshing(false);
-  }
-
-  @SuppressWarnings("unchecked") void setItems(List<?> items) {
-    if (adapter != null) {
-      adapter.onBindItems(items);
-    }
   }
 
   void showError(Throwable throwable) {
@@ -115,33 +117,48 @@ public class CollectionView extends FrameLayout {
       throw new NullPointerException("adapter is null");
     }
     refreshLayout.setRefreshing(false);
-    if (errorView == null) {
+    final View errorView;
+    final Class<? extends Throwable> errorClass = throwable.getClass();
+    if (errorViewHolder.containsKey(errorClass)) {
+      errorView = errorViewHolder.get(errorClass);
+    } else {
       errorView = adapter.onCreateErrorView(this, throwable);
       errorView.setOnClickListener(new OnClickListener() {
-        @Override public void onClick(View view) {
+        @Override
+        public void onClick(View view) {
           if (presenter != null) {
             presenter.onLoad();
           }
         }
       });
-      addView(errorView, lpWrapWrapCenter());
+      errorViewHolder.put(errorClass, errorView);
     }
-    errorView.setVisibility(VISIBLE);
+    addView(errorView, lpWrapWrapCenter());
   }
 
-  @NonNull private LayoutParams lpWrapWrapCenter() {
+  void showLoading() {
+    if (adapter == null) {
+      throw new NullPointerException("adapter is null");
+    }
+    if (getChildCount() == 2) {
+      removeViewAt(1);
+    }
+    refreshLayout.setRefreshing(true);
+  }
+
+  @NonNull
+  private LayoutParams lpMatchMatch() {
+    return new LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT);
+  }
+
+  @NonNull
+  private LayoutParams lpWrapWrapCenter() {
     final LayoutParams layoutParams = new LayoutParams(
         ViewGroup.LayoutParams.WRAP_CONTENT,
         ViewGroup.LayoutParams.WRAP_CONTENT);
     layoutParams.gravity = Gravity.CENTER;
     return layoutParams;
-  }
-
-  void hideRefreshing() {
-    refreshLayout.setRefreshing(false);
-  }
-
-  void hideLoadMore() {
-
   }
 }
