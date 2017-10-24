@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="vn.tiki.sample">
+    package="vn.tiki.sample">
 
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.INTERNET" />
 
   <application
       android:name=".SampleApp"
@@ -15,33 +15,32 @@
       android:theme="@style/AppTheme">
     <activity android:name=".MainActivity">
       <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+        <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER"/>
+        <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
     <activity
         android:name=".login.LoginActivity"
-        android:screenOrientation="portrait"/>
+        android:screenOrientation="portrait" />
     <activity
         android:name=".extra.ExtraInjectionActivity"
-        android:screenOrientation="portrait"/>
+        android:screenOrientation="portrait" />
     <activity
         android:name=".productlist.ProductListingActivity"
         android:screenOrientation="portrait"
-        android:theme="@style/AppDesignTheme"/>
+        android:theme="@style/AppDesignTheme" />
     <activity
         android:name=".productdetail.ProductDetailActivity"
-        android:screenOrientation="portrait"/>
+        android:screenOrientation="portrait" />
 
     <meta-data
         android:name="io.fabric.ApiKey"
-        android:value="b1cff2955798017c1408feb840f1520497e8f44e"/>
+        android:value="b1cff2955798017c1408feb840f1520497e8f44e" />
 
-    <activity android:name=".cart.CartActivity">
-    </activity>
-    <activity android:name=".collectionview.CollectionViewActivity">
-    </activity>
+    <activity android:name=".cart.CartActivity"></activity>
+    <activity android:name=".collectionview.CollectionViewActivity"></activity>
+    <activity android:name=".home.HomeActivity"></activity>
   </application>
 
 </manifest>
