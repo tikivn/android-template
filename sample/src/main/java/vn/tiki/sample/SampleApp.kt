@@ -14,6 +14,7 @@ import vn.tiki.daggers.AppInjector
 import vn.tiki.daggers.Daggers
 import vn.tiki.sample.di.AppComponent
 import vn.tiki.sample.di.AppModule
+import vn.tiki.sample.di.DaggerAppComponent
 
 open class SampleApp : Application(), AppInjector {
 
@@ -30,8 +31,8 @@ open class SampleApp : Application(), AppInjector {
     configureFabric()
     configureTimber()
     configureLeakCanary()
-    configureStrictMode()
     configureStetho()
+    configureStrictMode()
   }
 
   private fun configureStetho() {

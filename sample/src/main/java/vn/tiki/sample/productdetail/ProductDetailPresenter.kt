@@ -21,6 +21,6 @@ constructor(private val cartRepository: CartRepository) : RxBasePresenter<Produc
   }
 
   internal fun onAddToCartClick() {
-    cartRepository.addToCart(product, size, 1)
+    cartRepository.addToCart(product!!, size!!, 1)
   }
 }
