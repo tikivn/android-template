@@ -2,6 +2,7 @@ package vn.tiki.sample.di
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -58,18 +59,22 @@ open class AppModule(private val appContext: Context) {
 
   @Provides
   internal fun provideGson(): Gson {
-    return GsonBuilder()
-        .create()
+    return GsonBuilder().create()
   }
 
   @Singleton
   @Provides
   internal fun provideOkHttpClient(): OkHttpClient {
-    val logging = HttpLoggingInterceptor()
-    logging.level = HttpLoggingInterceptor.Level.BODY
-    return OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .build()
+    return if (BuildConfig.DEBUG) {
+      val logging = HttpLoggingInterceptor()
+      logging.level = HttpLoggingInterceptor.Level.BODY
+      OkHttpClient.Builder()
+          .addInterceptor(logging)
+          .addNetworkInterceptor(StethoInterceptor())
+          .build()
+    } else {
+      OkHttpClient()
+    }
   }
 
 }

@@ -45,7 +45,7 @@ public class CollectionViewPresenterTest {
     private final List<Integer> items;
     private final Paging paging;
 
-    public ListDataTest(final List<Integer> items, final Paging paging) {
+    ListDataTest(final List<Integer> items, final Paging paging) {
       this.items = items;
       this.paging = paging;
     }
@@ -62,20 +62,15 @@ public class CollectionViewPresenterTest {
   }
 
   @Rule public final RxSchedulerTestRule rxSchedulerTestRule = new RxSchedulerTestRule();
-
-  @Mock DataProvider mockedDataProvider;
-  @Mock CollectionView mockedView;
-
-  ListData<Integer> loadData = new ListDataTest(
+  private ListData<Integer> loadData = new ListDataTest(
       Arrays.asList(1, 2, 3),
       new PagingImpl(1, 2, 6));
-
-  ListData<Integer> loadMoreData = new ListDataTest(
+  private ListData<Integer> loadMoreData = new ListDataTest(
       Arrays.asList(4, 5, 6),
       new PagingImpl(2, 2, 6));
-
-
-  ListData<Integer> refreshData = new ListDataTest(
+  @Mock private DataProvider mockedDataProvider;
+  @Mock private CollectionView mockedView;
+  private ListData<Integer> refreshData = new ListDataTest(
       Arrays.asList(1, 2, 3, 4),
       new PagingImpl(1, 2, 6));
 

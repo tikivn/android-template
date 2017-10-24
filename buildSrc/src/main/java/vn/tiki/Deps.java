@@ -104,6 +104,18 @@ public interface Deps {
     String compiler = "nz.bradcampbell:paperparcel-compiler:2.0.4";
   }
 
+  interface LeakCanary {
+
+    String core = "com.squareup.leakcanary:leakcanary-android:1.5.4";
+    String noOp = "com.squareup.leakcanary:leakcanary-android-no-op:1.5.4";
+  }
+
+  interface Stetho {
+
+    String core = "com.facebook.stetho:stetho:1.5.0";
+    String okhttp = "com.facebook.stetho:stetho-okhttp3:1.5.0";
+  }
+
   String kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jre7:" + Version.kotlin;
   String rxJava = "io.reactivex.rxjava2:rxjava:2.1.2";
   String rxAndroid = "io.reactivex.rxjava2:rxandroid:2.0.1";

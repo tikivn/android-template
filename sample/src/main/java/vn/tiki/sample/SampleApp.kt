@@ -1,16 +1,19 @@
 package vn.tiki.sample
 
 import android.app.Application
+import android.os.StrictMode
 import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
+import com.facebook.stetho.Stetho
+import com.squareup.leakcanary.LeakCanary
+import com.squareup.leakcanary.RefWatcher
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import vn.tiki.daggers.AppInjector
 import vn.tiki.daggers.Daggers
 import vn.tiki.sample.di.AppComponent
 import vn.tiki.sample.di.AppModule
-import vn.tiki.sample.di.DaggerAppComponent
 
 open class SampleApp : Application(), AppInjector {
 
@@ -26,17 +29,38 @@ open class SampleApp : Application(), AppInjector {
     configureDagger()
     configureFabric()
     configureTimber()
+    configureLeakCanary()
+    configureStrictMode()
+    configureStetho()
+  }
 
-    val list1 = listOf(1, 2, 3, 4)
-    val list2 = ArrayList<Int>()
-    list1.mapTo(list2) { it }
+  private fun configureStetho() {
+    if (BuildConfig.DEBUG) {
+      Stetho.initializeWithDefaults(this)
+    }
+  }
+
+  private fun configureStrictMode() {
+    if (BuildConfig.DEBUG) {
+      StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder() //
+          .detectAll() //
+          .penaltyLog() //
+          .penaltyDeath() //
+          .build())
+    }
+  }
+
+  private fun configureLeakCanary(): RefWatcher? {
+    return if (LeakCanary.isInAnalyzerProcess(this)) {
+      RefWatcher.DISABLED
+    } else LeakCanary.install(this)
   }
 
   override fun appComponent(): Any {
     return appComponent
   }
 
-  protected fun configureDagger() {
+  private fun configureDagger() {
     Daggers.configure(this)
   }
 

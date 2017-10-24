@@ -136,6 +136,11 @@ dependencies {
   implementation Deps.ParcelParcel.kotlin
   kapt Deps.ParcelParcel.compiler
 
+  debugImplementation Deps.LeakCanary.core
+  releaseImplementation Deps.LeakCanary.noOp
+  implementation Deps.Stetho.core
+  implementation Deps.Stetho.okhttp
+
   testImplementation Deps.Test.junit
   testImplementation Deps.Test.mockito
   testImplementation Deps.Test.truth
