@@ -14,6 +14,7 @@ buildscript {
     classpath Deps.Android.gradlePlugin
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.Version.kotlin}"
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+    classpath 'com.uber:okbuck:0.29.8'
   }
 }
 
@@ -48,3 +49,5 @@ subprojects { project ->
     }
   }
 }
+
+apply plugin: 'com.uber.okbuck'
