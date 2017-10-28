@@ -34,7 +34,7 @@ public class SampleApp extends Application implements AppInjector {
     appComponent = DaggerAppComponent.builder()
         .appModule(new AppModule(this))
         .build();
-    Daggers.configure(this);
+    Daggers.installAppInjector(this);
   }
 
   private void configureFabric() {
@@ -44,7 +44,9 @@ public class SampleApp extends Application implements AppInjector {
     Fabric.with(this, crashlyticsKit);
   }
 
+
   private void configureTimber() {
+    Log.d("SampleApp", "configureTimber: " + BuildConfig.DEBUG);
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree());
     } else {

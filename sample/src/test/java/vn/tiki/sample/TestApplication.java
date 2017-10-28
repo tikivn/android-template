@@ -11,15 +11,16 @@ public class TestApplication extends SampleApp {
 
   private AppComponent mockedAppComponent;
 
+  @Override
+  public Object appComponent() {
+    return mockedAppComponent;
+  }
+
   public void setAppModule(AppModule appModule) {
     mockedAppComponent = DaggerAppComponent.builder()
         .appModule(appModule)
         .build();
 
-    Daggers.configure(this);
-  }
-
-  @Override public Object appComponent() {
-    return mockedAppComponent;
+    Daggers.installAppInjector(this);
   }
 }

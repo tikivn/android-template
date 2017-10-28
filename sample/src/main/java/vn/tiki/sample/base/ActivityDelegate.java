@@ -9,21 +9,36 @@ import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import vn.tiki.daggers.ActivityInjector;
+import vn.tiki.daggers.Daggers;
 import vn.tiki.sample.R;
 import vn.tiki.sample.di.ActivityModule;
 import vn.tiki.sample.util.NetworkUtil;
 
 class ActivityDelegate {
 
-  private Snackbar sbOfflineNotification;
-  private View rootView;
   private NetworkStatusObserver networkStatusObserver;
+  private View rootView;
+  private Snackbar sbOfflineNotification;
   @NonNull private final BroadcastReceiver networkStatusReceiver = new BroadcastReceiver() {
-    @Override public void onReceive(Context context, Intent intent) {
+    @Override
+    public void onReceive(Context context, Intent intent) {
       final boolean connected = NetworkUtil.isConnected(context);
       setNetworkStatus(connected);
     }
   };
+
+  public void onCreate(Activity activity) {
+    if (activity instanceof ActivityInjector) {
+      Daggers.installActivityInjector((ActivityInjector) activity);
+    }
+  }
+
+  public void onDestroy(Activity activity) {
+    if (activity instanceof ActivityInjector) {
+      Daggers.uninstallActivityInjector((ActivityInjector) activity);
+    }
+  }
 
   Object makeActivityModule(Activity activity) {
     return new ActivityModule(activity);
