@@ -1,0 +1,28 @@
+import org.gradle.internal.jvm.Jvm
+import vn.tiki.Deps
+
+apply plugin: 'java-library'
+apply plugin: 'checkstyle'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+  implementation project(':noadapter-viewholder-annotations')
+  api Deps.javapoet
+  implementation Deps.Auto.common
+  compileOnly Deps.Auto.service
+  compileOnly files(Jvm.current().getToolsJar())
+
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.truth
+}
+
+checkstyle {
+  configFile rootProject.file('checkstyle.xml')
+  showViolations true
+  //Remove this when tests are less verbose, i.e. using JavaPoet
+  sourceSets = [sourceSets.main]
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
