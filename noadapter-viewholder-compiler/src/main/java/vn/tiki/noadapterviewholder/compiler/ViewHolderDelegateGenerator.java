@@ -3,7 +3,7 @@ package vn.tiki.noadapterviewholder.compiler;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static vn.tiki.noadapterviewholder.compiler.ViewHolderProcessor.VIEW;
-import static vn.tiki.noadapterviewholder.compiler.ViewHolderProcessor.VIEW_HOLDER_DELEGATE;
+import static vn.tiki.noadapterviewholder.compiler.ViewHolderProcessor.viewHolderDelegate;
 
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -76,7 +76,7 @@ class ViewHolderDelegateGenerator {
     TypeSpec.Builder result = TypeSpec.classBuilder(viewHolderInfo.getTargetType().simpleName() + "_ViewHolderDelegate")
         .addModifiers(PUBLIC, FINAL)
         .superclass(viewHolderInfo.getTargetType())
-        .addSuperinterface(VIEW_HOLDER_DELEGATE);
+        .addSuperinterface(viewHolderDelegate);
 
     result.addMethod(createBindMethod());
     result.addMethod(createBindViewMethod());

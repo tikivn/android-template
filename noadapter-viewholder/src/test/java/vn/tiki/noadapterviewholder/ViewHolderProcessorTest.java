@@ -123,11 +123,38 @@ public class ViewHolderProcessorTest {
         + "}\n"
     );
 
+    JavaFileObject noAdapterFactory = JavaFileObjects.forSourceString(
+        "noadapterviewholder/NoAdapterFactory",
+        ""
+        + "package noadapterviewholder;\n"
+        + "\n"
+        + "import java.lang.InstantiationError;\n"
+        + "import vn.tiki.noadapter2.OnItemClickListener;\n"
+        + "import vn.tiki.noadapter2.OnlyAdapter;\n"
+        + "import vn.tiki.noadapterviewholder.TypeDiffCallback;\n"
+        + "\n"
+        + "public final class NoAdapterFactory {\n"
+        + "\n"
+        + "  private NoAdapterFactory() {\n"
+        + "    throw new InstantiationError();\n"
+        + "  }\n"
+        + "\n"
+        + "  public static OnlyAdapter makeAdapter(OnItemClickListener onItemClick) {\n"
+        + "    return new OnlyAdapter.Builder()\n"
+        + "        .typeFactory(new TypeFactoryImpl())\n"
+        + "        .viewHolderFactory(new ViewHolderFactoryImpl())\n"
+        + "        .diffCallback(new TypeDiffCallback())\n"
+        + "        .onItemClickListener(onItemClick)\n"
+        + "        .build();\n"
+        + "  }\n"
+        + "}\n"
+    );
+
     assertAbout(javaSource()).that(source)
         .withCompilerOptions("-Xlint:-processing")
         .processedWith(new ViewHolderProcessor())
         .compilesWithoutError()
         .and()
-        .generatesSources(typeFactory, viewHolderFactory, viewHolderDelegate);
+        .generatesSources(typeFactory, viewHolderFactory, viewHolderDelegate, noAdapterFactory);
   }
 }

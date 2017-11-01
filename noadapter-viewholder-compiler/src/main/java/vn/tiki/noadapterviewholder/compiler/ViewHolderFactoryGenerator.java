@@ -17,6 +17,7 @@ import java.util.List;
 
 class ViewHolderFactoryGenerator {
 
+  public static final String NAME = "ViewHolderFactoryImpl";
   private final ClassName lastViewHolderType;
   private final TypeName mapType;
   private final ClassName viewHolderFactoryType;
@@ -59,14 +60,14 @@ class ViewHolderFactoryGenerator {
 
     final Builder result = MethodSpec.methodBuilder("makeViewHolderDelegate")
         .addModifiers(PRIVATE)
-        .returns(ViewHolderProcessor.VIEW_HOLDER_DELEGATE)
+        .returns(ViewHolderProcessor.viewHolderDelegate)
         .addParameter(TypeName.INT, "type")
         .addCode(switchStatementBuilder.build());
     return result.build();
   }
 
   private TypeSpec createType() {
-    TypeSpec.Builder result = TypeSpec.classBuilder("ViewHolderFactoryImpl")
+    TypeSpec.Builder result = TypeSpec.classBuilder(NAME)
         .addModifiers(FINAL)
         .addSuperinterface(viewHolderFactoryType);
 

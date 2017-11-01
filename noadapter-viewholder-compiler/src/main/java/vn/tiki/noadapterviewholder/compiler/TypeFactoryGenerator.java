@@ -15,6 +15,7 @@ import java.util.List;
 
 class TypeFactoryGenerator {
 
+  public static final String NAME = "TypeFactoryImpl";
   private final TypeName mapType;
   private final List<ViewHolderInfo> viewHolderInfoList;
 
@@ -42,7 +43,7 @@ class TypeFactoryGenerator {
 
   private TypeSpec createType() {
     final ClassName typeFactoryType = ClassName.get("vn.tiki.noadapter2", "TypeFactory");
-    TypeSpec.Builder result = TypeSpec.classBuilder("TypeFactoryImpl")
+    TypeSpec.Builder result = TypeSpec.classBuilder(NAME)
         .addModifiers(FINAL)
         .addSuperinterface(typeFactoryType)
         .addField(mapType, "typeMapping", PRIVATE, FINAL);

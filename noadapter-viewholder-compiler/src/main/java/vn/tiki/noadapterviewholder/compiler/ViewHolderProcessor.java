@@ -26,12 +26,15 @@ import vn.tiki.noadapterviewholder.ViewHolder;
 @AutoService(Processor.class)
 public final class ViewHolderProcessor extends AbstractProcessor {
 
-  static final ClassName VIEW_HOLDER_DELEGATE = ClassName.get(
+  static final ClassName viewHolderDelegate = ClassName.get(
       "vn.tiki.noadapterviewholder",
       "ViewHolderDelegate");
 
   static final ClassName VIEW = ClassName.get("android.view", "View");
   static final ClassName VIEW_GROUP = ClassName.get("android.view", "ViewGroup");
+  static final ClassName onlyAdapter = ClassName.get("vn.tiki.noadapter2", "OnlyAdapter");
+  static final ClassName onItemClickListener = ClassName.get("vn.tiki.noadapter2", "OnItemClickListener");
+  static final ClassName typeDiffCallback = ClassName.get("vn.tiki.noadapterviewholder", "TypeDiffCallback");
   private Filer filer;
 
   @Override
@@ -84,6 +87,14 @@ public final class ViewHolderProcessor extends AbstractProcessor {
           .writeTo(filer);
     } catch (Exception e) {
       error("Unable to write ViewHolderFactory  %s", e.getMessage());
+    }
+
+    try {
+      new NoAdapterFactoryGenerator()
+          .brewJava()
+          .writeTo(filer);
+    } catch (Exception e) {
+      error("Unable to write NoAdapterFactory  %s", e.getMessage());
     }
 
     return false;
