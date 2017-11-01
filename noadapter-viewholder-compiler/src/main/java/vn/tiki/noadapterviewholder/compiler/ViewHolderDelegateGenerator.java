@@ -5,25 +5,21 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static vn.tiki.noadapterviewholder.compiler.ViewHolderProcessor.VIEW;
 import static vn.tiki.noadapterviewholder.compiler.ViewHolderProcessor.VIEW_HOLDER_DELEGATE;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import javax.lang.model.element.TypeElement;
 
 class ViewHolderDelegateGenerator {
 
-  private final ClassName targetClassName;
   private final ViewHolderInfo viewHolderInfo;
 
-  ViewHolderDelegateGenerator(final TypeElement typeElement, final ViewHolderInfo viewHolderInfo) {
-    targetClassName = ClassName.get(typeElement);
+  ViewHolderDelegateGenerator(final ViewHolderInfo viewHolderInfo) {
     this.viewHolderInfo = viewHolderInfo;
   }
 
   JavaFile brewJava() {
-    return JavaFile.builder(targetClassName.packageName(), createType())
+    return JavaFile.builder(viewHolderInfo.getTargetType().packageName(), createType())
         .addFileComment("Generated code from NoAdapter ViewHolder. Do not modify!")
         .build();
   }
@@ -33,7 +29,7 @@ class ViewHolderDelegateGenerator {
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
         .addParameter(Object.class, "item")
-        .addStatement("super.bind(($T) item)", viewHolderInfo.getTargetType())
+        .addStatement("super.bind(($T) item)", viewHolderInfo.getItemType())
         .build();
   }
 
@@ -77,9 +73,9 @@ class ViewHolderDelegateGenerator {
   }
 
   private TypeSpec createType() {
-    TypeSpec.Builder result = TypeSpec.classBuilder(targetClassName.simpleName() + "_ViewHolderDelegate")
+    TypeSpec.Builder result = TypeSpec.classBuilder(viewHolderInfo.getTargetType().simpleName() + "_ViewHolderDelegate")
         .addModifiers(PUBLIC, FINAL)
-        .superclass(targetClassName)
+        .superclass(viewHolderInfo.getTargetType())
         .addSuperinterface(VIEW_HOLDER_DELEGATE);
 
     result.addMethod(createBindMethod());

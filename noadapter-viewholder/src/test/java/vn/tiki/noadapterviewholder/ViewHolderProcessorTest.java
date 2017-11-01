@@ -90,11 +90,44 @@ public class ViewHolderProcessorTest {
         + "}\n"
     );
 
+    JavaFileObject viewHolderFactory = JavaFileObjects.forSourceString(
+        "noadapterviewholder/ViewHolderFactoryImpl",
+        ""
+        + "package noadapterviewholder;\n"
+        + "\n"
+        + "import android.view.ViewGroup;\n"
+        + "import java.lang.IllegalArgumentException;\n"
+        + "import java.lang.Override;\n"
+        + "import test.Test_ViewHolderDelegate;\n"
+        + "import vn.tiki.noadapter2.AbsViewHolder;\n"
+        + "import vn.tiki.noadapter2.ViewHolderFactory;\n"
+        + "import vn.tiki.noadapterviewholder.LastViewHolder;\n"
+        + "import vn.tiki.noadapterviewholder.ViewHolderDelegate;\n"
+        + "\n"
+        + "final class ViewHolderFactoryImpl implements ViewHolderFactory {\n"
+        + "\n"
+        + "  @Override\n"
+        + "  public AbsViewHolder viewHolderForType(ViewGroup parent, int type) {\n"
+        + "    final ViewHolderDelegate viewHolderDelegate = makeViewHolderDelegate(type);\n"
+        + "    return LastViewHolder.create(parent, viewHolderDelegate);\n"
+        + "  }\n"
+        + "\n"
+        + "  private ViewHolderDelegate makeViewHolderDelegate(int type) {\n"
+        + "    switch (type) {\n"
+        + "      case 10:\n"
+        + "        return new Test_ViewHolderDelegate();\n"
+        + "      default:\n"
+        + "        throw new IllegalArgumentException(\"unknown type: \" + type);\n"
+        + "    }\n"
+        + "  }\n"
+        + "}\n"
+    );
+
     assertAbout(javaSource()).that(source)
         .withCompilerOptions("-Xlint:-processing")
         .processedWith(new ViewHolderProcessor())
         .compilesWithoutError()
         .and()
-        .generatesSources(typeFactory, viewHolderDelegate);
+        .generatesSources(typeFactory, viewHolderFactory, viewHolderDelegate);
   }
 }

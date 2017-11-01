@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import vn.tiki.noadapter2.AbsViewHolder;
 
-public class LastViewHolder extends AbsViewHolder {
+public final class LastViewHolder extends AbsViewHolder {
 
   private final ViewHolderDelegate viewHolderDelegate;
 

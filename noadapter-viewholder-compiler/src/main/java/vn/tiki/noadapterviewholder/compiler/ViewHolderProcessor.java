@@ -6,11 +6,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -22,7 +20,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import vn.tiki.noadapterviewholder.ViewHolder;
 
@@ -34,6 +31,7 @@ public final class ViewHolderProcessor extends AbstractProcessor {
       "ViewHolderDelegate");
 
   static final ClassName VIEW = ClassName.get("android.view", "View");
+  static final ClassName VIEW_GROUP = ClassName.get("android.view", "ViewGroup");
   private Filer filer;
 
   @Override
@@ -57,24 +55,19 @@ public final class ViewHolderProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> set, RoundEnvironment env) {
-    Map<TypeElement, ViewHolderInfo> bindingMap = findAndParseTargets(env);
-
-    if (bindingMap.isEmpty()) {
+    final List<ViewHolderInfo> viewHolderInfoList = findAndParseTargets(env);
+    if (viewHolderInfoList.isEmpty()) {
       return false;
     }
 
-    final List<ViewHolderInfo> viewHolderInfoList = new LinkedList<>();
-    for (Map.Entry<TypeElement, ViewHolderInfo> entry : bindingMap.entrySet()) {
-      TypeElement typeElement = entry.getKey();
-      final ViewHolderInfo viewHolderInfo = entry.getValue();
-      viewHolderInfoList.add(viewHolderInfo);
+    for (ViewHolderInfo viewHolderInfo : viewHolderInfoList) {
       try {
-        new ViewHolderDelegateGenerator(typeElement, viewHolderInfo)
+        new ViewHolderDelegateGenerator(viewHolderInfo)
             .brewJava()
             .writeTo(filer);
 
       } catch (IOException e) {
-        error("Unable to write delegate for type %s: %s", typeElement, e.getMessage());
+        error("Unable to write delegate for type %s: %s", viewHolderInfo.getTargetType(), e.getMessage());
       }
     }
 
@@ -83,7 +76,14 @@ public final class ViewHolderProcessor extends AbstractProcessor {
           .brewJava()
           .writeTo(filer);
     } catch (Exception e) {
-      error("Unable to write TypeFactory for type %s: %s", e.getMessage());
+      error("Unable to write TypeFactory %s", e.getMessage());
+    }
+    try {
+      new ViewHolderFactoryGenerator(viewHolderInfoList)
+          .brewJava()
+          .writeTo(filer);
+    } catch (Exception e) {
+      error("Unable to write ViewHolderFactory  %s", e.getMessage());
     }
 
     return false;
@@ -93,8 +93,8 @@ public final class ViewHolderProcessor extends AbstractProcessor {
     printMessage(Diagnostic.Kind.ERROR, message, args);
   }
 
-  private Map<TypeElement, ViewHolderInfo> findAndParseTargets(RoundEnvironment env) {
-    Map<TypeElement, ViewHolderInfo> builderMap = new LinkedHashMap<>();
+  private List<ViewHolderInfo> findAndParseTargets(RoundEnvironment env) {
+    List<ViewHolderInfo> viewHolderInfoList = new LinkedList<>();
     // Process each @BindExtra element.
     for (Element element : env.getElementsAnnotatedWith(ViewHolder.class)) {
       // we don't SuperficialValidation.validateElement(element)
@@ -107,15 +107,19 @@ public final class ViewHolderProcessor extends AbstractProcessor {
         final List<? extends VariableElement> parameters = bindMethod.getParameters();
         final TypeElement targetType = (TypeElement) processingEnv.getTypeUtils().asElement(parameters.get(0).asType());
         final ClassName itemClassName = ClassName.get(targetType);
-        final ViewHolderInfo viewHolderInfo = new ViewHolderInfo(layout, onClick, itemClassName);
-        TypeElement typeElement = (TypeElement) element;
-        builderMap.put(typeElement, viewHolderInfo);
+        final TypeElement typeElement = (TypeElement) element;
+        final ViewHolderInfo viewHolderInfo = new ViewHolderInfo(
+            layout,
+            onClick,
+            itemClassName,
+            ClassName.get(typeElement));
+        viewHolderInfoList.add(viewHolderInfo);
       } catch (Exception e) {
         logParsingError(ViewHolder.class, e);
       }
     }
 
-    return builderMap;
+    return viewHolderInfoList;
   }
 
   private ExecutableElement findMethod(Element element, String name) {

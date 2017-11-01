@@ -35,7 +35,7 @@ class TypeFactoryGenerator {
         .addStatement("typeMapping = new $T()", mapType);
 
     for (ViewHolderInfo viewHolderInfo : viewHolderInfoList) {
-      result.addStatement("typeMapping.put($T.class, $L)", viewHolderInfo.getTargetType(), viewHolderInfo.getLayout());
+      result.addStatement("typeMapping.put($T.class, $L)", viewHolderInfo.getItemType(), viewHolderInfo.getLayout());
     }
     return result.build();
   }
