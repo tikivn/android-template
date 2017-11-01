@@ -12,12 +12,12 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import javax.lang.model.element.TypeElement;
 
-class ViewHolderDelegate {
+class ViewHolderDelegateGenerator {
 
   private final ClassName targetClassName;
   private final ViewHolderInfo viewHolderInfo;
 
-  ViewHolderDelegate(final TypeElement typeElement, final ViewHolderInfo viewHolderInfo) {
+  ViewHolderDelegateGenerator(final TypeElement typeElement, final ViewHolderInfo viewHolderInfo) {
     targetClassName = ClassName.get(typeElement);
     this.viewHolderInfo = viewHolderInfo;
   }
@@ -78,7 +78,7 @@ class ViewHolderDelegate {
 
   private TypeSpec createType() {
     TypeSpec.Builder result = TypeSpec.classBuilder(targetClassName.simpleName() + "_ViewHolderDelegate")
-        .addModifiers(FINAL)
+        .addModifiers(PUBLIC, FINAL)
         .superclass(targetClassName)
         .addSuperinterface(VIEW_HOLDER_DELEGATE);
 

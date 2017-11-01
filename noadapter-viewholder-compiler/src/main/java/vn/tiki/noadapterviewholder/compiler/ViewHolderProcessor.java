@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,25 +63,34 @@ public final class ViewHolderProcessor extends AbstractProcessor {
       return false;
     }
 
+    final List<ViewHolderInfo> viewHolderInfoList = new LinkedList<>();
     for (Map.Entry<TypeElement, ViewHolderInfo> entry : bindingMap.entrySet()) {
       TypeElement typeElement = entry.getKey();
       final ViewHolderInfo viewHolderInfo = entry.getValue();
-
+      viewHolderInfoList.add(viewHolderInfo);
       try {
-        new ViewHolderDelegate(typeElement, viewHolderInfo)
+        new ViewHolderDelegateGenerator(typeElement, viewHolderInfo)
             .brewJava()
             .writeTo(filer);
 
       } catch (IOException e) {
-        error(typeElement, "Unable to write binding for type %s: %s", typeElement, e.getMessage());
+        error("Unable to write delegate for type %s: %s", typeElement, e.getMessage());
       }
+    }
+
+    try {
+      new TypeFactoryGenerator(viewHolderInfoList)
+          .brewJava()
+          .writeTo(filer);
+    } catch (Exception e) {
+      error("Unable to write TypeFactory for type %s: %s", e.getMessage());
     }
 
     return false;
   }
 
-  private void error(Element element, String message, Object... args) {
-    printMessage(Diagnostic.Kind.ERROR, element, message, args);
+  private void error(String message, Object... args) {
+    printMessage(Diagnostic.Kind.ERROR, message, args);
   }
 
   private Map<TypeElement, ViewHolderInfo> findAndParseTargets(RoundEnvironment env) {
@@ -101,7 +111,7 @@ public final class ViewHolderProcessor extends AbstractProcessor {
         TypeElement typeElement = (TypeElement) element;
         builderMap.put(typeElement, viewHolderInfo);
       } catch (Exception e) {
-        logParsingError(element, ViewHolder.class, e);
+        logParsingError(ViewHolder.class, e);
       }
     }
 
@@ -119,22 +129,19 @@ public final class ViewHolderProcessor extends AbstractProcessor {
   }
 
   private void logParsingError(
-      Element element, Class<? extends Annotation> annotation,
+      Class<? extends Annotation> annotation,
       Exception e) {
     StringWriter stackTrace = new StringWriter();
     e.printStackTrace(new PrintWriter(stackTrace));
-    error(element, "Unable to parse @%s binding.\n\n%s", annotation.getSimpleName(), stackTrace);
+    error("Unable to parse @%s binding.\n\n%s", annotation.getSimpleName(), stackTrace);
   }
 
-  private void printMessage(Diagnostic.Kind kind, Element element, String message, Object[] args) {
+  private void printMessage(Diagnostic.Kind kind, String message, Object[] args) {
     if (args.length > 0) {
       message = String.format(message, args);
     }
 
-    processingEnv.getMessager().printMessage(kind, message, element);
+    processingEnv.getMessager().printMessage(kind, message);
   }
 
-  private static boolean isTypeEqual(TypeMirror typeMirror, String otherType) {
-    return otherType.equals(typeMirror.toString());
-  }
 }

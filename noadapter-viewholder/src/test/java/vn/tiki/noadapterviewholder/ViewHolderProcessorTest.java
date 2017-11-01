@@ -10,23 +10,29 @@ import vn.tiki.noadapterviewholder.compiler.ViewHolderProcessor;
 
 public class ViewHolderProcessorTest {
 
-  @Test
-  public void generateViewHolderDelegate() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
+  private JavaFileObject source;
+
+  @Before
+  public void setUp() throws Exception {
+    source = JavaFileObjects.forSourceString(
         "test.Test",
         ""
         + "package test;\n"
         + "import android.view.View;\n"
         + "import vn.tiki.noadapterviewholder.ViewHolder;\n"
         + "@ViewHolder(\n"
-        + "    layout = 10\n"
+        + "    layout = 10,\n"
+        + "    onClick = {1, 2}\n"
         + ")"
         + "public abstract class Test {"
         + "  void bindView(final View view) {}\n"
         + "  void bind(final String item) {}"
         + "}"
     );
+  }
 
+  @Test
+  public void testGenerate() {
     JavaFileObject viewHolderDelegate = JavaFileObjects.forSourceString(
         "test/Test_ViewHolderDelegate",
         ""
@@ -36,7 +42,7 @@ public class ViewHolderProcessorTest {
         + "import java.lang.Override;\n"
         + "import java.lang.String;\n"
         + "import vn.tiki.noadapterviewholder.ViewHolderDelegate;\n"
-        + "final class Test_ViewHolderDelegate extends Test implements ViewHolderDelegate {\n"
+        + "public final class Test_ViewHolderDelegate extends Test implements ViewHolderDelegate {\n"
         + "  @Override\n"
         + "  public void bind(Object item) {\n"
         + "    super.bind((String) item);\n"
@@ -51,17 +57,44 @@ public class ViewHolderProcessorTest {
         + "  }\n"
         + "  @Override\n"
         + "  public int[] onClick() {\n"
-        + "    return new int[0];\n"
+        + "    return new int[] { 1, 2 };\n"
         + "  }"
         + "}"
     );
 
-    assertAbout(javaSource())
-        .that(source)
+    JavaFileObject typeFactory = JavaFileObjects.forSourceString(
+        "noadapterviewholder/TypeFactoryImpl",
+        ""
+        + "package noadapterviewholder;\n"
+        + "import java.lang.Class;\n"
+        + "import java.lang.Integer;\n"
+        + "import java.lang.Object;\n"
+        + "import java.lang.Override;\n"
+        + "import java.lang.String;\n"
+        + "import java.util.LinkedHashMap;\n"
+        + "import vn.tiki.noadapter2.TypeFactory;\n"
+        + "\n"
+        + "final class TypeFactoryImpl implements TypeFactory {\n"
+        + "\n"
+        + "  private final LinkedHashMap<Class, Integer> typeMapping;\n"
+        + "\n"
+        + "  TypeFactoryIml() {\n"
+        + "    typeMapping = new LinkedHashMap<Class, Integer>();\n"
+        + "    typeMapping.put(String.class, 10);\n"
+        + "  }\n"
+        + "\n"
+        + "  @Override\n"
+        + "  public int typeOf(Object item) {\n"
+        + "    return typeMapping.get(item.getClass());\n"
+        + "  }\n"
+        + "}\n"
+    );
+
+    assertAbout(javaSource()).that(source)
         .withCompilerOptions("-Xlint:-processing")
         .processedWith(new ViewHolderProcessor())
         .compilesWithoutError()
         .and()
-        .generatesSources(viewHolderDelegate);
+        .generatesSources(typeFactory, viewHolderDelegate);
   }
 }
