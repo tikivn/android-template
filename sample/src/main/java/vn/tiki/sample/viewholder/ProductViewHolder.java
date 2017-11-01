@@ -1,51 +1,37 @@
 package vn.tiki.sample.viewholder;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import vn.tiki.noadapter2.AbsViewHolder;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import vn.tiki.noadapterviewholder.ViewHolder;
 import vn.tiki.sample.R;
+import vn.tiki.sample.entity.Product;
+import vn.tiki.sample.glide.GlideApp;
+import vn.tiki.sample.util.TextViews;
+import vn.tiki.sample.util.Urls;
 
-public class ProductViewHolder extends AbsViewHolder {
+@ViewHolder(
+    layout = R.layout.productlist_item_product,
+    onClick = R.id.itemView
+)
+public class ProductViewHolder {
 
-  ImageView ivThumb;
-  TextView tvPrice;
-  TextView tvTitle;
-  Product product;
+  @BindView(R.id.ivThumb) ImageView ivThumb;
+  @BindView(R.id.tvPrice) TextView tvPrice;
+  @BindView(R.id.tvTitle) TextView tvTitle;
 
-  public static ProductViewHolder create(ViewGroup parent) {
-    final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    final View view = inflater.inflate(R.layout.productlist_item_product, parent, false);
-    return new ProductViewHolder(view);
+  void bind(Product product) {
+    tvTitle.setText(product.id() + " - " + product.title());
+    TextViews.setPrice(tvPrice, product.price());
+    GlideApp
+        .with(ivThumb.getContext())
+        .load(Urls.resolveImageUrl(product.image()))
+        .into(ivThumb);
   }
 
-  private ProductViewHolder(View itemView) {
-    super(itemView);
-    registerOnClickOn(itemView.findViewById(R.id.ivThumb));
-    ivThumb = itemView.findViewById(R.id.ivThumb);
-    tvPrice = itemView.findViewById(R.id.tvPrice);
-    tvTitle = itemView.findViewById(R.id.tvTitle);
-  }
-
-  @Override
-  public void bind(Object item) {
-    super.bind(item);
-    if (item instanceof Product) {
-      product = (Product) item;
-      product.ivThumb = ivThumb;
-      product.tvPrice = tvPrice;
-      product.tvTitle = tvTitle;
-      product.bind();
-    }
-  }
-
-  @Override
-  public void unbind() {
-    product.ivThumb = null;
-    product.tvPrice = null;
-    product.tvTitle = null;
-    super.unbind();
+  void bindView(View itemView) {
+    ButterKnife.bind(this, itemView);
   }
 }

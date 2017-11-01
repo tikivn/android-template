@@ -1,4 +1,5 @@
 package vn.tiki.collectionview;
 
-public interface LoadingItem {
+public class LoadingItem {
+
 }

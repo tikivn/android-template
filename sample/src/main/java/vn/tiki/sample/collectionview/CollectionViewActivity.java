@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import java.util.List;
+import noadapterviewholder.NoAdapterFactory;
 import vn.tiki.collectionview.Adapter;
 import vn.tiki.collectionview.CollectionView;
 import vn.tiki.collectionview.DataProvider;
-import vn.tiki.collectionview.LoadingItem;
 import vn.tiki.noadapter2.OnlyAdapter;
 import vn.tiki.sample.R;
 
@@ -35,45 +35,38 @@ public class CollectionViewActivity extends AppCompatActivity {
     setContentView(R.layout.activity_collection_view);
     ButterKnife.bind(this);
 
-    adapter = OnlyAdapter.builder()
-        .typeFactory(item -> {
-          if (item instanceof LoadingItem) {
-            return 1;
-          } else {
-            return 2;
-          }
-        })
-        .viewHolderFactory((parent, type) -> {
-          if (type == 1) {
-            return LoadingViewHolder.create(parent);
-          } else {
-            return TextViewHolder.create(parent);
-          }
-        })
-        .build();
+    adapter = NoAdapterFactory.makeAdapter((view, item, position) -> {
+
+    });
 
     vCollectionView.setAdapter(new Adapter<String>() {
-      @Override public DataProvider<String> onCreateDataProvider() {
+      @Override
+      public void onBindItems(List<String> items) {
+        adapter.setItems(items);
+      }
+
+      @Override
+      public DataProvider<String> onCreateDataProvider() {
         return new TodoDataProvider();
       }
 
-      @Override public RecyclerView.LayoutManager onCreateLayoutManager() {
+      @NonNull
+      @Override
+      public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
+        return getLayoutInflater().inflate(R.layout.view_error, parent, false);
+      }
+
+      @Override
+      public RecyclerView.LayoutManager onCreateLayoutManager() {
         return new LinearLayoutManager(
             CollectionViewActivity.this,
             LinearLayoutManager.VERTICAL,
             false);
       }
 
-      @Override public RecyclerView.Adapter<?> onCreateRecyclerViewAdapter() {
+      @Override
+      public RecyclerView.Adapter<?> onCreateRecyclerViewAdapter() {
         return adapter;
-      }
-
-      @Override public void onBindItems(List<String> items) {
-        adapter.setItems(items);
-      }
-
-      @NonNull @Override public View onCreateErrorView(ViewGroup parent, Throwable throwable) {
-        return getLayoutInflater().inflate(R.layout.view_error, parent, false);
       }
     });
   }

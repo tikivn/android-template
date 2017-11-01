@@ -5,6 +5,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
@@ -54,12 +55,21 @@ class TypeFactoryGenerator {
   }
 
   private MethodSpec createTypeOfMethod() {
+
     return MethodSpec.methodBuilder("typeOf")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
         .returns(TypeName.INT)
         .addParameter(Object.class, "item")
-        .addStatement("return typeMapping.get(item.getClass())")
+        .addCode(
+            CodeBlock.builder()
+                .addStatement("final Class<?> itemClass = item.getClass()")
+                .add("if (typeMapping.containsKey(itemClass)) {\n")
+                .addStatement("return typeMapping.get(itemClass)")
+                .add("} else {\n")
+                .addStatement("throw new $T(\"unknown \" + itemClass)", IllegalArgumentException.class)
+                .add("}")
+                .build())
         .build();
   }
 }

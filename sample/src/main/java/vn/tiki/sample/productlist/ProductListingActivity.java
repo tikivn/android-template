@@ -17,12 +17,12 @@ import intents.Intents;
 import io.reactivex.Single;
 import java.util.List;
 import javax.inject.Inject;
+import noadapterviewholder.NoAdapterFactory;
 import vn.tiki.collectionview.Adapter;
 import vn.tiki.collectionview.CollectionView;
 import vn.tiki.collectionview.DataProvider;
 import vn.tiki.collectionview.ListData;
 import vn.tiki.daggers.Daggers;
-import vn.tiki.noadapter2.DiffCallback;
 import vn.tiki.noadapter2.OnlyAdapter;
 import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseActivity;
@@ -63,26 +63,10 @@ public class ProductListingActivity extends BaseActivity implements NetworkStatu
   }
 
   private void configureCollectionView() {
-    final OnlyAdapter adapter = new OnlyAdapter.Builder()
-        .viewHolderFactory((parent, type) -> ProductViewHolder.create(parent))
-        .diffCallback(new DiffCallback() {
-          @Override
-          public boolean areContentsTheSame(Object oldItem, Object newItem) {
-            return oldItem.equals(newItem);
-          }
-
-          @Override
-          public boolean areItemsTheSame(Object oldItem, Object newItem) {
-            return oldItem instanceof Product
-                   && newItem instanceof Product
-                   && ((Product) oldItem).id().equals(((Product) newItem).id());
-          }
-        })
-        .onItemClickListener((view, item, position) -> startActivity(
-            Intents.productDetailActivity(ProductListingActivity.this)
-                .product(((Product) item))
-                .make()))
-        .build();
+    final OnlyAdapter adapter = NoAdapterFactory.makeAdapter((view, item, position) -> Intents.productDetailActivity(
+        ProductListingActivity.this)
+        .product(((Product) item))
+        .make());
 
     vCollectionView.setAdapter(new Adapter() {
       @Override

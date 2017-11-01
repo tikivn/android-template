@@ -14,8 +14,7 @@ import java.util.List;
 
 class CollectionViewPresenter {
 
-  static final LoadingItem LOADING_ITEM = new LoadingItem() {
-  };
+  static final LoadingItem LOADING_ITEM = new LoadingItem();
   CollectionView collectionView;
   @NonNull private final DataProvider<?> dataProvider;
   @Nullable private Disposable disposable;

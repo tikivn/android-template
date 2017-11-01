@@ -1,11 +1,13 @@
 package vn.tiki.noadapterviewholder.compiler;
 
+import android.support.annotation.Nullable;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -115,6 +117,10 @@ public final class ViewHolderProcessor extends AbstractProcessor {
         final int layout = annotation.layout();
         final int[] onClick = annotation.onClick();
         final ExecutableElement bindMethod = findMethod(element, "bind");
+        if (bindMethod == null) {
+          error("not found %s.bind(Object) method", element);
+          return Collections.emptyList();
+        }
         final List<? extends VariableElement> parameters = bindMethod.getParameters();
         final TypeElement targetType = (TypeElement) processingEnv.getTypeUtils().asElement(parameters.get(0).asType());
         final ClassName itemClassName = ClassName.get(targetType);
@@ -123,6 +129,7 @@ public final class ViewHolderProcessor extends AbstractProcessor {
             layout,
             onClick,
             itemClassName,
+            findMethod(element, "bindView") != null,
             ClassName.get(typeElement));
         viewHolderInfoList.add(viewHolderInfo);
       } catch (Exception e) {
@@ -133,6 +140,7 @@ public final class ViewHolderProcessor extends AbstractProcessor {
     return viewHolderInfoList;
   }
 
+  @Nullable
   private ExecutableElement findMethod(Element element, String name) {
     final List<? extends Element> elements = element.getEnclosedElements();
     for (Element e : elements) {
@@ -140,7 +148,7 @@ public final class ViewHolderProcessor extends AbstractProcessor {
         return (ExecutableElement) e;
       }
     }
-    throw new IllegalArgumentException("method " + name + " not found in class " + element);
+    return null;
   }
 
   private void logParsingError(
@@ -156,6 +164,7 @@ public final class ViewHolderProcessor extends AbstractProcessor {
       message = String.format(message, args);
     }
 
+    message = "\n\n======== ERROR ========\nViewHolderProcessor: " + message + "\n\n";
     processingEnv.getMessager().printMessage(kind, message);
   }
 

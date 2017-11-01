@@ -7,6 +7,7 @@ import static vn.tiki.noadapterviewholder.compiler.ViewHolderProcessor.viewHolde
 
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -34,12 +35,15 @@ class ViewHolderDelegateGenerator {
   }
 
   private MethodSpec createBindViewMethod() {
-    return MethodSpec.methodBuilder("bindView")
+    final Builder result = MethodSpec.methodBuilder("bindView")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
-        .addParameter(VIEW, "view")
-        .addStatement("super.bindView(view)")
-        .build();
+        .addParameter(VIEW, "view");
+
+    if (viewHolderInfo.hasView()) {
+      result.addStatement("super.bindView(view)");
+    }
+    return result.build();
   }
 
   private MethodSpec createLayoutMethod() {
