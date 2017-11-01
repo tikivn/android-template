@@ -17,7 +17,7 @@ import intents.Intents;
 import io.reactivex.Single;
 import java.util.List;
 import javax.inject.Inject;
-import noadapterviewholder.NoAdapterFactory;
+import viewholders.NoAdapterFactory;
 import vn.tiki.collectionview.Adapter;
 import vn.tiki.collectionview.CollectionView;
 import vn.tiki.collectionview.DataProvider;

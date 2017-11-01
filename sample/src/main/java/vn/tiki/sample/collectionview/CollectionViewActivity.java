@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import java.util.List;
-import noadapterviewholder.NoAdapterFactory;
+import viewholders.NoAdapterFactory;
 import vn.tiki.collectionview.Adapter;
 import vn.tiki.collectionview.CollectionView;
 import vn.tiki.collectionview.DataProvider;
@@ -35,9 +35,7 @@ public class CollectionViewActivity extends AppCompatActivity {
     setContentView(R.layout.activity_collection_view);
     ButterKnife.bind(this);
 
-    adapter = NoAdapterFactory.makeAdapter((view, item, position) -> {
-
-    });
+    adapter = NoAdapterFactory.makeAdapter(null);
 
     vCollectionView.setAdapter(new Adapter<String>() {
       @Override

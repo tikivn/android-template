@@ -2,7 +2,7 @@ package vn.tiki.sample.viewholder;
 
 import android.view.View;
 import android.widget.TextView;
-import vn.tiki.noadapterviewholder.ViewHolder;
+import vn.tiki.viewholders.ViewHolder;
 import vn.tiki.sample.R;
 
 @ViewHolder(

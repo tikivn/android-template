@@ -95,8 +95,8 @@ dependencies {
     implementation project(':mvp')
     implementation project(':intents')
     annotationProcessor project(':intents-compiler')
-    implementation project(':noadapter-viewholder')
-    annotationProcessor project(':noadapter-viewholder-compiler')
+    implementation project(':viewholders')
+    annotationProcessor project(':viewholders-compiler')
     implementation project(':collectionview')
     //  implementation deps.tiki.daggers
     //  implementation deps.tiki.mvp
