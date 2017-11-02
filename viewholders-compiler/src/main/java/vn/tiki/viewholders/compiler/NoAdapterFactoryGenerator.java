@@ -46,7 +46,7 @@ class NoAdapterFactoryGenerator {
             .add(".typeFactory(new $T())\n", typeFactory)
             .add(".viewHolderFactory(new $T())\n", viewHolderFactory)
             .add(".diffCallback(new $T())\n", DIFF_CALLBACK)
-            .add(".ITEM_CLICK_LISTENER(onItemClick)")
+            .add(".onItemClickListener(onItemClick)")
             .add(".build();")
             .build())
         .build();
