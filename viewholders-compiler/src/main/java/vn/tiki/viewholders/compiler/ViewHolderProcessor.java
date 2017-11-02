@@ -28,7 +28,7 @@ import vn.tiki.viewholders.ViewHolder;
 @AutoService(Processor.class)
 public final class ViewHolderProcessor extends AbstractProcessor {
 
-  static final ClassName viewHolderDelegate = ClassName.get(
+  static final ClassName VIEW_HOLDER_DELEGATE = ClassName.get(
       "vn.tiki.viewholders",
       "ViewHolderDelegate");
 

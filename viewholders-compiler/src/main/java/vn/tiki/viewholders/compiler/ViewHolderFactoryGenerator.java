@@ -60,7 +60,7 @@ class ViewHolderFactoryGenerator {
 
     final Builder result = MethodSpec.methodBuilder("makeViewHolderDelegate")
         .addModifiers(PRIVATE)
-        .returns(ViewHolderProcessor.viewHolderDelegate)
+        .returns(ViewHolderProcessor.VIEW_HOLDER_DELEGATE)
         .addParameter(TypeName.INT, "type")
         .addCode(switchStatementBuilder.build());
     return result.build();
