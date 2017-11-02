@@ -15,6 +15,18 @@ public interface Deps {
 
   }
 
+  interface Tiki {
+
+    interface ViewHolders {
+
+      String annotations = "com.github.tikivn.android-template:viewholders-annotations:" + version;
+      String runtime = "com.github.tikivn.android-template:viewholders:" + version;
+      String compiler = "com.github.tikivn.android-template:viewholders-compiler:" + version;
+    }
+
+    String version = "master-SNAPSHOT";
+  }
+
   interface Dagger {
 
     String runtime = "com.google.dagger:dagger:" + Version.dagger;

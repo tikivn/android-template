@@ -17,7 +17,7 @@ before_install:
   - sdkmanager tools
 
 script:
-  - ./gradlew :daggers:build :intents:build :mvp:build
+  - ./gradlew check
 
 after_success:
   - export CODECOV_TOKEN="4cb08118-2073-45d2-b2de-47151e1d734f"
@@ -33,7 +33,8 @@ branches:
     - gh-pages
 
 notifications:
-  email: false
+  email:
+  - giangnguyen.tale@gmail.com
 
 sudo: false
 
