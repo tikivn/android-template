@@ -2,10 +2,12 @@ package vn.tale.viewholdersdemo.viewholder;
 
 import android.view.View;
 import vn.tale.viewholdersdemo.R2;
+import vn.tale.viewholdersdemo.viewholder.ColorViewHolder.Model;
 import vn.tiki.viewholders.ViewHolder;
 
 @ViewHolder(
-    layout = R2.layout.viewholder_item_color
+    layout = R2.layout.viewholder_item_color,
+    bindTo = Model.class
 )
 public class ColorViewHolder {
 

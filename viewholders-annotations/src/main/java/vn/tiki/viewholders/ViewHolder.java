@@ -21,4 +21,9 @@ public @interface ViewHolder {
    * View IDs to which the method will be bound.
    */
   @IdRes int[] onClick() default {};
+
+  /**
+   * Model class that this ViewModel will be bound to
+   */
+  Class<?> bindTo() default Object.class;
 }

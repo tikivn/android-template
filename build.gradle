@@ -3,6 +3,7 @@ import vn.tiki.Deps
 apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
+  ext.kotlin_version = '1.1.51'
   repositories {
     google()
     jcenter()
@@ -16,6 +17,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.Version.kotlin}"
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
     classpath "com.jakewharton:butterknife-gradle-plugin:${Deps.Version.butterKnife}"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 

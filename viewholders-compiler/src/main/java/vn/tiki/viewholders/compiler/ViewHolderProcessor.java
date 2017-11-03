@@ -89,8 +89,10 @@ public final class ViewHolderProcessor extends AbstractProcessor {
     private final PackageElement respectivePackageName;
 
     IdScanner(
-        Map<QualifiedId, Id> ids, PackageElement rPackageName,
-        PackageElement respectivePackageName, Set<String> referenced) {
+        Map<QualifiedId, Id> ids,
+        PackageElement rPackageName,
+        PackageElement respectivePackageName,
+        Set<String> referenced) {
       this.ids = ids;
       this.rPackageName = rPackageName;
       this.respectivePackageName = respectivePackageName;
@@ -122,8 +124,10 @@ public final class ViewHolderProcessor extends AbstractProcessor {
     private final PackageElement respectivePackageName;
 
     private VarScanner(
-        Map<QualifiedId, Id> ids, ClassName className,
-        PackageElement respectivePackageName, Set<String> referenced) {
+        Map<QualifiedId, Id> ids,
+        ClassName className,
+        PackageElement respectivePackageName,
+        Set<String> referenced) {
       this.ids = ids;
       this.className = className;
       this.respectivePackageName = respectivePackageName;
@@ -261,21 +265,24 @@ public final class ViewHolderProcessor extends AbstractProcessor {
             onClickIds[i] = getId(qualifiedId);
           }
         }
-        final ExecutableElement bindMethod = findMethod(typeElement, "bind");
-        if (bindMethod == null) {
-          error("not found %s.bind(Object) method", element);
+        TypeMirror modelClass = getModelClass(annotation);
+        if (modelClass == null) {
+          error("can not read Model class");
+          return Collections.emptyList();
+        } else if (modelClass.toString().equals("java.lang.Object")) {
+          error("Object is not allow to be a Model class");
           return Collections.emptyList();
         }
-        final List<? extends VariableElement> parameters = bindMethod.getParameters();
-        final VariableElement variableElement = parameters.get(0);
-        final TypeElement targetType = (TypeElement) typeUtils.asElement(variableElement.asType());
-        final ClassName itemClassName = ClassName.get(targetType);
+
+        final TypeElement paramType = (TypeElement) typeUtils.asElement(modelClass);
+        final boolean hasBindMethod = hasMethod(typeElement, "bind", paramType.toString());
+        final ClassName itemClassName = ClassName.get(paramType);
         final ViewHolderInfo viewHolderInfo = new ViewHolderInfo(
-            layoutId,
+            ClassName.get(typeElement), layoutId,
             onClickIds,
             itemClassName,
-            findMethod(typeElement, "bindView") != null,
-            ClassName.get(typeElement));
+            hasBindMethod, hasMethod(typeElement, "bindView", "android.view.View")
+        );
         viewHolderInfoList.add(viewHolderInfo);
       } catch (Exception e) {
         logParsingError(ViewHolder.class, e);
@@ -285,27 +292,43 @@ public final class ViewHolderProcessor extends AbstractProcessor {
     return viewHolderInfoList;
   }
 
-  @Nullable
-  private ExecutableElement findMethod(TypeElement element, String name) {
-    final List<? extends Element> elements = element.getEnclosedElements();
-    for (Element e : elements) {
-      if (e instanceof ExecutableElement && name.equals(e.getSimpleName().toString())) {
-        return (ExecutableElement) e;
-      }
-    }
-    // find in supper class.
-    final TypeMirror superclass = element.getSuperclass();
-    if (superclass.getKind() == TypeKind.NONE) {
-      return null;
-    }
-    return findMethod((TypeElement) typeUtils.asElement(superclass), name);
-  }
-
   private Id getId(QualifiedId qualifiedId) {
     if (symbols.get(qualifiedId) == null) {
       symbols.put(qualifiedId, new Id(qualifiedId.id));
     }
     return symbols.get(qualifiedId);
+  }
+
+  @Nullable
+  private TypeMirror getModelClass(final ViewHolder annotation) {
+    try {
+      annotation.bindTo();
+    } catch (MirroredTypeException mte) {
+      return mte.getTypeMirror();
+    }
+    return null;
+  }
+
+  private boolean hasMethod(TypeElement target, String name, String param) {
+    final List<? extends Element> elements = target.getEnclosedElements();
+    for (Element e : elements) {
+      if (e instanceof ExecutableElement && name.equals(e.getSimpleName().toString())) {
+        final List<? extends VariableElement> parameters = ((ExecutableElement) e).getParameters();
+        if (parameters.size() == 1) {
+          final VariableElement variableElement = parameters.get(0);
+          final TypeElement parameterType = (TypeElement) typeUtils.asElement(variableElement.asType());
+          if (parameterType.toString().equals(param)) {
+            return true;
+          }
+        }
+      }
+    }
+    // find in supper class.
+    final TypeMirror superclass = target.getSuperclass();
+    return superclass.getKind() != TypeKind.NONE && hasMethod(
+        (TypeElement) typeUtils.asElement(superclass),
+        name,
+        param);
   }
 
   private void logParsingError(

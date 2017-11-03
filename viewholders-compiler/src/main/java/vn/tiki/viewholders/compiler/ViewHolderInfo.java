@@ -4,30 +4,38 @@ import com.squareup.javapoet.ClassName;
 
 public class ViewHolderInfo {
 
-  private final boolean hasView;
-  private final ClassName itemType;
+  private final boolean hasBindMethod;
+  private final boolean hasBindViewMethod;
   private final Id layout;
+  private final ClassName modelType;
   private final Id[] onClick;
   private final ClassName targetType;
 
   ViewHolderInfo(
+      final ClassName targetType,
       final Id layout,
       final Id[] onClick,
-      final ClassName itemType,
-      final boolean hasView, final ClassName targetType) {
+      final ClassName modelType,
+      final boolean hasBindMethod,
+      final boolean hasBindViewMethod) {
     this.layout = layout;
     this.onClick = onClick;
-    this.itemType = itemType;
-    this.hasView = hasView;
+    this.modelType = modelType;
+    this.hasBindMethod = hasBindMethod;
+    this.hasBindViewMethod = hasBindViewMethod;
     this.targetType = targetType;
   }
 
-  ClassName getItemType() {
-    return itemType;
+  public boolean hasBindMethod() {
+    return hasBindMethod;
   }
 
   Id getLayout() {
     return layout;
+  }
+
+  ClassName getModelType() {
+    return modelType;
   }
 
   Id[] getOnClick() {
@@ -38,7 +46,7 @@ public class ViewHolderInfo {
     return targetType;
   }
 
-  boolean hasView() {
-    return hasView;
+  boolean hasBindViewMethod() {
+    return hasBindViewMethod;
   }
 }

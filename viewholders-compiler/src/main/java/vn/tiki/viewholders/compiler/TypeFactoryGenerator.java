@@ -39,7 +39,7 @@ class TypeFactoryGenerator {
     for (ViewHolderInfo viewHolderInfo : viewHolderInfoList) {
       result.addStatement(
           "typeMapping.put($T.class, $L)",
-          viewHolderInfo.getItemType(),
+          viewHolderInfo.getModelType(),
           viewHolderInfo.getLayout().code);
     }
     return result.build();

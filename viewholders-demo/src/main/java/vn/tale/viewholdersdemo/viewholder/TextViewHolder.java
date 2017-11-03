@@ -1,24 +1,22 @@
 package vn.tale.viewholdersdemo.viewholder;
 
-import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import vn.tale.viewholdersdemo.R2;
+import vn.tale.viewholdersdemo.viewholder.TextViewHolder.Model;
 import vn.tiki.viewholders.ViewHolder;
 
 @ViewHolder(
-    layout = R2.layout.viewholder_item_text
+    layout = R2.layout.viewholder_item_text,
+    bindTo = Model.class
 )
-public class TextViewHolder {
+public class TextViewHolder extends BaseViewHolder {
 
   public static class Model {
 
-    private String value;
+    public final String value;
 
-    public Model(final String value) {
-      this.value = value;
-    }
+    public Model(final String value) {this.value = value;}
 
     @Override
     public boolean equals(final Object o) {
@@ -46,7 +44,4 @@ public class TextViewHolder {
     text.setText(model.value);
   }
 
-  void bindView(View view) {
-    ButterKnife.bind(this, view);
-  }
 }

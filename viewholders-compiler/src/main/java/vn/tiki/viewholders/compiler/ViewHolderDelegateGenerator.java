@@ -26,12 +26,15 @@ class ViewHolderDelegateGenerator {
   }
 
   private MethodSpec createBindMethod() {
-    return MethodSpec.methodBuilder("bind")
+    final Builder result = MethodSpec.methodBuilder("bind")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
-        .addParameter(Object.class, "item")
-        .addStatement("super.bind(($T) item)", viewHolderInfo.getItemType())
-        .build();
+        .addParameter(Object.class, "item");
+
+    if (viewHolderInfo.hasBindMethod()) {
+      result.addStatement("super.bind(($T) item)", viewHolderInfo.getModelType());
+    }
+    return result.build();
   }
 
   private MethodSpec createBindViewMethod() {
@@ -40,7 +43,7 @@ class ViewHolderDelegateGenerator {
         .addModifiers(PUBLIC)
         .addParameter(VIEW, "view");
 
-    if (viewHolderInfo.hasView()) {
+    if (viewHolderInfo.hasBindViewMethod()) {
       result.addStatement("super.bindView(view)");
     }
     return result.build();

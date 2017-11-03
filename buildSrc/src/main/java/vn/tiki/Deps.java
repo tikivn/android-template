@@ -118,4 +118,5 @@ public interface Deps {
   String noadapter = "vn.tiki.noadapter2:noadapter:2.0.2";
   String javapoet = "com.squareup:javapoet:1.9.0";
   String gson = "com.google.code.gson:gson:2.8.0";
+  String kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jre7:" + Version.kotlin;
 }
