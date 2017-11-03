@@ -43,7 +43,6 @@ public class ColorViewHolder {
 
   void bind(Model model) {
     view.setBackgroundColor(model.value);
-
   }
 
   void bindView(final View view) {

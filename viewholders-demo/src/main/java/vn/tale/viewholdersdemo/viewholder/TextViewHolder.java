@@ -16,7 +16,9 @@ public class TextViewHolder extends BaseViewHolder {
 
     public final String value;
 
-    public Model(final String value) {this.value = value;}
+    public Model(final String value) {
+      this.value = value;
+    }
 
     @Override
     public boolean equals(final Object o) {
