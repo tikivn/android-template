@@ -16,7 +16,7 @@ import java.util.List;
 
 class TypeFactoryGenerator {
 
-  public static final String NAME = "TypeFactoryImpl";
+  static final String NAME = "TypeFactoryImpl";
   private final TypeName mapType;
   private final List<ViewHolderInfo> viewHolderInfoList;
 
@@ -37,7 +37,10 @@ class TypeFactoryGenerator {
         .addStatement("typeMapping = new $T()", mapType);
 
     for (ViewHolderInfo viewHolderInfo : viewHolderInfoList) {
-      result.addStatement("typeMapping.put($T.class, $L)", viewHolderInfo.getItemType(), viewHolderInfo.getLayout());
+      result.addStatement(
+          "typeMapping.put($T.class, $L)",
+          viewHolderInfo.getItemType(),
+          viewHolderInfo.getLayout().code);
     }
     return result.build();
   }

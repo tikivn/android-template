@@ -6,13 +6,13 @@ public class ViewHolderInfo {
 
   private final boolean hasView;
   private final ClassName itemType;
-  private final int layout;
-  private final int[] onClick;
+  private final Id layout;
+  private final Id[] onClick;
   private final ClassName targetType;
 
   ViewHolderInfo(
-      final int layout,
-      final int[] onClick,
+      final Id layout,
+      final Id[] onClick,
       final ClassName itemType,
       final boolean hasView, final ClassName targetType) {
     this.layout = layout;
@@ -22,23 +22,23 @@ public class ViewHolderInfo {
     this.targetType = targetType;
   }
 
-  boolean hasView() {
-    return hasView;
-  }
-
   ClassName getItemType() {
     return itemType;
   }
 
-  int getLayout() {
+  Id getLayout() {
     return layout;
   }
 
-  int[] getOnClick() {
+  Id[] getOnClick() {
     return onClick;
   }
 
   ClassName getTargetType() {
     return targetType;
+  }
+
+  boolean hasView() {
+    return hasView;
   }
 }

@@ -51,17 +51,17 @@ class ViewHolderDelegateGenerator {
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
         .returns(TypeName.INT)
-        .addStatement("return $L", viewHolderInfo.getLayout())
+        .addStatement("return $L", viewHolderInfo.getLayout().code)
         .build();
   }
 
   private MethodSpec createOnClickMethod() {
-    final int[] onClick = viewHolderInfo.getOnClick();
+    final Id[] onClick = viewHolderInfo.getOnClick();
     final StringBuilder idsBuilder = new StringBuilder("");
     if (onClick.length > 0) {
       idsBuilder.append("new int[] {");
-      for (int id : onClick) {
-        idsBuilder.append(id).append(",");
+      for (Id id : onClick) {
+        idsBuilder.append(id.code).append(",");
       }
       idsBuilder.setLength(idsBuilder.length() - 1);
       idsBuilder.append("}");

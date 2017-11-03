@@ -4,16 +4,13 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
-import static vn.tiki.viewholders.compiler.ViewHolderProcessor.NULLABLE;
-import static vn.tiki.viewholders.compiler.ViewHolderProcessor.ITEM_CLICK_LISTENER;
-import static vn.tiki.viewholders.compiler.ViewHolderProcessor.ONLY_ADAPTER;
 import static vn.tiki.viewholders.compiler.ViewHolderProcessor.DIFF_CALLBACK;
+import static vn.tiki.viewholders.compiler.ViewHolderProcessor.ONLY_ADAPTER_BUILDER;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 class NoAdapterFactoryGenerator {
@@ -34,20 +31,14 @@ class NoAdapterFactoryGenerator {
   private MethodSpec createMakeAdapterMethod() {
     final ClassName typeFactory = ClassName.get("viewholders", TypeFactoryGenerator.NAME);
     final ClassName viewHolderFactory = ClassName.get("viewholders", ViewHolderFactoryGenerator.NAME);
-    return MethodSpec.methodBuilder("makeAdapter")
+    return MethodSpec.methodBuilder("builder")
         .addModifiers(PUBLIC, STATIC)
-        .returns(ONLY_ADAPTER)
-        .addParameter(
-            ParameterSpec.builder(ITEM_CLICK_LISTENER, "onItemClick")
-                .addAnnotation(NULLABLE)
-                .build())
+        .returns(ONLY_ADAPTER_BUILDER)
         .addCode(CodeBlock.builder()
             .add("return new OnlyAdapter.Builder()\n")
             .add(".typeFactory(new $T())\n", typeFactory)
             .add(".viewHolderFactory(new $T())\n", viewHolderFactory)
-            .add(".diffCallback(new $T())\n", DIFF_CALLBACK)
-            .add(".onItemClickListener(onItemClick)\n")
-            .add(".build();\n")
+            .add(".diffCallback(new $T());\n", DIFF_CALLBACK)
             .build())
         .build();
   }

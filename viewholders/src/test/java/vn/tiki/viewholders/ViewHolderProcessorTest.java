@@ -4,6 +4,8 @@ import static com.google.common.truth.Truth.assertAbout;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 
 import com.google.testing.compile.JavaFileObjects;
+import com.google.testing.compile.JavaSourcesSubjectFactory;
+import java.util.Arrays;
 import javax.tools.JavaFileObject;
 import org.junit.*;
 import vn.tiki.viewholders.compiler.ViewHolderProcessor;
@@ -79,7 +81,7 @@ public class ViewHolderProcessorTest {
         + "import test.Test_ViewHolderDelegate;\n"
         + "import vn.tiki.noadapter2.AbsViewHolder;\n"
         + "import vn.tiki.noadapter2.ViewHolderFactory;\n"
-        + "import vn.tiki.viewholders.LastViewHolder;\n"
+        + "import vn.tiki.viewholders.OnlyViewHolder;\n"
         + "import vn.tiki.viewholders.ViewHolderDelegate;\n"
         + "\n"
         + "final class ViewHolderFactoryImpl implements ViewHolderFactory {\n"
@@ -87,15 +89,14 @@ public class ViewHolderProcessorTest {
         + "  @Override\n"
         + "  public AbsViewHolder viewHolderForType(ViewGroup parent, int type) {\n"
         + "    final ViewHolderDelegate viewHolderDelegate = makeViewHolderDelegate(type);\n"
-        + "    return LastViewHolder.create(parent, viewHolderDelegate);\n"
+        + "    return OnlyViewHolder.create(parent, viewHolderDelegate);\n"
         + "  }\n"
         + "\n"
         + "  private ViewHolderDelegate makeViewHolderDelegate(int type) {\n"
-        + "    switch (type) {\n"
-        + "      case 10:\n"
-        + "        return new Test_ViewHolderDelegate();\n"
-        + "      default:\n"
-        + "        throw new IllegalArgumentException(\"unknown type: \" + type);\n"
+        + "    if (type == 10) {\n"
+        + "      return new Test_ViewHolderDelegate();\n"
+        + "    } else {\n"
+        + "      throw new IllegalArgumentException(\"unknown type: \" + type);\n"
         + "    }\n"
         + "  }\n"
         + "}\n"
@@ -106,11 +107,9 @@ public class ViewHolderProcessorTest {
         ""
         + "package viewholders;\n"
         + "\n"
-        + "import android.support.annotation.Nullable;\n"
         + "import java.lang.InstantiationError;\n"
-        + "import vn.tiki.noadapter2.OnItemClickListener;\n"
         + "import vn.tiki.noadapter2.OnlyAdapter;\n"
-        + "import vn.tiki.viewholders.TypeDiffCallback;\n"
+        + "import vn.tiki.viewholders.OnlyDiffCallback;"
         + "\n"
         + "public final class NoAdapterFactory {\n"
         + "\n"
@@ -118,13 +117,11 @@ public class ViewHolderProcessorTest {
         + "    throw new InstantiationError();\n"
         + "  }\n"
         + "\n"
-        + "  public static OnlyAdapter makeAdapter(@Nullable OnItemClickListener onItemClick) {\n"
+        + "  public static OnlyAdapter.Builder builder() {\n"
         + "    return new OnlyAdapter.Builder()\n"
         + "        .typeFactory(new TypeFactoryImpl())\n"
         + "        .viewHolderFactory(new ViewHolderFactoryImpl())\n"
-        + "        .diffCallback(new TypeDiffCallback())\n"
-        + "        .onItemClickListener(onItemClick)\n"
-        + "        .build();\n"
+        + "        .diffCallback(new OnlyDiffCallback());\n"
         + "  }\n"
         + "}\n"
     );
@@ -178,6 +175,34 @@ public class ViewHolderProcessorTest {
 
   @Test
   public void testGenerateViewHolderDelegateNoBind() {
+
+    JavaFileObject nonFinal = JavaFileObjects.forSourceString(
+        "test.R",
+        ""
+        + "package test;\n"
+        + "public final class R {\n"
+        + "  public static final class layout {\n"
+        + "    public static final int product = 0x7f040001;\n"
+        + "  }\n"
+        + "  public static final class id {\n"
+        + "    public static final int name = 0x7f040004;\n"
+        + "    public static final int image = 0x7f040005;\n"
+        + "  }\n"
+        + "}");
+
+    JavaFileObject r2Final = JavaFileObjects.forSourceString(
+        "test.R2",
+        ""
+        + "package test;\n"
+        + "public final class R2 {\n"
+        + "  public static final class layout {\n"
+        + "    public static final int product = 0x7f040001;\n"
+        + "  }\n"
+        + "  public static final class id {\n"
+        + "    public static final int name = 0x7f040004;\n"
+        + "    public static final int image = 0x7f040005;\n"
+        + "  }\n"
+        + "}");
     final JavaFileObject source = JavaFileObjects.forSourceString(
         "test.Test",
         ""
@@ -185,7 +210,8 @@ public class ViewHolderProcessorTest {
         + "import android.view.View;\n"
         + "import vn.tiki.viewholders.ViewHolder;\n"
         + "@ViewHolder(\n"
-        + "    layout = 10\n"
+        + "    layout = R2.layout.product,\n"
+        + "    onClick = {R2.id.name, R2.id.image}\n"
         + ")"
         + "public abstract class Test {"
         + "  void bind(final String item) {}"
@@ -210,16 +236,17 @@ public class ViewHolderProcessorTest {
         + "  }\n"
         + "  @Override\n"
         + "  public int layout() {\n"
-        + "    return 10;\n"
+        + "    return R.layout.product;\n"
         + "  }\n"
         + "  @Override\n"
         + "  public int[] onClick() {\n"
-        + "    return new int[0];\n"
+        + "    return new int[]{test.R.id.name, test.R.id.image};\n"
         + "  }"
         + "}"
     );
 
-    assertAbout(javaSource()).that(source)
+    assertAbout(JavaSourcesSubjectFactory.javaSources())
+        .that(Arrays.asList(nonFinal, r2Final, source))
         .withCompilerOptions("-Xlint:-processing")
         .processedWith(new ViewHolderProcessor())
         .compilesWithoutError()

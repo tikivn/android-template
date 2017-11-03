@@ -10,7 +10,6 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
-import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.util.List;
@@ -18,19 +17,16 @@ import java.util.List;
 class ViewHolderFactoryGenerator {
 
   public static final String NAME = "ViewHolderFactoryImpl";
-  private final ClassName lastViewHolderType;
-  private final TypeName mapType;
+  private final ClassName onViewHolderType;
   private final ClassName viewHolderFactoryType;
   private final List<ViewHolderInfo> viewHolderInfoList;
   private final ClassName viewHolderType;
 
   ViewHolderFactoryGenerator(final List<ViewHolderInfo> viewHolderInfoList) {
     this.viewHolderInfoList = viewHolderInfoList;
-    ClassName map = ClassName.get("java.util", "LinkedHashMap");
-    mapType = ParameterizedTypeName.get(map, ClassName.get(Class.class), ClassName.get(Integer.class));
     viewHolderType = ClassName.get("vn.tiki.noadapter2", "AbsViewHolder");
     viewHolderFactoryType = ClassName.get("vn.tiki.noadapter2", "ViewHolderFactory");
-    lastViewHolderType = ClassName.get("vn.tiki.viewholders", "LastViewHolder");
+    onViewHolderType = ClassName.get("vn.tiki.viewholders", "OnlyViewHolder");
   }
 
   JavaFile brewJava() {
@@ -40,29 +36,33 @@ class ViewHolderFactoryGenerator {
   }
 
   private MethodSpec createMakeViewHolderDelegateMethod() {
-    final CodeBlock.Builder switchStatementBuilder = CodeBlock.builder();
+    final CodeBlock.Builder ifStatementBuilder = CodeBlock.builder();
 
-    switchStatementBuilder.beginControlFlow("switch(type)");
-    for (ViewHolderInfo viewHolderInfo : viewHolderInfoList) {
-      final ClassName targetType = viewHolderInfo.getTargetType();
-      final ClassName viewHolderDelegateType = ClassName.get(
+    for (int i = 0; i < viewHolderInfoList.size(); i++) {
+      ViewHolderInfo viewHolderInfo = viewHolderInfoList.get(i);
+      ClassName targetType = viewHolderInfo.getTargetType();
+      ClassName viewHolderDelegateType = ClassName.get(
           targetType.packageName(),
           targetType.simpleName() + "_ViewHolderDelegate");
-      switchStatementBuilder.addStatement(
-          "case $L: return new $T()",
-          viewHolderInfo.getLayout(),
-          viewHolderDelegateType);
+      if (i == 0) {
+        ifStatementBuilder.beginControlFlow("if (type == $L)", viewHolderInfo.getLayout().code);
+      } else {
+        ifStatementBuilder.beginControlFlow("else if (type == $L)", viewHolderInfo.getLayout().code);
+      }
+      ifStatementBuilder.addStatement("return new $T()", viewHolderDelegateType)
+          .endControlFlow();
     }
-    switchStatementBuilder.addStatement(
-        "default: throw new $T(\"unknown type: \" + type)",
-        IllegalArgumentException.class);
-    switchStatementBuilder.endControlFlow();
+
+    ifStatementBuilder
+        .beginControlFlow("else")
+        .addStatement("throw new $T(\"unknown type: \" + type)", IllegalArgumentException.class)
+        .endControlFlow();
 
     final Builder result = MethodSpec.methodBuilder("makeViewHolderDelegate")
         .addModifiers(PRIVATE)
         .returns(ViewHolderProcessor.VIEW_HOLDER_DELEGATE)
         .addParameter(TypeName.INT, "type")
-        .addCode(switchStatementBuilder.build());
+        .addCode(ifStatementBuilder.build());
     return result.build();
   }
 
@@ -85,7 +85,7 @@ class ViewHolderFactoryGenerator {
         .addParameter(VIEW_GROUP, "parent")
         .addParameter(TypeName.INT, "type")
         .addStatement("final ViewHolderDelegate viewHolderDelegate = makeViewHolderDelegate(type)")
-        .addStatement("return $T.create(parent, viewHolderDelegate)", lastViewHolderType)
+        .addStatement("return $T.create(parent, viewHolderDelegate)", onViewHolderType)
         .build();
   }
 }
