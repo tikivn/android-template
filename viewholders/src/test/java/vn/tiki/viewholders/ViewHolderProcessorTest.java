@@ -2,9 +2,9 @@ package vn.tiki.viewholders;
 
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
+import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 
 import com.google.testing.compile.JavaFileObjects;
-import com.google.testing.compile.JavaSourcesSubjectFactory;
 import java.util.Arrays;
 import javax.tools.JavaFileObject;
 import org.junit.*;
@@ -174,7 +174,125 @@ public class ViewHolderProcessorTest {
   }
 
   @Test
+  public void testGenerateViewHolderDelegateExtends() {
+
+    final JavaFileObject base = JavaFileObjects.forSourceString(
+        "test.Base",
+        ""
+        + "package test;\n"
+        + "import android.view.View;\n"
+        + "public abstract class Base {"
+        + "  void bindView(View view) {}"
+        + "}"
+    );
+    final JavaFileObject source = JavaFileObjects.forSourceString(
+        "test.Test",
+        ""
+        + "package test;\n"
+        + "import android.view.View;\n"
+        + "import vn.tiki.viewholders.ViewHolder;\n"
+        + "@ViewHolder(\n"
+        + "    layout = 10,\n"
+        + "    onClick = { 1, 2 }\n"
+        + ")"
+        + "public abstract class Test extends Base {"
+        + "  void bind(final String item) {}"
+        + "}"
+    );
+    JavaFileObject viewHolderDelegate = JavaFileObjects.forSourceString(
+        "test/Test_ViewHolderDelegate",
+        ""
+        + "package test;\n"
+        + "import android.view.View;\n"
+        + "import java.lang.Object;\n"
+        + "import java.lang.Override;\n"
+        + "import java.lang.String;\n"
+        + "import vn.tiki.viewholders.ViewHolderDelegate;\n"
+        + "public final class Test_ViewHolderDelegate extends Test implements ViewHolderDelegate {\n"
+        + "  @Override\n"
+        + "  public void bind(Object item) {\n"
+        + "    super.bind((String) item);\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public void bindView(View view) {\n"
+        + "    super.bindView(view);\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public int layout() {\n"
+        + "    return 10;\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public int[] onClick() {\n"
+        + "    return new int[] { 1, 2 };\n"
+        + "  }"
+        + "}"
+    );
+
+    assertAbout(javaSources())
+        .that(Arrays.asList(base, source))
+        .withCompilerOptions("-Xlint:-processing")
+        .processedWith(new ViewHolderProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(viewHolderDelegate);
+  }
+
+  @Test
   public void testGenerateViewHolderDelegateNoBind() {
+
+    final JavaFileObject source = JavaFileObjects.forSourceString(
+        "test.Test",
+        ""
+        + "package test;\n"
+        + "import android.view.View;\n"
+        + "import vn.tiki.viewholders.ViewHolder;\n"
+        + "@ViewHolder(\n"
+        + "    layout = 10,\n"
+        + "    onClick = { 1, 2 }\n"
+        + ")"
+        + "public abstract class Test {"
+        + "  void bind(final String item) {}"
+        + "}"
+    );
+    JavaFileObject viewHolderDelegate = JavaFileObjects.forSourceString(
+        "test/Test_ViewHolderDelegate",
+        ""
+        + "package test;\n"
+        + "import android.view.View;\n"
+        + "import java.lang.Object;\n"
+        + "import java.lang.Override;\n"
+        + "import java.lang.String;\n"
+        + "import vn.tiki.viewholders.ViewHolderDelegate;\n"
+        + "public final class Test_ViewHolderDelegate extends Test implements ViewHolderDelegate {\n"
+        + "  @Override\n"
+        + "  public void bind(Object item) {\n"
+        + "    super.bind((String) item);\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public void bindView(View view) {\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public int layout() {\n"
+        + "    return 10;\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public int[] onClick() {\n"
+        + "    return new int[] { 1, 2 };\n"
+        + "  }"
+        + "}"
+    );
+
+    assertAbout(javaSource())
+        .that(source)
+        .withCompilerOptions("-Xlint:-processing")
+        .processedWith(new ViewHolderProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(viewHolderDelegate);
+  }
+
+  @Test
+  public void testGenerateViewHolderDelegateR2() {
 
     JavaFileObject nonFinal = JavaFileObjects.forSourceString(
         "test.R",
@@ -245,7 +363,7 @@ public class ViewHolderProcessorTest {
         + "}"
     );
 
-    assertAbout(JavaSourcesSubjectFactory.javaSources())
+    assertAbout(javaSources())
         .that(Arrays.asList(nonFinal, r2Final, source))
         .withCompilerOptions("-Xlint:-processing")
         .processedWith(new ViewHolderProcessor())
