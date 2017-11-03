@@ -96,8 +96,11 @@ dependencies {
   implementation project(':intents')
   annotationProcessor project(':intents-compiler')
   implementation project(':collectionview')
-  implementation project(':viewholders')
-  annotationProcessor project(':viewholders-compiler')
+//
+  implementation project(':viewholders-demo')
+//  implementation project(':viewholders')
+//  annotationProcessor project(':viewholders-compiler')
+
 //  implementation Deps.Tiki.ViewHolders.annotations
 //  implementation Deps.Tiki.ViewHolders.runtime
 //  annotationProcessor Deps.Tiki.ViewHolders.compiler

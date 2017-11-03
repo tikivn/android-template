@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="81dp"
+    >
+
+  <ImageView
+      android:id="@+id/ivThumb"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:minHeight="80dp"
+      android:scaleType="fitCenter"
+      app:layout_constraintDimensionRatio="w,1:1"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@drawable/ic_placeholder"
+      />
+
+  <TextView
+      android:id="@+id/tvTitle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:gravity="center"
+      android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/ivThumb"
+      tools:text="This is text"
+      />
+
+  <TextView
+      android:id="@+id/tvPrice"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:gravity="center"
+      android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+      tools:text="This is text"
+      />
+
+</android.support.constraint.ConstraintLayout>

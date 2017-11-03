@@ -5,17 +5,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import vn.tiki.viewholders.ViewHolder;
 import vn.tiki.sample.R;
 import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.glide.GlideApp;
 import vn.tiki.sample.util.TextViews;
 import vn.tiki.sample.util.Urls;
 
-@ViewHolder(
-    layout = R.layout.productlist_item_product,
-    onClick = R.id.itemView
-)
+//@ViewHolder(
+//    layout = R.layout.productlist_item_product,
+//    onClick = R.id.itemView
+//)
 public class ProductViewHolder {
 
   @BindView(R.id.ivThumb) ImageView ivThumb;

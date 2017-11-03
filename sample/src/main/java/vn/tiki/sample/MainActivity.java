@@ -7,6 +7,7 @@ import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import intents.Intents;
+import vn.tale.viewholdersdemo.ViewHoldersDemoActivity;
 import vn.tiki.sample.base.BaseActivity;
 import vn.tiki.sample.collectionview.CollectionViewActivity;
 import vn.tiki.sample.login.LoginActivity;
@@ -49,5 +50,10 @@ public class MainActivity extends BaseActivity {
   @OnClick(R.id.btOpenProductListing)
   public void openProductListing(View view) {
     startActivity(ProductListingActivity.intent(this));
+  }
+
+  @OnClick(R.id.btOpenViewHoldersDemo)
+  public void openViewHoldersDemo(View view) {
+    startActivity(new Intent(this, ViewHoldersDemoActivity.class));
   }
 }

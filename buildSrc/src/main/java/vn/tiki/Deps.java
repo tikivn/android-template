@@ -7,9 +7,9 @@ public interface Deps {
     int minSdk = 16;
     int compileSdk = 26;
     String kotlin = "1.1.51";
-    String support = "26.1.0";
+    String support = "27.0.0";
     String dagger = "2.11";
-    String butterKnife = "8.8.1";
+    String butterKnife = "9.0.0-SNAPSHOT";
     String room = "1.0.0-beta1";
     String store = "3.0.0-beta";
 
@@ -24,7 +24,7 @@ public interface Deps {
       String compiler = "com.github.tikivn.android-template:viewholders-compiler:" + version;
     }
 
-    String version = "master-SNAPSHOT";
+    String version = "-SNAPSHOT";
   }
 
   interface Dagger {
@@ -46,6 +46,7 @@ public interface Deps {
     String appCompat = "com.android.support:appcompat-v7:" + Version.support;
     String design = "com.android.support:design:" + Version.support;
     String recyclerview = "com.android.support:recyclerview-v7:" + Version.support;
+    String cardView = "com.android.support:cardview-v7:" + Version.support;
     String constraint = "com.android.support.constraint:constraint-layout:1.0.2";
     String testRunner = "com.android.support.test:runner:1.0.0";
   }

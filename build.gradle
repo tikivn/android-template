@@ -8,13 +8,14 @@ buildscript {
     jcenter()
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
   dependencies {
     classpath Deps.Android.gradlePlugin
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.Version.kotlin}"
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
-    classpath 'com.uber:okbuck:0.29.8'
+    classpath "com.jakewharton:butterknife-gradle-plugin:${Deps.Version.butterKnife}"
   }
 }
 
@@ -28,6 +29,7 @@ subprojects { project ->
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url 'https://jitpack.io' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
   apply plugin: 'checkstyle'
@@ -49,5 +51,3 @@ subprojects { project ->
     }
   }
 }
-
-apply plugin: 'com.uber.okbuck'

@@ -63,10 +63,12 @@ public class ProductListingActivity extends BaseActivity implements NetworkStatu
   }
 
   private void configureCollectionView() {
-    final OnlyAdapter adapter = NoAdapterFactory.makeAdapter((view, item, position) -> Intents.productDetailActivity(
-        ProductListingActivity.this)
-        .product(((Product) item))
-        .make());
+    final OnlyAdapter adapter = NoAdapterFactory.builder()
+        .onItemClickListener((view, item, position) -> Intents.productDetailActivity(
+            ProductListingActivity.this)
+            .product(((Product) item))
+            .make())
+        .build();
 
     vCollectionView.setAdapter(new Adapter() {
       @Override

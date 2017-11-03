@@ -35,7 +35,7 @@ public class CollectionViewActivity extends AppCompatActivity {
     setContentView(R.layout.activity_collection_view);
     ButterKnife.bind(this);
 
-    adapter = NoAdapterFactory.makeAdapter(null);
+    adapter = NoAdapterFactory.builder().build();
 
     vCollectionView.setAdapter(new Adapter<String>() {
       @Override

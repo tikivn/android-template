@@ -28,4 +28,5 @@
 
   <!--CollectionView-->
   <string name="clv_error_occurred">Error occurred.</string>
+  <string name="main_open_viewholders_demo">Open ViewHolders Demo</string>
 </resources>
