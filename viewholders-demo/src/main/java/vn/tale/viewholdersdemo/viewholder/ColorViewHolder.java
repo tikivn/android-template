@@ -8,7 +8,7 @@ import vn.tiki.viewholders.ViewHolder;
     layout = R2.layout.viewholder_item_color,
     bindTo = ColorModel.class
 )
-public class ColorViewHolder {
+class ColorViewHolder {
 
   private View view;
 

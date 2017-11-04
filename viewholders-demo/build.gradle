@@ -1,8 +1,9 @@
 import vn.tiki.Deps
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
@@ -44,6 +45,9 @@ dependencies {
 
   implementation Deps.ButterKnife.runtime
   kapt Deps.ButterKnife.compiler
+
+  api Deps.Glide.runtime
+  kapt Deps.Glide.compiler
 
   implementation project(':viewholders')
   kapt project(':viewholders-compiler')

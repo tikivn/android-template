@@ -9,7 +9,7 @@ import vn.tiki.viewholders.ViewHolder;
     layout = R2.layout.viewholder_item_text,
     bindTo = TextModel.class
 )
-public class TextViewHolder extends BaseViewHolder {
+class TextViewHolder extends BaseViewHolder {
 
   @BindView(R2.id.text) TextView text;
 

@@ -120,8 +120,6 @@ dependencies {
   annotationProcessor Deps.AutoValue.gson
   annotationProcessor Deps.AutoValue.parcel
   implementation Deps.noadapter
-  implementation Deps.Glide.runtime
-  annotationProcessor Deps.Glide.compiler
   annotationProcessor Deps.javapoet
   implementation Deps.timber
   implementation(Deps.crashlytics) {

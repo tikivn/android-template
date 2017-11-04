@@ -7,6 +7,6 @@ import vn.tiki.viewholders.ViewHolder;
     layout = R2.layout.viewholder_item_loading,
     bindTo = LoadingModel.class
 )
-public class LoadingViewHolder {
+class LoadingViewHolder {
 
 }

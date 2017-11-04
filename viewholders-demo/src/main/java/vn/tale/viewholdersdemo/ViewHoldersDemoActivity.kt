@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup
 import android.support.v7.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_view_holders_demo.rvGrid
 import viewholders.NoAdapterFactory
 import vn.tale.viewholdersdemo.viewholder.ButtonModel
 import vn.tale.viewholdersdemo.viewholder.ColorModel
@@ -24,8 +25,6 @@ class ViewHoldersDemoActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_view_holders_demo)
 
-    val rvGrid = findViewById<RecyclerView>(R.id.rvGrid)
-
     val gridLayoutManager = GridLayoutManager(this, 5, GridLayoutManager.VERTICAL, false)
     gridLayoutManager.spanSizeLookup = object : SpanSizeLookup() {
       override fun getSpanSize(position: Int): Int {
@@ -38,6 +37,7 @@ class ViewHoldersDemoActivity : AppCompatActivity() {
     }
     rvGrid.layoutManager = gridLayoutManager
     rvGrid.setHasFixedSize(true)
+
     adapter = NoAdapterFactory.builder()
         .onItemClickListener { view, item, _ ->
           if (item is ButtonModel) {
@@ -60,6 +60,7 @@ class ViewHoldersDemoActivity : AppCompatActivity() {
           }
         }
         .build()
+
     rvGrid.adapter = adapter
 
     // init with controller buttons
