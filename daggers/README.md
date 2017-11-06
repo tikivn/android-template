@@ -83,6 +83,20 @@ dependencies {
 }
 ```
 
+Proguard
+--------
+```proguard
+-keep,allowobfuscation @interface dagger.Component
+-keep,allowobfuscation @interface dagger.Subcomponent
+-keepclassmembers @dagger.Component public class * {
+ *** plus(***);
+ void inject(***);
+}
+-keepclassmembers @dagger.Subcomponent public class * {
+ void inject(***);
+}
+```
+
 License
 -------
 

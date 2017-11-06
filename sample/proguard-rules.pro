@@ -41,5 +41,16 @@
   public *;
 }
 
+# Dagger2 & Daggers
+-keep,allowobfuscation @interface dagger.Component
+-keep,allowobfuscation @interface dagger.Subcomponent
+-keepclassmembers @dagger.Component public class * {
+ *** plus(***);
+ void inject(***);
+}
+-keepclassmembers @dagger.Subcomponent public class * {
+ void inject(***);
+}
+
 # for DexGuard only
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+# -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
