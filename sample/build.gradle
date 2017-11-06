@@ -37,12 +37,29 @@ android {
     }
   }
 
+  signingConfigs {
+    debug {
+      storeFile file('./debug.keystore')
+      keyAlias 'androiddebugkey'
+      keyPassword 'android'
+      storePassword 'android'
+    }
+    release {
+      storeFile file('./debug.keystore')
+      keyAlias 'androiddebugkey'
+      keyPassword 'android'
+      storePassword 'android'
+    }
+  }
+
   buildTypes {
     debug {
       ext.enableCrashlytics = false
+      signingConfig signingConfigs.debug
     }
     release {
-      minifyEnabled false
+      minifyEnabled true
+      signingConfig signingConfigs.release
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }

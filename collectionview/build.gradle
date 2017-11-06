@@ -9,8 +9,6 @@ android {
     minSdkVersion Deps.Version.minSdk
     targetSdkVersion Deps.Version.compileSdk
 
-    consumerProguardFiles 'proguard-rules.txt'
-
     testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
     javaCompileOptions {
