@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import java.util.List;
 import viewholders.NoAdapterFactory;
+import vn.tale.viewholdersdemo.viewholder.TextModel;
 import vn.tiki.collectionview.Adapter;
 import vn.tiki.collectionview.CollectionView;
 import vn.tiki.collectionview.DataProvider;
@@ -37,14 +38,14 @@ public class CollectionViewActivity extends AppCompatActivity {
 
     adapter = NoAdapterFactory.builder().build();
 
-    vCollectionView.setAdapter(new Adapter<String>() {
+    vCollectionView.setAdapter(new Adapter<TextModel>() {
       @Override
-      public void onBindItems(List<String> items) {
+      public void onBindItems(List<TextModel> items) {
         adapter.setItems(items);
       }
 
       @Override
-      public DataProvider<String> onCreateDataProvider() {
+      public DataProvider<TextModel> onCreateDataProvider() {
         return new TodoDataProvider();
       }
 

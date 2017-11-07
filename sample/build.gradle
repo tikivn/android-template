@@ -10,10 +10,14 @@ buildscript {
   }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 
 repositories {
   maven { url 'https://maven.fabric.io/public' }
+  mavenCentral()
 }
 
 apply plugin: 'jacoco'
@@ -98,33 +102,35 @@ android {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation Deps.kotlin
+
   implementation Deps.AndroidSupport.appCompat
   implementation Deps.AndroidSupport.recyclerview
   implementation Deps.AndroidSupport.design
   implementation Deps.AndroidSupport.constraint
   implementation Deps.Dagger.runtime
-  annotationProcessor Deps.Dagger.compiler
+  kapt Deps.Dagger.compiler
   implementation Deps.ButterKnife.runtime
-  annotationProcessor Deps.ButterKnife.compiler
+  kapt Deps.ButterKnife.compiler
   implementation Deps.rxJava
   implementation Deps.rxAndroid
   implementation project(':daggers')
   implementation project(':mvp')
   implementation project(':intents')
-  annotationProcessor project(':intents-compiler')
+  kapt project(':intents-compiler')
   implementation project(':collectionview')
 //
   implementation project(':viewholders-demo')
 //  implementation project(':viewholders')
-//  annotationProcessor project(':viewholders-compiler')
+//  kapt project(':viewholders-compiler')
 
 //  implementation Deps.Tiki.ViewHolders.annotations
 //  implementation Deps.Tiki.ViewHolders.runtime
-//  annotationProcessor Deps.Tiki.ViewHolders.compiler
+//  kapt Deps.Tiki.ViewHolders.compiler
   //  implementation deps.tiki.daggers
   //  implementation deps.tiki.mvp
   //  implementation deps.tiki.intents.intents
-  //  annotationProcessor deps.tiki.intents.compiler
+  //  kapt deps.tiki.intents.compiler
   implementation Deps.gson
   implementation Deps.Http.retrofit
   implementation Deps.Http.gsonConverter
@@ -133,20 +139,18 @@ dependencies {
   implementation Deps.Http.logging
   compileOnly Deps.AutoValue.annotations
   compileOnly Deps.AutoValue.gsonAnnotations
-  annotationProcessor Deps.AutoValue.autoValue
-  annotationProcessor Deps.AutoValue.gson
-  annotationProcessor Deps.AutoValue.parcel
+  kapt Deps.AutoValue.autoValue
+  kapt Deps.AutoValue.gson
+  kapt Deps.AutoValue.parcel
   implementation Deps.noadapter
-  implementation Deps.Glide.runtime
-  annotationProcessor Deps.Glide.compiler
-  annotationProcessor Deps.javapoet
+  kapt Deps.javapoet
   implementation Deps.timber
   implementation(Deps.crashlytics) {
     transitive = true
   }
   implementation Deps.ixJava
   implementation Deps.Room.runtime
-  annotationProcessor Deps.Room.compiler
+  kapt Deps.Room.compiler
   implementation Deps.Store.store
   implementation Deps.Store.fileSystem
   implementation Deps.Store.middleware

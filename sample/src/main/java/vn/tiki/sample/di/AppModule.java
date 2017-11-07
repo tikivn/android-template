@@ -7,9 +7,13 @@ import com.google.gson.GsonBuilder;
 import dagger.Module;
 import dagger.Provides;
 import java.io.File;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,6 +23,7 @@ import vn.tiki.sample.database.AppDatabase;
 import vn.tiki.sample.database.CartDao;
 import vn.tiki.sample.entity.MyAdapterFactory;
 import vn.tiki.sample.model.UserModel;
+import vn.tiki.sample.util.Assets;
 
 /**
  * Created by Giang Nguyen on 8/25/17.
@@ -40,7 +45,27 @@ public class AppModule {
 
   @Singleton
   @Provides
-  ApiService provideApiService(OkHttpClient okHttpClient) {
+  ApiService provideApiService(Assets assets, OkHttpClient okHttpClient) {
+    if ("dev".equals(BuildConfig.FLAVOR)) {
+      return (page, perPage) -> assets.read("products.json")
+          .map(bufferedSource -> new ResponseBody() {
+            @Override
+            public long contentLength() {
+              return 0;
+            }
+
+            @Nullable
+            @Override
+            public MediaType contentType() {
+              return MediaType.parse("application/json");
+            }
+
+            @Override
+            public BufferedSource source() {
+              return bufferedSource;
+            }
+          });
+    }
     return new Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
@@ -54,6 +79,12 @@ public class AppModule {
   @Provides
   AppDatabase provideAppDatabase() {
     return Room.databaseBuilder(appContext, AppDatabase.class, "shopping").build();
+  }
+
+  @Singleton
+  @Provides
+  Assets provideAssets() {
+    return new Assets(appContext);
   }
 
   @Provides

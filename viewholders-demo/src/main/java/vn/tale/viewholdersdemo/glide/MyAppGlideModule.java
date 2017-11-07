@@ -1,4 +1,4 @@
-package vn.tiki.sample.glide;
+package vn.tale.viewholdersdemo.glide;
 
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;

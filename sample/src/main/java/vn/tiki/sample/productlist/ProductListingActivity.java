@@ -18,6 +18,7 @@ import io.reactivex.Single;
 import java.util.List;
 import javax.inject.Inject;
 import viewholders.NoAdapterFactory;
+import vn.tale.viewholdersdemo.viewholder.ProductModel;
 import vn.tiki.collectionview.Adapter;
 import vn.tiki.collectionview.CollectionView;
 import vn.tiki.collectionview.DataProvider;
@@ -80,12 +81,12 @@ public class ProductListingActivity extends BaseActivity implements NetworkStatu
       public DataProvider onCreateDataProvider() {
         return new DataProvider() {
           @Override
-          public Single<? extends ListData<Product>> fetch(int page) {
+          public Single<? extends ListData<ProductModel>> fetch(int page) {
             return productRepository.getProducts(page, false);
           }
 
           @Override
-          public Single<? extends ListData<Product>> fetchNewest() {
+          public Single<? extends ListData<ProductModel>> fetchNewest() {
             return productRepository.getProducts(1, true);
           }
         };
