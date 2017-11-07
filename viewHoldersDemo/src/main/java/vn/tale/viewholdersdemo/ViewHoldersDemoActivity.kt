@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup
-import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_view_holders_demo.rvGrid
 import viewholders.NoAdapterFactory
 import vn.tale.viewholdersdemo.viewholder.ButtonModel

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemView"
@@ -10,7 +9,8 @@
     android:orientation="vertical"
     android:padding="8dp"
     tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="81dp"
+    >
 
   <ImageView
       android:id="@+id/ivThumb"
@@ -21,7 +21,9 @@
       app:layout_constraintDimensionRatio="w,1:1"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" tools:src="@drawable/ic_placeholder"/>
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@drawable/ic_placeholder"
+      />
 
   <TextView
       android:id="@+id/tvTitle"
@@ -33,7 +35,9 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/ivThumb"
-      tools:text="This is text"/>
+      tools:text="This is text"
+      />
+
   <TextView
       android:id="@+id/tvPrice"
       android:layout_width="0dp"
@@ -43,6 +47,8 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Body2"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/tvTitle" tools:text="This is text"/>
+      app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+      tools:text="This is text"
+      />
 
 </android.support.constraint.ConstraintLayout>
