@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
@@ -54,6 +55,21 @@ public final class Daggers {
     throw new InstantiationError();
   }
 
+  @VisibleForTesting
+  static Object get(final ActivityInjector activityInjector) {
+    return componentMap.get(activityInjector);
+  }
+
+  @VisibleForTesting
+  static void inject(Object target, Injector injector) {
+    if (injector instanceof AppInjector) {
+      inject(appInjector.appComponent(), target);
+    } else {
+      final Object component = componentMap.get(injector);
+      inject(component, target);
+    }
+  }
+
   private static Injector findInjector(Context context) {
     if (context instanceof Injector) {
       return ((Injector) context);
@@ -76,28 +92,23 @@ public final class Daggers {
    * @return Method or throw Exception.
    */
   private static Method findMethod(Class<?> target, String name, Object parameter) {
-    try {
-      return target.getDeclaredMethod(name, parameter.getClass());
-    } catch (NoSuchMethodException e) {
-      throw new IllegalArgumentException(
-          "Can not find method "
-          + target.getName()
-          + "."
-          + name
-          + "("
-          + parameter
-          + ")",
-          e);
+    final Method[] methods = target.getDeclaredMethods();
+    for (Method method : methods) {
+      if (method.getName().equals(name)) {
+        final Class<?>[] parameterTypes = method.getParameterTypes();
+        if (parameterTypes.length == 1 && parameterTypes[0].isAssignableFrom(parameter.getClass())) {
+          return method;
+        }
+      }
     }
-  }
-
-  private static void inject(Object target, Injector injector) {
-    if (injector instanceof AppInjector) {
-      inject(appInjector.appComponent(), target);
-    } else {
-      final Object component = componentMap.get(injector);
-      inject(component, target);
-    }
+    throw new IllegalArgumentException(
+        "Can not find method "
+        + target.getName()
+        + "."
+        + name
+        + "("
+        + parameter
+        + ")");
   }
 
   /**

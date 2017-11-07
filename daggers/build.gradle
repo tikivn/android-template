@@ -30,6 +30,7 @@ dependencies {
   implementation Deps.AndroidSupport.annotations
 
   testImplementation Deps.Test.junit
+  testImplementation Deps.Test.mockito
   testImplementation Deps.Test.truth
 }
 
