@@ -8,6 +8,8 @@ public interface ViewHolderDelegate {
 
   void bind(Object item);
 
+  void unbind();
+
   int layout();
 
   int[] onClick();

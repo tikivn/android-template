@@ -86,9 +86,21 @@ class ViewHolderDelegateGenerator {
         .addSuperinterface(VIEW_HOLDER_DELEGATE);
 
     result.addMethod(createBindMethod());
+    result.addMethod(createUnBindMethod());
     result.addMethod(createBindViewMethod());
     result.addMethod(createLayoutMethod());
     result.addMethod(createOnClickMethod());
+    return result.build();
+  }
+
+  private MethodSpec createUnBindMethod() {
+    final Builder result = MethodSpec.methodBuilder("unbind")
+        .addAnnotation(Override.class)
+        .addModifiers(PUBLIC);
+
+    if (viewHolderInfo.hasUnBindMethod()) {
+      result.addStatement("super.unbind()");
+    }
     return result.build();
   }
 }

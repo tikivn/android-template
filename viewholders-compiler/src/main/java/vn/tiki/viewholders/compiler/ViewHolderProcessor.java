@@ -276,12 +276,15 @@ public final class ViewHolderProcessor extends AbstractProcessor {
 
         final TypeElement paramType = (TypeElement) typeUtils.asElement(modelClass);
         final boolean hasBindMethod = hasMethod(typeElement, "bind", paramType.toString());
+        final boolean hasUnBindMethod = hasMethod(typeElement, "unbind", "");
         final ClassName itemClassName = ClassName.get(paramType);
         final ViewHolderInfo viewHolderInfo = new ViewHolderInfo(
             ClassName.get(typeElement), layoutId,
             onClickIds,
             itemClassName,
-            hasBindMethod, hasMethod(typeElement, "bindView", "android.view.View")
+            hasBindMethod,
+            hasUnBindMethod,
+            hasMethod(typeElement, "bindView", "android.view.View")
         );
         viewHolderInfoList.add(viewHolderInfo);
       } catch (Exception e) {
@@ -314,7 +317,9 @@ public final class ViewHolderProcessor extends AbstractProcessor {
     for (Element e : elements) {
       if (e instanceof ExecutableElement && name.equals(e.getSimpleName().toString())) {
         final List<? extends VariableElement> parameters = ((ExecutableElement) e).getParameters();
-        if (parameters.size() == 1) {
+        if (param.isEmpty()) {
+          return parameters.size() == 0;
+        } else if (parameters.size() == 1) {
           final VariableElement variableElement = parameters.get(0);
           final TypeElement parameterType = (TypeElement) typeUtils.asElement(variableElement.asType());
           if (parameterType.toString().equals(param)) {

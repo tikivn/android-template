@@ -2,10 +2,11 @@ package vn.tiki.viewholders.compiler;
 
 import com.squareup.javapoet.ClassName;
 
-public class ViewHolderInfo {
+class ViewHolderInfo {
 
   private final boolean hasBindMethod;
   private final boolean hasBindViewMethod;
+  private final boolean hasUnBindMethod;
   private final Id layout;
   private final ClassName modelType;
   private final Id[] onClick;
@@ -17,17 +18,15 @@ public class ViewHolderInfo {
       final Id[] onClick,
       final ClassName modelType,
       final boolean hasBindMethod,
+      final boolean hasUnBindMethod,
       final boolean hasBindViewMethod) {
     this.layout = layout;
     this.onClick = onClick;
     this.modelType = modelType;
     this.hasBindMethod = hasBindMethod;
+    this.hasUnBindMethod = hasUnBindMethod;
     this.hasBindViewMethod = hasBindViewMethod;
     this.targetType = targetType;
-  }
-
-  public boolean hasBindMethod() {
-    return hasBindMethod;
   }
 
   Id getLayout() {
@@ -46,7 +45,15 @@ public class ViewHolderInfo {
     return targetType;
   }
 
+  boolean hasBindMethod() {
+    return hasBindMethod;
+  }
+
   boolean hasBindViewMethod() {
     return hasBindViewMethod;
+  }
+
+  boolean hasUnBindMethod() {
+    return hasUnBindMethod;
   }
 }

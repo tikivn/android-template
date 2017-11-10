@@ -29,10 +29,15 @@ public final class OnlyViewHolder extends AbsViewHolder {
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void bind(final Object item) {
     super.bind(item);
     viewHolderDelegate.bind(item);
+  }
+
+  @Override
+  public void unbind() {
+    super.unbind();
+    viewHolderDelegate.unbind();
   }
 }

@@ -132,6 +132,9 @@ public class ViewHolderProcessorTest {
         + "    super.bind((String) item);\n"
         + "  }\n"
         + "  @Override\n"
+        + "  public void unbind() {\n"
+        + "  }\n"
+        + "  @Override\n"
         + "  public void bindView(View view) {\n"
         + "    super.bindView(view);\n"
         + "  }\n"
@@ -196,6 +199,9 @@ public class ViewHolderProcessorTest {
         + "    super.bind((String) item);\n"
         + "  }\n"
         + "  @Override\n"
+        + "  public void unbind() {\n"
+        + "  }\n"
+        + "  @Override\n"
         + "  public void bindView(View view) {\n"
         + "    super.bindView(view);\n"
         + "  }\n"
@@ -248,6 +254,9 @@ public class ViewHolderProcessorTest {
         + "public final class Test_ViewHolderDelegate extends Test implements ViewHolderDelegate {\n"
         + "  @Override\n"
         + "  public void bind(Object item) {\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public void unbind() {\n"
         + "  }\n"
         + "  @Override\n"
         + "  public void bindView(View view) {\n"
@@ -303,6 +312,9 @@ public class ViewHolderProcessorTest {
         + "  @Override\n"
         + "  public void bind(Object item) {\n"
         + "    super.bind((String) item);\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public void unbind() {\n"
         + "  }\n"
         + "  @Override\n"
         + "  public void bindView(View view) {\n"
@@ -387,6 +399,9 @@ public class ViewHolderProcessorTest {
         + "    super.bind((String) item);\n"
         + "  }\n"
         + "  @Override\n"
+        + "  public void unbind() {\n"
+        + "  }\n"
+        + "  @Override\n"
         + "  public void bindView(View view) {\n"
         + "  }\n"
         + "  @Override\n"
@@ -402,6 +417,65 @@ public class ViewHolderProcessorTest {
 
     assertAbout(javaSources())
         .that(Arrays.asList(nonFinal, r2Final, source))
+        .withCompilerOptions("-Xlint:-processing")
+        .processedWith(new ViewHolderProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(viewHolderDelegate);
+  }
+
+  @Test
+  public void testGenerateViewHolderDelegateUnBind() {
+
+    final JavaFileObject source = JavaFileObjects.forSourceString(
+        "test.Test",
+        ""
+        + "package test;\n"
+        + "import android.view.View;\n"
+        + "import vn.tiki.viewholders.ViewHolder;\n"
+        + "@ViewHolder(\n"
+        + "    layout = 10,\n"
+        + "    bindTo = String.class\n"
+        + ")"
+        + "public abstract class Test {"
+        + "  void bind(final String item) {}"
+        + "  void unbind() {}"
+        + "}"
+    );
+    JavaFileObject viewHolderDelegate = JavaFileObjects.forSourceString(
+        "test/Test_ViewHolderDelegate",
+        ""
+        + "package test;\n"
+        + "import android.view.View;\n"
+        + "import java.lang.Object;\n"
+        + "import java.lang.Override;\n"
+        + "import java.lang.String;\n"
+        + "import vn.tiki.viewholders.ViewHolderDelegate;\n"
+        + "public final class Test_ViewHolderDelegate extends Test implements ViewHolderDelegate {\n"
+        + "  @Override\n"
+        + "  public void bind(Object item) {\n"
+        + "    super.bind((String) item);\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public void unbind() {\n"
+        + "    super.unbind();\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public void bindView(View view) {\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public int layout() {\n"
+        + "    return 10;\n"
+        + "  }\n"
+        + "  @Override\n"
+        + "  public int[] onClick() {\n"
+        + "    return new int[0];\n"
+        + "  }"
+        + "}"
+    );
+
+    assertAbout(javaSource())
+        .that(source)
         .withCompilerOptions("-Xlint:-processing")
         .processedWith(new ViewHolderProcessor())
         .compilesWithoutError()

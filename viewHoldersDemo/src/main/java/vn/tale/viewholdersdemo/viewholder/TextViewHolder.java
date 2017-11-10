@@ -16,5 +16,4 @@ class TextViewHolder extends BaseViewHolder {
   void bind(TextModel model) {
     text.setText(model.getValue());
   }
-
 }
