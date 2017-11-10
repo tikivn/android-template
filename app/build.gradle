@@ -154,7 +154,8 @@ dependencies {
   implementation Deps.Store.store
   implementation Deps.Store.fileSystem
   implementation Deps.Store.middleware
-
+  implementation project(':repatch')
+  
   testImplementation Deps.Test.junit
   testImplementation Deps.Test.mockito
   testImplementation Deps.Test.truth
