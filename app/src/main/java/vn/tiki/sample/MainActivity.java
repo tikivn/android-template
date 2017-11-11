@@ -12,6 +12,7 @@ import vn.tiki.sample.base.BaseActivity;
 import vn.tiki.sample.collectionview.CollectionViewActivity;
 import vn.tiki.sample.login.LoginActivity;
 import vn.tiki.sample.productlist.ProductListingActivity;
+import vn.tiki.sample.redux.ReduxDemoActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -50,6 +51,11 @@ public class MainActivity extends BaseActivity {
   @OnClick(R.id.btOpenProductListing)
   public void openProductListing(View view) {
     startActivity(ProductListingActivity.intent(this));
+  }
+
+  @OnClick(R.id.btOpenReduxDemo)
+  public void openReduxDemo(View view) {
+    startActivity(new Intent(this, ReduxDemoActivity.class));
   }
 
   @OnClick(R.id.btOpenViewHoldersDemo)

@@ -42,6 +42,8 @@ class ReduxTest {
   @Test
   fun `state should be Ping when dispatch PING`() {
     store.dispatch("PING")
+    store.dispatch("PONG")
+    store.dispatch("PING")
     store.getState()
         .test()
         .assertValue(Ping)
@@ -49,6 +51,8 @@ class ReduxTest {
 
   @Test
   fun `state should be Pong when dispatch PONG`() {
+    store.dispatch("PONG")
+    store.dispatch("PING")
     store.dispatch("PONG")
     store.getState()
         .test()

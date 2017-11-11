@@ -19,11 +19,15 @@ internal class StoreImpl<State>(initialState: State, epics: List<(Observable<Any
   private var disposables: CompositeDisposable = CompositeDisposable()
 
   init {
-    disposables.add(Observable.fromIterable(epics)
-        .flatMap { epic -> epic(actions, { states.value }) }
-        .subscribe(
-            states::onNext,
-            Throwable::printStackTrace))
+    val getState = { states.value }
+
+    val stateStream = actions.concatMap { action ->
+      Observable.concat(epics.map { epic -> epic(Observable.just(action), getState) })
+    }
+
+    disposables.add(stateStream.subscribe(
+        states::onNext,
+        Throwable::printStackTrace))
 
     if (debug) {
       disposables.add(actions.map { "action = [$it]" }

@@ -14,7 +14,6 @@ import android.view.View;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import intents.Intents;
 import java.util.List;
 import javax.inject.Inject;
 import viewholders.NoAdapterFactory;
@@ -24,7 +23,6 @@ import vn.tiki.noadapter2.OnlyAdapter;
 import vn.tiki.sample.R;
 import vn.tiki.sample.base.BaseMvpActivity;
 import vn.tiki.sample.base.NetworkStatusObserver;
-import vn.tiki.sample.entity.Product;
 import vn.tiki.sample.repository.ProductRepository;
 import vn.tiki.sample.util.InfiniteScrollListener;
 
@@ -121,10 +119,6 @@ public class ProductListingActivity extends BaseMvpActivity<ProductListingView, 
     rvProducts.setLayoutManager(layoutManaer);
     rvProducts.addOnScrollListener(new InfiniteScrollListener(layoutManaer, 4, () -> presenter.onLoadMore()));
     rvProductAdapter = NoAdapterFactory.builder()
-        .onItemClickListener((view, item, position) -> Intents.productDetailActivity(
-            ProductListingActivity.this)
-            .product(((ProductModel) item))
-            .make())
         .build();
     rvProducts.setAdapter(rvProductAdapter);
   }
