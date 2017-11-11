@@ -1,6 +1,5 @@
 package vn.tiki.architecture.redux
 
-import io.reactivex.Observable
 import org.junit.*
 import vn.tiki.architecture.redux.ReduxTodoTest.Action.AddTodo
 import vn.tiki.architecture.redux.ReduxTodoTest.Action.ToggleTodo
@@ -19,7 +18,7 @@ class ReduxTodoTest {
 
   @Before
   fun setUp() {
-    val addEpic: (Observable<Any>, () -> TodoState) -> Observable<TodoState> = { actions, getState ->
+    val addEpic = Epic<TodoState> { actions, getState ->
       actions.ofType(AddTodo::class.java)
           .map { action ->
             val state = getState()
@@ -28,7 +27,7 @@ class ReduxTodoTest {
             TodoState(todoList + todo)
           }
     }
-    val toggleEpic: (Observable<Any>, () -> TodoState) -> Observable<TodoState> = { actions, getState ->
+    val toggleEpic = Epic<TodoState> { actions, getState ->
       actions.ofType(ToggleTodo::class.java)
           .map { action ->
             val state = getState()

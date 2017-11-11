@@ -1,6 +1,5 @@
 package vn.tiki.architecture.redux
 
-import io.reactivex.Observable
 import org.junit.*
 
 sealed class State
@@ -15,11 +14,12 @@ class ReduxTest {
 
   @Before
   fun setUp() {
-    val pingEpic: (Observable<Any>, () -> State) -> Observable<State> = { actions, _ ->
+
+    val pingEpic = Epic<State> { actions, _ ->
       actions.filter { "PING" == it }
           .map { Ping }
     }
-    val pongEpic: (Observable<Any>, () -> State) -> Observable<State> = { actions, _ ->
+    val pongEpic = Epic<State> { actions, _ ->
       actions.filter { "PONG" == it }
           .map { Pong }
     }

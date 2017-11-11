@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_redux_demo.tvValue
+import vn.tiki.architecture.redux.Epic
 import vn.tiki.architecture.redux.Store
 import vn.tiki.architecture.redux.createStore
 import vn.tiki.sample.R
@@ -20,13 +21,13 @@ class ReduxDemoActivity : AppCompatActivity() {
     data class MultiplyAction(val value: Int) : Action()
   }
 
-  lateinit var store: Store<Int>
+  private lateinit var store: Store<Int>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_redux_demo)
 
-    val addEpic = { actions: Observable<Any>, getState: () -> Int ->
+    val addEpic = Epic<Int> { actions, getState ->
       actions.ofType(AddAction::class.java)
           .switchMap { action ->
             Observable.fromCallable {
@@ -36,7 +37,7 @@ class ReduxDemoActivity : AppCompatActivity() {
           }
     }
 
-    val multiplyEpic = { actions: Observable<Any>, getState: () -> Int ->
+    val multiplyEpic = Epic<Int> { actions, getState ->
       actions.ofType(MultiplyAction::class.java)
           .switchMap { action ->
             Observable.fromCallable {

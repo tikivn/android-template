@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import vn.tale.viewholdersdemo.viewholder.ProductModel
+import vn.tiki.architecture.redux.Epic
 import vn.tiki.architecture.redux.Store
 import vn.tiki.architecture.redux.createStore
 import vn.tiki.sample.entity.ListData
@@ -62,7 +63,7 @@ class ProductListingPresenter @Inject constructor(productRepository: ProductRepo
       Pair(paging, productModels)
     }
 
-    val load: (Observable<Any>, () -> Model) -> Observable<Model> = { actions, getModel ->
+    val load = Epic<Model> { actions, getModel ->
       actions
           .filter { it is LoadAction }
           .filter {
@@ -84,7 +85,7 @@ class ProductListingPresenter @Inject constructor(productRepository: ProductRepo
           }
     }
 
-    val refresh: (Observable<Any>, () -> Model) -> Observable<Model> = { actions, getModel ->
+    val refresh = Epic<Model> { actions, getModel ->
       actions
           .filter { it is RefreshAction }
           .filter {
@@ -104,7 +105,7 @@ class ProductListingPresenter @Inject constructor(productRepository: ProductRepo
           }
     }
 
-    val loadMore: (Observable<Any>, () -> Model) -> Observable<Model> = { actions, getModel ->
+    val loadMore = Epic<Model> { actions, getModel ->
       val model = getModel()
       actions
           .filter { it is LoadMoreAction }

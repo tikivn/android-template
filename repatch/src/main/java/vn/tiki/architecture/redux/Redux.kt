@@ -2,6 +2,7 @@ package vn.tiki.architecture.redux
 
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.subjects.PublishSubject
@@ -12,7 +13,7 @@ interface Store<State> {
   fun destroy()
 }
 
-internal class StoreImpl<State>(initialState: State, epics: List<(Observable<Any>, () -> State) -> Observable<State>>, debug: Boolean) : Store<State> {
+internal class StoreImpl<State>(initialState: State, epics: List<Epic<State>>, debug: Boolean) : Store<State> {
 
   private val actions: PublishSubject<Any> = PublishSubject.create()
   private val states: BehaviorProcessor<State> = BehaviorProcessor.createDefault(initialState)
@@ -21,13 +22,16 @@ internal class StoreImpl<State>(initialState: State, epics: List<(Observable<Any
   init {
     val getState = { states.value }
 
-    val stateStream = actions.concatMap { action ->
-      Observable.concat(epics.map { epic -> epic(Observable.just(action), getState) })
+    val stateTransformer: ObservableTransformer<Any, State> = ObservableTransformer {
+      it.concatMap { action ->
+        Observable.concat(epics.map { epic -> epic.involve(Observable.just(action), getState) })
+      }
     }
 
-    disposables.add(stateStream.subscribe(
-        states::onNext,
-        Throwable::printStackTrace))
+    disposables.add(actions.compose(stateTransformer)
+        .subscribe(
+            states::onNext,
+            Throwable::printStackTrace))
 
     if (debug) {
       disposables.add(actions.map { "action = [$it]" }
@@ -52,7 +56,7 @@ internal class StoreImpl<State>(initialState: State, epics: List<(Observable<Any
 }
 
 fun <State> createStore(initialState: State,
-                        epics: List<(Observable<Any>, () -> State) -> Observable<State>>,
+                        epics: List<Epic<State>>,
                         debug: Boolean = false): Store<State> {
   return StoreImpl(initialState, epics, debug)
 }
