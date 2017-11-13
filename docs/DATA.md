@@ -137,6 +137,7 @@ Gson gson = new GsonBuilder()
     .registerTypeAdapterFactory(MyAdapterFactory.create())
     .create();
 ~~~
+
 ## AutoValue + Gson + Parcelable
 After you configure AutoValue + Gson you can add Parcelable support very easy
 
