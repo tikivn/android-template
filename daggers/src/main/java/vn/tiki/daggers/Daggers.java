@@ -1,54 +1,41 @@
 package vn.tiki.daggers;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.support.annotation.VisibleForTesting;
-import android.view.View;
 import java.lang.reflect.Method;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.Stack;
 
 public final class Daggers {
 
-  private static Map<Injector, Object> componentMap = new Hashtable<>();
-  private static AppInjector appInjector;
+  private static Stack<Object> componentStack = new Stack<>();
+  @VisibleForTesting static Object appComponent;
 
-  public static void inject(Activity activity) {
-    inject(activity, activity);
+  public static void clear() {
+    appComponent = null;
+    componentStack.clear();
   }
 
-  public static void inject(Fragment fragment) {
-    inject(fragment, fragment.getActivity());
-  }
-
-  public static void inject(View view) {
-    inject(view, view.getContext());
-  }
-
-  public static void inject(Object target, Context context) {
-    final Injector injector = findInjector(context);
-    inject(target, injector);
-  }
-
-  public static void installActivityInjector(ActivityInjector activityInjector) {
-    if (componentMap.containsKey(activityInjector)) {
+  public static void closeActivityScope() {
+    if (componentStack.empty()) {
       return;
     }
-    componentMap.put(
-        activityInjector,
-        makeSubComponent(
-            appInjector.appComponent(),
-            activityInjector.activityModule()));
+    componentStack.pop();
   }
 
-  public static void installAppInjector(AppInjector appInjector) {
-    Daggers.appInjector = appInjector;
+  public static void inject(final Object target) {
+    inject(getTopScope(), target);
   }
 
-  public static void uninstallActivityInjector(ActivityInjector activityInjector) {
-    componentMap.remove(activityInjector);
+  public static void injectAppDependencies(final Object target) {
+    inject(appComponent, target);
+  }
+
+  public static void openActivityScope(final Object activityModule) {
+    final Object activityComponent = makeSubComponent(appComponent, activityModule);
+    componentStack.push(activityComponent);
+  }
+
+  public static void openAppScope(final Object appComponent) {
+    Daggers.appComponent = appComponent;
   }
 
   private Daggers() {
@@ -56,31 +43,11 @@ public final class Daggers {
   }
 
   @VisibleForTesting
-  static Object get(final ActivityInjector activityInjector) {
-    return componentMap.get(activityInjector);
-  }
-
-  @VisibleForTesting
-  static void inject(Object target, Injector injector) {
-    if (injector instanceof AppInjector) {
-      inject(appInjector.appComponent(), target);
-    } else {
-      final Object component = componentMap.get(injector);
-      inject(component, target);
+  static Object getTopScope() {
+    if (componentStack.empty()) {
+      throw new IllegalStateException("there is no opened scope");
     }
-  }
-
-  private static Injector findInjector(Context context) {
-    if (context instanceof Injector) {
-      return ((Injector) context);
-    }
-
-    if (context instanceof ContextWrapper) {
-      return findInjector(((ContextWrapper) context).getBaseContext());
-    } else {
-      throw new IllegalArgumentException("context or baseContext must be instance of "
-                                         + Injector.class.getName());
-    }
+    return componentStack.peek();
   }
 
   /**

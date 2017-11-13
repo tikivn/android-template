@@ -32,6 +32,8 @@ dependencies {
   testImplementation Deps.Test.junit
   testImplementation Deps.Test.mockito
   testImplementation Deps.Test.truth
+  testImplementation Deps.Dagger.runtime
+  testAnnotationProcessor Deps.Dagger.compiler
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

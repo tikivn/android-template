@@ -1,6 +1,7 @@
 package vn.tiki.daggers;
 
-import static com.google.common.truth.Truth.assertThat;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.*;
 
 import org.junit.*;
@@ -31,61 +32,67 @@ public class DaggersTest {
     void inject(Target target);
   }
 
-  private ActivityComponent mockedActicityComponent;
-  private ActivityInjector mockedActivityInjector;
+  private ActivityComponent mockedActivityComponent;
+
   private AppComponent mockedAppComponent;
-  private AppInjector mockedAppInjector;
 
   @Before
   public void setUp() throws Exception {
-    ActivityModule activityModule = new ActivityModule();
-    mockedAppInjector = mock(AppInjector.class);
     mockedAppComponent = mock(AppComponent.class);
-    mockedActicityComponent = mock(ActivityComponent.class);
-    mockedActivityInjector = mock(ActivityInjector.class);
+    mockedActivityComponent = mock(ActivityComponent.class);
 
-    when(mockedAppInjector.appComponent()).thenReturn(mockedAppComponent);
-    when(mockedAppComponent.plus(activityModule)).thenReturn(mockedActicityComponent);
-    when(mockedActivityInjector.activityModule()).thenReturn(activityModule);
+    when(mockedAppComponent.plus(any(ActivityModule.class))).thenReturn(mockedActivityComponent);
 
-    Daggers.installAppInjector(mockedAppInjector);
-    Daggers.installActivityInjector(mockedActivityInjector);
+    Daggers.openAppScope(mockedAppComponent);
+    Daggers.openActivityScope(new ActivityModule());
   }
 
   @After
   public void tearDown() throws Exception {
-    Daggers.uninstallActivityInjector(mockedActivityInjector);
+    Daggers.clear();
   }
 
   @Test
-  public void testInjectSubType_shouldSupport() throws Exception {
+  public void testInject() throws Exception {
+    final Target target = new Target();
+    Daggers.inject(target);
+
+    verify(mockedActivityComponent).inject(target);
+  }
+
+  @Test
+  public void testInjectAppDependencies() throws Exception {
+    final Target target = new Target();
+    Daggers.injectAppDependencies(target);
+
+    verify(mockedAppComponent).inject(target);
+  }
+
+  @Test
+  public void testInjectSubClass() throws Exception {
     final SubTarget subTarget = new SubTarget();
-    Daggers.inject(subTarget, mockedAppInjector);
+    Daggers.injectAppDependencies(subTarget);
     verify(mockedAppComponent).inject(subTarget);
 
-    Daggers.inject(subTarget, mockedActivityInjector);
-    verify(mockedActicityComponent).inject(subTarget);
+    Daggers.inject(subTarget);
+    verify(mockedActivityComponent).inject(subTarget);
   }
 
   @Test
-  public void testInject_shouldUseRightComponent() throws Exception {
-    Target target = new Target();
-
-    Daggers.inject(target, mockedAppInjector);
-    verify(mockedAppComponent).inject(target);
-
-    Daggers.inject(target, mockedActivityInjector);
-    verify(mockedActicityComponent).inject(target);
+  public void testOpenAppScope() throws Exception {
+    assertEquals(mockedAppComponent, Daggers.appComponent);
   }
 
   @Test
-  public void testInstallActivityInjector_shouldPlusActivityComponent() throws Exception {
-    assertThat(Daggers.get(mockedActivityInjector)).isEqualTo(mockedActicityComponent);
-  }
+  public void testOpenCloseActivityScope() throws Exception {
+    assertEquals(mockedActivityComponent, Daggers.getTopScope());
 
-  @Test
-  public void testUninstallActivityInjector_shouldClearReferenceToActivityInjector() throws Exception {
-    Daggers.uninstallActivityInjector(mockedActivityInjector);
-    assertThat(Daggers.get(mockedActivityInjector)).isNull();
+    Daggers.closeActivityScope();
+
+    try {
+      Daggers.getTopScope();
+      fail();
+    } catch (IllegalStateException e) {
+    }
   }
 }
