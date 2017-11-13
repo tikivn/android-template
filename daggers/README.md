@@ -10,32 +10,34 @@ Dagger2 utility, help to setup Dagger2 easier.
 
 ```java
 
-public class SampleApp extends Application implements AppInjector {
-  private AppComponent appComponent;
+public class SampleApp extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
-    appComponent = DaggerAppComponent.builder()
-        .appModule(new AppModule())
-        .build();
-
     Daggers.configure(this);
+    Daggers.openAppScope(DaggerAppComponent.builder()
+        .appModule(new AppModule(this))
+        .build());
   }
 
-  @Override public Object appComponent() {
-    return appComponent;
-  }
 }
 
-class ExampleActivity extends Activity implements ActivityInjector {  
+class ExampleActivity extends Activity implements HasScope {
   
   @Inject UserModel userModel;
   
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Daggers.inject(this, this);
+    Daggers.inject(this);
     // TODO use userModel
   }
+
+
+  @Override
+  public Object module() {
+    return new ActivityModule();
+  }
+
 }
 
 public class ExampleFragment extends Fragment {
@@ -43,7 +45,7 @@ public class ExampleFragment extends Fragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Daggers.inject(this, getContext());
+    Daggers.inject(this);
     // TODO use userModel
   }
 }
@@ -53,7 +55,7 @@ public class ExampleViewGroup extends FrameLayout {
   
   public ExampleViewGroup(Context context, AttributeSet attrs) {
     super(context, attrs);
-    Daggers.inject(this, context.getApplicationContext());
+    Daggers.injectAppDependencies(this);
     // TODO use presenter
   }
 }
@@ -62,8 +64,8 @@ public class ExampleViewGroup extends FrameLayout {
 
 **Remember**
 
- * `Daggers.inject(this, context.getApplicationContext())` // injected by `AppComponent`
- * `Daggers.inject(this, context /** activity **/)` // injected by `ActivityComponent`
+ * `Daggers.injectAppDependencies(this)` // injected by `AppComponent`
+ * `Daggers.inject(this)` // injected by `ActivityComponent`
 
 For example and additional information see [sample](../sample).
 
