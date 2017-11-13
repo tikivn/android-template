@@ -6,7 +6,7 @@ include ':viewholders-annotations'
 include ':viewholders-compiler'
 include ':daggers'
 include ':mvp'
-include ':repatch'
+include ':redux'
 include ':collectionview'
 
 include ':app'
