@@ -1,21 +1,13 @@
 package vn.tiki.sample.base;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import vn.tiki.architecture.mvp.Mvp;
 import vn.tiki.architecture.mvp.MvpActivity;
-import vn.tiki.daggers.ActivityInjector;
+import vn.tiki.daggers.HasScope;
 
 public abstract class BaseMvpActivity<V extends Mvp.View, P extends Mvp.Presenter<V>>
-    extends MvpActivity<V, P> implements ActivityInjector {
+    extends MvpActivity<V, P> implements HasScope {
 
   private ActivityDelegate activityDelegate = new ActivityDelegate();
-
-  @Override
-  protected void onCreate(@Nullable final Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    activityDelegate.onCreate(this);
-  }
 
   @Override
   protected void onResume() {
@@ -30,13 +22,8 @@ public abstract class BaseMvpActivity<V extends Mvp.View, P extends Mvp.Presente
   }
 
   @Override
-  protected void onDestroy() {
-    activityDelegate.onDestroy(this);
-    super.onDestroy();
-  }
-
-  @Override
-  public Object activityModule() {
+  public Object module() {
     return activityDelegate.makeActivityModule(this);
   }
+
 }

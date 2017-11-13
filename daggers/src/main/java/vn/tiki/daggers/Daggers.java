@@ -1,13 +1,16 @@
 package vn.tiki.daggers;
 
+import android.app.Application;
+import android.app.Application.ActivityLifecycleCallbacks;
 import android.support.annotation.VisibleForTesting;
 import java.lang.reflect.Method;
 import java.util.Stack;
 
 public final class Daggers {
 
-  private static Stack<Object> componentStack = new Stack<>();
   @VisibleForTesting static Object appComponent;
+  private static Stack<Object> componentStack = new Stack<>();
+  private static ActivityLifecycleCallbacks activityLifecycleCallbacks = new DaggerActivityLifecycleCallbacks();
 
   public static void clear() {
     appComponent = null;
@@ -19,6 +22,11 @@ public final class Daggers {
       return;
     }
     componentStack.pop();
+  }
+
+  public static void configure(Application appComponent) {
+    appComponent.unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks);
+    appComponent.registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
   }
 
   public static void inject(final Object target) {

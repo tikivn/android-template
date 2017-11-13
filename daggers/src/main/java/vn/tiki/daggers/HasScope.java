@@ -1,6 +1,6 @@
 package vn.tiki.daggers;
 
-public interface ScopeOwner {
+public interface HasScope {
 
   Object module();
 }

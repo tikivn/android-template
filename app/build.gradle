@@ -109,6 +109,7 @@ dependencies {
   implementation Deps.AndroidSupport.design
   implementation Deps.AndroidSupport.constraint
   implementation Deps.Dagger.runtime
+  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   kapt Deps.Dagger.compiler
   implementation Deps.ButterKnife.runtime
   kapt Deps.ButterKnife.compiler

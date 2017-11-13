@@ -9,7 +9,7 @@ import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.view.View;
-import vn.tiki.daggers.ActivityInjector;
+import vn.tiki.daggers.HasScope;
 import vn.tiki.daggers.Daggers;
 import vn.tiki.sample.R;
 import vn.tiki.sample.di.ActivityModule;
@@ -27,18 +27,6 @@ class ActivityDelegate {
       setNetworkStatus(connected);
     }
   };
-
-  public void onCreate(Activity activity) {
-    if (activity instanceof ActivityInjector) {
-      Daggers.installActivityInjector((ActivityInjector) activity);
-    }
-  }
-
-  public void onDestroy(Activity activity) {
-    if (activity instanceof ActivityInjector) {
-      Daggers.uninstallActivityInjector((ActivityInjector) activity);
-    }
-  }
 
   Object makeActivityModule(Activity activity) {
     return new ActivityModule(activity);

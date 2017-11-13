@@ -43,12 +43,18 @@
       android:text="@string/main_open_viewholders_demo"
       />
 
-
   <Button
       android:id="@+id/btOpenReduxDemo"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="Redux Demo"
+      />
+
+  <Button
+      android:id="@+id/btOpenDaggersDemo"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Daggers Demo"
       />
 
 </LinearLayout>

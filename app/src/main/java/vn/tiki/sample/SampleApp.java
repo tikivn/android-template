@@ -6,15 +6,11 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
-import vn.tiki.daggers.AppInjector;
 import vn.tiki.daggers.Daggers;
-import vn.tiki.sample.di.AppComponent;
 import vn.tiki.sample.di.AppModule;
 import vn.tiki.sample.di.DaggerAppComponent;
 
-public class SampleApp extends Application implements AppInjector {
-
-  private AppComponent appComponent;
+public class SampleApp extends Application {
 
   @Override
   public void onCreate() {
@@ -25,16 +21,11 @@ public class SampleApp extends Application implements AppInjector {
     configureTimber();
   }
 
-  @Override
-  public Object appComponent() {
-    return appComponent;
-  }
-
   protected void configureDagger() {
-    appComponent = DaggerAppComponent.builder()
+    Daggers.configure(this);
+    Daggers.openAppScope(DaggerAppComponent.builder()
         .appModule(new AppModule(this))
-        .build();
-    Daggers.installAppInjector(this);
+        .build());
   }
 
   private void configureFabric() {

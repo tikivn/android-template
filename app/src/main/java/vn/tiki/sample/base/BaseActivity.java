@@ -1,19 +1,11 @@
 package vn.tiki.sample.base;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import vn.tiki.daggers.ActivityInjector;
+import vn.tiki.daggers.HasScope;
 
-public abstract class BaseActivity extends AppCompatActivity implements ActivityInjector {
+public abstract class BaseActivity extends AppCompatActivity implements HasScope {
 
   private ActivityDelegate activityDelegate = new ActivityDelegate();
-
-  @Override
-  protected void onCreate(@Nullable final Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    activityDelegate.onCreate(this);
-  }
 
   @Override
   protected void onResume() {
@@ -28,13 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
   }
 
   @Override
-  protected void onDestroy() {
-    activityDelegate.onDestroy(this);
-    super.onDestroy();
-  }
-
-  @Override
-  public Object activityModule() {
+  public Object module() {
     return activityDelegate.makeActivityModule(this);
   }
 }
