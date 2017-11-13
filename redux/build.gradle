@@ -1,0 +1,45 @@
+import vn.tiki.Deps
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+
+android {
+  compileSdkVersion Deps.Version.compileSdk
+
+  defaultConfig {
+    minSdkVersion Deps.Version.minSdk
+    targetSdkVersion Deps.Version.compileSdk
+
+    consumerProguardFiles 'proguard-rules.txt'
+
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        includeCompileClasspath = true
+      }
+    }
+  }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+    // We run a full lint analysis as build part in CI, so skip vital checks for assemble tasks.
+    checkReleaseBuilds false
+  }
+}
+
+dependencies {
+  implementation Deps.kotlin
+
+  implementation Deps.AndroidSupport.annotations
+
+  implementation Deps.rxJava
+  implementation Deps.rxAndroid
+
+  testImplementation Deps.Test.junit
+  testImplementation Deps.Test.truth
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
