@@ -134,10 +134,16 @@ afterEvaluate { project ->
         }
       }
     }
-
     task androidJavadocs(type: Javadoc) {
-      source = android.sourceSets.main.java.source
+      if (!project.plugins.hasPlugin('kotlin-android')) {
+        source = android.sourceSets.main.java.srcDirs
+      }
       classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+      exclude '**/internal/*'
+
+      if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+      }
     }
 
     task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
